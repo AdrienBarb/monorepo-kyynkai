@@ -8,6 +8,7 @@
     "@babel/preset-react": "^7.25.7",
     "@babel/preset-typescript": "^7.25.7",
     "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
     "eslint-config-next": "^14.0.4",
     "next": "^14.2.16",
     "pnpm": "9.12.3",
@@ -24,6 +25,16 @@
   },
   "dependencies": {
     "@types/react": "^18",
-    "react": "^18"
+    "@types/react-dom": "^18",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "eslint": "^8.57.1",
+      "react": "^18.3.1",
+      "react-dom": "^18.3.1",
+      "@iconscout/react-unicons>react": "^18.3.1"
+    }
   }
 }
