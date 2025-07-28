@@ -1,29 +1,56 @@
+import { auth } from '@/lib/better-auth/auth';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { auth } from '@/auth';
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  // Get the session
+  const session = await auth.api.getSession({
+    headers: request.headers,
+  });
 
-  // Check if the path starts with /admin
-  if (pathname.startsWith('/admin')) {
-    const session = await auth();
+  // Define protected routes
+  const protectedRoutes = [
+    '/account',
+    '/conversations',
+    '/nudes',
+    '/revenue',
+    '/settings',
+  ];
 
-    // If no session, redirect to login
-    if (!session?.user) {
-      return NextResponse.redirect(new URL('/login', request.url));
-    }
+  // Check if the current path is protected
+  const isProtectedRoute = protectedRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route),
+  );
 
-    // Check if user has admin role
-    const userRoles = session.user.roles || [];
-    if (!userRoles.includes('admin')) {
-      return NextResponse.redirect(new URL('/401', request.url));
-    }
+  // If it's a protected route and user is not authenticated
+  if (isProtectedRoute && !session) {
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('callbackUrl', request.nextUrl.pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // If user is authenticated and trying to access auth pages, redirect to home
+  const authRoutes = ['/login', '/register'];
+  const isAuthRoute = authRoutes.some((route) =>
+    request.nextUrl.pathname.startsWith(route),
+  );
+
+  if (isAuthRoute && session) {
+    return NextResponse.redirect(new URL('/', request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
 };

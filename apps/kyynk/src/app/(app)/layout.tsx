@@ -1,8 +1,7 @@
-import { auth } from '@/auth';
 import { AppSidebar } from '@/components/layout/AppSidebar';
 import { Button } from '@/components/ui/Button';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/Sidebar';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import Link from 'next/link';
 import React, { FC, ReactNode } from 'react';
 import { getCookie } from 'cookies-next/server';
@@ -10,13 +9,17 @@ import { appRouter } from '@/constants/appRouter';
 import Footer from '@/components/layout/Footer';
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
 import { getTranslations } from 'next-intl/server';
+import { auth } from '@/lib/better-auth/auth';
 
 interface Props {
   children: ReactNode;
 }
 
 const AppLayout: FC<Props> = async ({ children }) => {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  console.log('🚀 ~ AppLayout ~ session:', session);
   const t = await getTranslations();
 
   const defaultOpen =

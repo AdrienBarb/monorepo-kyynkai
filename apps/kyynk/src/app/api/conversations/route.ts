@@ -8,7 +8,8 @@ import { messageSchema } from '@/schemas/conversations/messageSchema';
 import { validateMessageCreation } from '@/utils/conversations/validateMessageCreation';
 import { findOrCreateConversation } from '@/utils/conversations/findOrCreateConversation';
 import { createMessage } from '@/utils/conversations/createMessage';
-import { auth } from '@/auth';
+import { auth } from '@/lib/better-auth/auth';
+import { headers } from 'next/headers';
 
 const conversationSchema = z.object({
   slug: z.string(),
@@ -70,7 +71,9 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
 
 export const GET = async (req: NextRequest) => {
   try {
-    const session = await auth();
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
     if (!session?.user?.id) {
       return NextResponse.json([], { status: 200 });

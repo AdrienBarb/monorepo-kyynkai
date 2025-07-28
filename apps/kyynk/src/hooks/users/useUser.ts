@@ -1,8 +1,8 @@
 import { useUserStore } from '@/stores/UserStore';
 import useApi from '@/hooks/requests/useApi';
-import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { LoggedUserType } from '@/types/users';
+import { useSession } from '@/lib/better-auth/auth-client';
 
 export const useUser = () => {
   const { user, setUser: setUserStore, clearUser } = useUserStore();

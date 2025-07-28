@@ -27,12 +27,12 @@ export async function generateMetadata({
 }
 
 const HomePage = async () => {
-  const initialUsersDatas = (await getUsers()) as User[];
+  // const initialUsersDatas = (await getUsers()) as User[];
 
   return (
     <PaddingContainer>
       <Landing />
-      <UsersList initialUsers={initialUsersDatas} />
+      {/* <UsersList initialUsers={initialUsersDatas} /> */}
       <AppFAQ />
     </PaddingContainer>
   );

@@ -1,20 +1,22 @@
-import { auth } from '@/auth';
+import { auth } from '@/lib/better-auth/auth';
 import { errorMessages } from '@/lib/constants/errorMessage';
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 
-type Handler = (...args: any[]) => Promise<NextResponse> | NextResponse;
+type Handler = (request: NextRequest, session: any) => Promise<NextResponse>;
 
 export function strictlyAuth(handler: Handler) {
-  return auth(async (...args) => {
-    const [req] = args;
+  return async (request: NextRequest) => {
+    const session = await auth.api.getSession({
+      headers: request.headers,
+    });
 
-    if (!req.auth) {
+    if (!session) {
       return NextResponse.json(
         { message: errorMessages.NOT_AUTHENTICATE },
         { status: 401 },
       );
     }
 
-    return handler(...args);
-  }) as Handler;
+    return handler(request, session);
+  };
 }

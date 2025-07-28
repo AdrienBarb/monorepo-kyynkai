@@ -4,7 +4,6 @@ import { genPageMetadata } from '@/app/seo';
 import { redirect } from 'next/navigation';
 import ErrorMessage from '@/components/ErrorMessage';
 import { getTranslations } from 'next-intl/server';
-import { auth } from '@/auth';
 import UserUncompletedProfileBanner from '@/components/profile/UserUncompletedProfileBanner';
 import UserProfileHeader from '@/components/UserProfileHeader';
 import PageContainer from '@/components/PageContainer';
@@ -19,6 +18,8 @@ import imgixLoader from '@/lib/imgix/loader';
 import { UserType } from '@prisma/client';
 import ProfileConversationInput from '@/components/conversations/ProfileConversationInput';
 import UserProfileMenu from '@/components/UserProfileMenu';
+import { auth } from '@/lib/better-auth/auth';
+import { headers } from 'next/headers';
 
 export type PageProps = {
   params: Promise<{ slug: string }>;
@@ -48,7 +49,11 @@ export async function generateMetadata({
 const UserPage = async ({ params }: PageProps) => {
   const { slug } = await params;
   const t = await getTranslations();
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  console.log('🚀 ~ UserPage ~ session:', session);
 
   const user = (await getUserBySlug({ slug })) as FetchedUserType;
 
@@ -64,14 +69,6 @@ const UserPage = async ({ params }: PageProps) => {
     return <ErrorMessage message={t('error.userArchived')} />;
   }
 
-  const nudes = (await getUserNudesById({
-    userId: user.id,
-  })) as NudeFromPrisma[];
-
-  const nudesWithPermissions = nudes.map((currentNude) =>
-    formatNudeWithPermissions(currentNude, session?.user.id),
-  ) as NudeWithPermissions[];
-
   return (
     <PageContainer>
       <PaddingContainer>
@@ -79,7 +76,6 @@ const UserPage = async ({ params }: PageProps) => {
         <UserProfileMenu />
         <UserProfileHeader initialUserDatas={user} />
         <ProfileConversationInput user={user} />
-        <UserNudes initialNudes={nudesWithPermissions} user={user} />
       </PaddingContainer>
     </PageContainer>
   );

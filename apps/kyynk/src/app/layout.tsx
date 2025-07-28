@@ -13,11 +13,9 @@ import clsx from 'clsx';
 import GlobalConfig from '@/components/GlobalConfig';
 import { getLocale, getMessages } from 'next-intl/server';
 import CustomQueryClientProvider from '@/components/provider/CustomQueryClientProvider';
-import CustomSessionProvider from '@/components/provider/CustomSessionProvider';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { PostHogProvider } from '@/components/provider/PostHogProvider';
 import { AxiomWebVitals } from 'next-axiom';
-import LoggedUserProvider from '@/components/provider/LoggedUserProvider';
 import UTMTracking from '@/components/tracking/UTMTracking';
 import ModalWrapper from '@/components/layout/ModalWrapper';
 import { GoogleTagManager } from '@next/third-parties/google';
@@ -83,44 +81,40 @@ const RootLayout: FC<Props> = async ({ children }) => {
 
   return (
     <CustomQueryClientProvider>
-      <CustomSessionProvider>
-        <NextIntlClientProvider messages={messages}>
-          <html
-            lang={locale}
-            className={clsx(karlaFont.variable, rubikFont.variable)}
-          >
-            <link
-              rel="icon"
-              type="image/png"
-              sizes="32x32"
-              href="/images/favicon-32x32.png"
-            />
-            <link
-              rel="icon"
-              type="image/png"
-              sizes="16x16"
-              href="/images/favicon-16x16.png"
-            />
-            <GoogleTagManager gtmId="GTM-KHBKVG2G" />
-            <body>
-              <NuqsAdapter>
-                <Toaster position="bottom-center" />
-                <GlobalConfig>
-                  <LoggedUserProvider>
-                    <PostHogProvider>{children}</PostHogProvider>
-                  </LoggedUserProvider>
-                </GlobalConfig>
-                <UTMTracking />
-                <GlobalErrorProvider />
+      <NextIntlClientProvider messages={messages}>
+        <html
+          lang={locale}
+          className={clsx(karlaFont.variable, rubikFont.variable)}
+        >
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/images/favicon-32x32.png"
+          />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/images/favicon-16x16.png"
+          />
+          <GoogleTagManager gtmId="GTM-KHBKVG2G" />
+          <body>
+            <NuqsAdapter>
+              <Toaster position="bottom-center" />
+              <GlobalConfig>
+                <PostHogProvider>{children}</PostHogProvider>
+              </GlobalConfig>
+              <UTMTracking />
+              <GlobalErrorProvider />
 
-                {/* Modals */}
-                <ModalWrapper />
-                <AxiomWebVitals />
-              </NuqsAdapter>
-            </body>
-          </html>
-        </NextIntlClientProvider>
-      </CustomSessionProvider>
+              {/* Modals */}
+              <ModalWrapper />
+              <AxiomWebVitals />
+            </NuqsAdapter>
+          </body>
+        </html>
+      </NextIntlClientProvider>
     </CustomQueryClientProvider>
   );
 };
