@@ -1,0 +1,249 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                            String             @id @default(cuid())
+  pseudo                        String             @unique
+  slug                          String             @unique
+  email                         String             @unique
+  password                      String
+  description                   String?
+  profileImageId                String?
+  nudesCount                    Int                @default(0)
+  age                           Int?
+  gender                        String?
+  bodyType                      String?
+  hairColor                     String?
+  country                       String?
+  languages                     String[]           @default([])
+  tags                          String[]           @default([])
+  isArchived                    Boolean            @default(false)
+  isEmailVerified               Boolean            @default(false)
+  identityVerificationStatus    VerificationStatus @default(unverified)
+  contentProviderPolicyAccepted Boolean            @default(false)
+  preferences                   String[]           @default([])
+  userType                      UserType?          @default(member)
+  userToken                     UserToken?
+  medias                        Media[]
+  nudes                         Nude[]
+  invoices                      Invoice[]
+  creditsAmount                 Int                @default(0)
+  frontIdentity                 String?
+  backIdentity                  String?
+  frontAndFaceIdentity          String?
+  watermarkId                   String?
+  lastSeenAt                    DateTime?
+  createdAt                     DateTime           @default(now())
+  updatedAt                     DateTime           @updatedAt
+  salesAsSeller                 Sale[]             @relation("SellerSales")
+  salesAsBuyer                  Sale[]             @relation("BuyerSales")
+  verificationCodes             VerificationCode[]
+  conversations                 Conversation[]     @relation("UserConversations")
+  messages                      Message[]
+  settings                      UserSettings?
+  feeFreeUntil                  DateTime           @default(dbgenerated("now() + interval '1 months'"))
+  transactions                  Transaction[]
+  utmTracking                   Json?
+  roles                         UserRole[]         @default([user])
+}
+
+model UserToken {
+  id        String   @id @default(cuid())
+  token     String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Nude {
+  id                 String              @id @default(cuid())
+  description        String?
+  fiatPrice          Int
+  creditPrice        Int
+  currency           String
+  tags               String[]            @default([])
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             String
+  media              Media               @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  mediaId            String
+  buyers             String[]            @default([])
+  isPrivate          Boolean             @default(false)
+  isArchived         Boolean             @default(false)
+  moderationStatus   ModerationStatus    @default(pending)
+  moderatedBy        String?
+  moderatedAt        DateTime?
+  moderationReason   String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  messageAttachments MessageAttachment[]
+
+  @@index([userId])
+  @@index([mediaId])
+}
+
+model Media {
+  id          String   @id @default(cuid())
+  thumbnailId String?  @unique
+  videoId     String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  nudes       Nude[]
+  nudeId      String?  @unique
+  isReady     Boolean  @default(false)
+  isArchived  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Sale {
+  id            String   @id @default(cuid())
+  creditAmount  Int
+  type          SaleType
+  isPaid        Boolean  @default(false)
+  availableDate DateTime @default(dbgenerated("now() + interval '7 days'"))
+  seller        User     @relation("SellerSales", fields: [sellerId], references: [id], onDelete: Cascade)
+  sellerId      String
+  buyer         User     @relation("BuyerSales", fields: [buyerId], references: [id], onDelete: Cascade)
+  buyerId       String
+  invoice       Invoice? @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoiceId     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Invoice {
+  id         String   @id @default(cuid())
+  fiatAmount Int
+  isPaid     Boolean  @default(false)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  sales      Sale[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model VerificationCode {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  code      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  expireOn  DateTime @default(dbgenerated("now() + interval '24 hours'"))
+}
+
+model Conversation {
+  id           String    @id @default(cuid())
+  participants User[]    @relation("UserConversations")
+  messages     Message[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  isArchived   Boolean   @default(false)
+}
+
+model Message {
+  id             String             @id @default(cuid())
+  conversation   Conversation       @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String
+  sender         User               @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  senderId       String
+  content        String
+  attachment     MessageAttachment?
+  createdAt      DateTime           @default(now())
+  status         MessageStatus      @default(sent)
+
+  @@index([conversationId])
+  @@index([senderId])
+}
+
+model MessageAttachment {
+  id        String                @id @default(cuid())
+  message   Message               @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  messageId String                @unique
+  type      MessageAttachmentType
+  nude      Nude?                 @relation(fields: [nudeId], references: [id], onDelete: SetNull)
+  nudeId    String?
+  createdAt DateTime              @default(now())
+
+  @@index([nudeId])
+}
+
+model UserSettings {
+  id              String   @id @default(cuid())
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId          String   @unique
+  fiatMessage     Float    @default(0)
+  creditMessage   Float    @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  bankAccountName String?
+  iban            String?
+}
+
+model Transaction {
+  id           String            @id @default(cuid())
+  userId       String
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  creditAmount Int
+  fiatAmount   Int
+  currency     String
+  status       TransactionStatus @default(pending)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
+
+enum TransactionStatus {
+  pending
+  success
+  failed
+  refunded
+}
+
+enum UserType {
+  member
+  creator
+}
+
+enum SaleType {
+  nude
+  tip
+  message
+}
+
+enum VerificationStatus {
+  unverified
+  pending
+  verified
+  rejected
+}
+
+enum MessageStatus {
+  sent
+  delivered
+  read
+}
+
+enum UserRole {
+  user
+  admin
+}
+
+enum ModerationStatus {
+  pending
+  approved
+  rejected
+}
+
+enum MessageAttachmentType {
+  nude
+  voice
+  tip
+}

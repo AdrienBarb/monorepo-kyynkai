@@ -1,0 +1,59 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [],
+  "globalEnv": [
+    "DATABASE_URL",
+    "DIRECT_URL",
+    "AUTH_SECRET",
+    "RESEND_API_KEY",
+    "API_VIDEO_KEY",
+    "NEXTAUTH_URL",
+    "CLIENT_URL",
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_REGION",
+    "S3_BUCKET",
+    "ADMIN_SECRET_KEY",
+    "CC_BASE_URL",
+    "CC_LOGIN",
+    "CC_PASSWORD",
+    "CC_MERCHANT_ID",
+    "CC_MERCHANT_WEBSITE_ID"
+  ],
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "build": {
+      "outputs": [
+        ".next/**"
+      ],
+      "env": [
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "AUTH_SECRET",
+        "RESEND_API_KEY",
+        "API_VIDEO_KEY",
+        "NEXTAUTH_URL",
+        "CLIENT_URL",
+        "AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY",
+        "AWS_REGION",
+        "S3_BUCKET",
+        "ADMIN_SECRET_KEY",
+        "CC_BASE_URL",
+        "CC_LOGIN",
+        "CC_PASSWORD",
+        "CC_MERCHANT_ID",
+        "CC_MERCHANT_WEBSITE_ID"
+      ]
+    },
+    "start": {
+      "dependsOn": [
+        "build"
+      ],
+      "cache": false
+    }
+  }
+}

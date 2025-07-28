@@ -1,0 +1,44 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Kyynk - Cursor Rules
+
+## Project Context
+**Kyynk** is an adult content social media platform centered around private, personalized conversations between creators and members. The platform monetizes intimate interactions through a credit-based economy.
+
+### Key Features:
+- Users can **buy and sell** videos using an internal credit system.
+- Users can chat in realtime with creators, exchange videos, voices notes
+- Creators can receive tips from users
+- Payments are handled via **COMMERCE GATE** for fiat transactions.
+- Videos are hosted on **api.video**; thumbnails on **S3 (imgx)**.
+- Authentication is managed with **NextAuth.js** (Credentials provider).
+- The backend is built using **Next.js App Router**, **Prisma**, and **Supabase**.
+- Users must be **18+** and **verified** before purchasing or uploading content.
+- The project follows **GDPR compliance** and secure data handling practices.
+
+## Technology Stack
+- **Frontend:** Next.js 14 (App Router), React.js, Tailwind CSS
+- **Backend:** Node.js, Prisma ORM, Supabase
+- **Authentication:** NextAuth.js (Credentials provider)
+- **Payments:** Commerce Gate for fiat transactions, internal credit system
+- **Storage:** api.video (videos), S3 (imgx) for thumbnails
+- **State Management:** Zustand (where needed)
+- **Monorepo:** Turborepo (Kyynk)
+
+## General Rules
+- The project uses **Next.js App Router** (not Pages Router).
+- **React Query** is the preferred method for API calls.
+- **Prisma ORM** is mandatory for database interactions.
+- **Zustand** is used for state management where needed.
+- **Stripe is used for fiat transactions**; the internal credit system is used for content purchases.
+- **All API routes should be defined in `/api/`.**
+- **Users must verify their age** before accessing premium content.
+
+## Compliance & Security
+- **All users must be 18+** and verified via ID check.
+- **No sensitive user data** should be stored in local storage.
+- The platform follows **GDPR compliance** for user data handling.
+- Video uploads **must go through api.video** and not be stored locally.

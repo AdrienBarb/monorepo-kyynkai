@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watermark Preview</title>
+  <style>
+    #watermarkCanvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Watermark Preview</h1>
+  <label for="slugInput">Slug:</label>
+  <input type="text" id="slugInput" placeholder="Enter slug" oninput="updateWatermark()">
+  <br>
+  <label for="fontSizeInput">Font Size:</label>
+  <input type="number" id="fontSizeInput" value="50" oninput="updateWatermark()">
+  <br>
+  <canvas id="watermarkCanvas" width="600" height="150"></canvas>
+  <p id="sizeInfo"></p>
+
+  <script>
+    function updateWatermark() {
+      const slug = document.getElementById('slugInput').value;
+      const fontSize = document.getElementById('fontSizeInput').value;
+      const canvas = document.getElementById('watermarkCanvas');
+      const ctx = canvas.getContext('2d');
+
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Set font and text properties
+      ctx.font = `${fontSize}px Arial`;
+      ctx.fillStyle = 'black';
+      ctx.textAlign = 'center';
+
+      // Draw the text
+      ctx.fillText(`kyynk.com/${slug}`, canvas.width / 2, canvas.height / 2);
+
+      // Display the size of the text
+      const textMetrics = ctx.measureText(`kyynk.com/${slug}`);
+      document.getElementById('sizeInfo').innerText = `Text width: ${textMetrics.width}px`;
+    }
+
+    // Initial call to set up the canvas
+    updateWatermark();
+  </script>
+</body>
+
+</html>

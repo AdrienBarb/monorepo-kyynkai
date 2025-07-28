@@ -1,0 +1,21 @@
+{
+  "extends": "@kyynk/typescript-config/base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "allowJs": true,
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "outDir": "dist"
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "types/next-auth.d.ts"
+  ],
+  "exclude": ["node_modules", "src/generated"]
+}
