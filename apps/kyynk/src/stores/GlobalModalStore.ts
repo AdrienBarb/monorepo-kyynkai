@@ -8,6 +8,7 @@ type ModalType =
   | 'nudeView'
   | 'confirmation'
   | 'privateNude'
+  | 'auth'
   | null;
 
 interface ModalStackItem {

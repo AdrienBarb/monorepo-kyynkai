@@ -1,8 +1,26 @@
 import { isProduction } from '@/utils/environments';
 import { PrismaClient } from '@prisma/client';
+import { withAccelerate } from '@prisma/extension-accelerate';
 
-const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
+const globalForPrisma = global as unknown as {
+  prisma: PrismaClient;
+};
 
-export const prisma = globalForPrisma.prisma || new PrismaClient();
+// Prevent Prisma from running in browser environments
+const createPrismaClient = () => {
+  if (typeof window !== 'undefined') {
+    throw new Error(
+      'PrismaClient is unable to run in this browser environment',
+    );
+  }
 
-if (!isProduction) globalForPrisma.prisma = prisma;
+  return new PrismaClient().$extends(withAccelerate());
+};
+
+const prisma = globalForPrisma.prisma || createPrismaClient();
+
+if (!isProduction && typeof window === 'undefined') {
+  globalForPrisma.prisma = prisma;
+}
+
+export { prisma };

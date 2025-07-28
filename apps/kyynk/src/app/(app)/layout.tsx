@@ -1,14 +1,11 @@
 import { AppSidebar } from '@/components/layout/AppSidebar';
-import { Button } from '@/components/ui/Button';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/Sidebar';
 import { cookies, headers } from 'next/headers';
-import Link from 'next/link';
 import React, { FC, ReactNode } from 'react';
 import { getCookie } from 'cookies-next/server';
-import { appRouter } from '@/constants/appRouter';
 import Footer from '@/components/layout/Footer';
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
-import { getTranslations } from 'next-intl/server';
+import LoginButton from '@/components/layout/LoginButton';
 import { auth } from '@/lib/better-auth/auth';
 
 interface Props {
@@ -20,7 +17,6 @@ const AppLayout: FC<Props> = async ({ children }) => {
     headers: await headers(),
   });
   console.log('🚀 ~ AppLayout ~ session:', session);
-  const t = await getTranslations();
 
   const defaultOpen =
     (await getCookie('sidebar_state', { cookies })) === 'true';
@@ -35,11 +31,7 @@ const AppLayout: FC<Props> = async ({ children }) => {
           <SidebarTrigger />
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
-            {!isLoggedIn && (
-              <Button asChild>
-                <Link href={appRouter.login}>{t('login')}</Link>
-              </Button>
-            )}
+            {!isLoggedIn && <LoginButton />}
           </div>
         </header>
         <main className="min-h-screen">{children}</main>
