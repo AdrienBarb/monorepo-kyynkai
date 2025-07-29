@@ -8,7 +8,6 @@ import NudeEditModal from '@/components/modals/NudeEditModal';
 import NudeModal from '@/components/modals/NudeModal';
 import ConfirmationModal from '../modals/ConfirmationModal';
 import PrivateNudeModal from '../modals/PrivateNudeModal';
-import AuthModal from '../auth/AuthModal';
 
 const ModalWrapper = () => {
   const stack = useGlobalModalStore((s) => s.stack);
@@ -32,8 +31,6 @@ const ModalWrapper = () => {
       return <ConfirmationModal {...top.data} open setOpen={closeModal} />;
     case 'privateNude':
       return <PrivateNudeModal {...top.data} open setOpen={closeModal} />;
-    case 'auth':
-      return <AuthModal open setOpen={closeModal} />;
     default:
       return null;
   }

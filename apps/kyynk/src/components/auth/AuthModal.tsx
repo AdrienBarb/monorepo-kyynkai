@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -13,11 +13,7 @@ import ModalSignInForm from './ModalSignInForm';
 import ModalSignUpForm from './ModalSignUpForm';
 import AuthAlert from './AuthAlert';
 import { useRouter } from 'next/navigation';
-
-interface AuthModalProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}
+import { useAuthModal } from '@/utils/auth/openAuthModal';
 
 interface AlertState {
   type: 'success' | 'error';
@@ -25,20 +21,43 @@ interface AlertState {
   email?: string;
 }
 
-const AuthModal: React.FC<AuthModalProps> = ({ open, setOpen }) => {
+const AuthModal: React.FC = () => {
+  const {
+    isOpen,
+    isSignInMode,
+    isSignUpMode,
+    closeAuthModal,
+    openSignIn,
+    openSignUp,
+  } = useAuthModal();
   const [isLogin, setIsLogin] = useState(false);
   const [alert, setAlert] = useState<AlertState | null>(null);
   const t = useTranslations();
   const router = useRouter();
 
+  // Set initial mode based on URL parameter
+  useEffect(() => {
+    if (isSignInMode) {
+      setIsLogin(true);
+    } else if (isSignUpMode) {
+      setIsLogin(false);
+    }
+  }, [isSignInMode, isSignUpMode]);
+
   const handleClose = () => {
-    setOpen(false);
+    closeAuthModal();
     setIsLogin(true);
     setAlert(null);
   };
 
   const toggleMode = () => {
-    setIsLogin(!isLogin);
+    const newMode = !isLogin;
+    setIsLogin(newMode);
+    if (newMode) {
+      openSignIn();
+    } else {
+      openSignUp();
+    }
     setAlert(null);
   };
 
@@ -61,8 +80,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, setOpen }) => {
     setAlert(null);
   };
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-center">
