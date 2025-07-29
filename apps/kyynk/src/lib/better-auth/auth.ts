@@ -2,6 +2,8 @@ import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { prisma } from '@/lib/db/client';
 import { magicLink } from 'better-auth/plugins';
+import { resendClient } from '../resend/resendClient';
+import MagicLinkEmail from '@kyynk/transactional/emails/MagicLinkEmail';
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -13,7 +15,12 @@ export const auth = betterAuth({
   plugins: [
     magicLink({
       sendMagicLink: async ({ email, token, url }, request) => {
-        // send email to user
+        await resendClient.emails.send({
+          from: 'noreply@kyynk.com',
+          to: email,
+          subject: 'Magic link',
+          react: MagicLinkEmail({ magicLink: url }),
+        });
       },
     }),
   ],

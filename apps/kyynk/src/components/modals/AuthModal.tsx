@@ -20,7 +20,7 @@ interface AuthModalProps {
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({ open, setOpen }) => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const t = useTranslations();
   const router = useRouter();
 
@@ -54,26 +54,33 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, setOpen }) => {
 
         <div className="space-y-6">
           {isLogin ? (
-            <div className="space-y-4">
-              <ModalSignInForm onSuccess={handleAuthSuccess} />
-              <div className="text-center">
-                <Button
-                  variant="ghost"
-                  className="text-sm text-primary font-light"
-                  onClick={handleForgotPassword}
-                >
-                  {t('forgotPassword')}
-                </Button>
-              </div>
-            </div>
+            <ModalSignInForm onSuccess={handleAuthSuccess} />
           ) : (
             <ModalSignUpForm onSuccess={handleAuthSuccess} />
           )}
 
-          <div className="flex flex-col gap-4">
-            <Button variant="secondary" onClick={toggleMode} className="w-full">
-              {isLogin ? t('signUp') : t('signIn')}
-            </Button>
+          <div className="flex justify-center">
+            {isLogin ? (
+              <span>
+                Don&apos;t have an account?{' '}
+                <span
+                  onClick={toggleMode}
+                  className="cursor-pointer text-primary"
+                >
+                  Sign up
+                </span>
+              </span>
+            ) : (
+              <span>
+                Already have an account?{' '}
+                <span
+                  onClick={toggleMode}
+                  className="cursor-pointer text-primary"
+                >
+                  Sign in
+                </span>
+              </span>
+            )}
           </div>
         </div>
       </DialogContent>

@@ -10,7 +10,6 @@ generator client {
 
 model User {
   id            String    @id
-  name          String
   email         String
   emailVerified Boolean
   createdAt     DateTime
