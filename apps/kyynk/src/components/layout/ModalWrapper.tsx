@@ -8,7 +8,7 @@ import NudeEditModal from '@/components/modals/NudeEditModal';
 import NudeModal from '@/components/modals/NudeModal';
 import ConfirmationModal from '../modals/ConfirmationModal';
 import PrivateNudeModal from '../modals/PrivateNudeModal';
-import AuthModal from '../modals/AuthModal';
+import AuthModal from '../auth/AuthModal';
 
 const ModalWrapper = () => {
   const stack = useGlobalModalStore((s) => s.stack);

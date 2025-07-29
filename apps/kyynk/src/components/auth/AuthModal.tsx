@@ -7,14 +7,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/Dialog';
-import { Button } from '@/components/ui/Button';
-import { Alert, AlertDescription } from '@/components/ui/Alert';
+
 import { useTranslations } from 'next-intl';
 import ModalSignInForm from './ModalSignInForm';
 import ModalSignUpForm from './ModalSignUpForm';
+import AuthAlert from './AuthAlert';
 import { useRouter } from 'next/navigation';
-import { appRouter } from '@/constants/appRouter';
-import { CheckCircle, XCircle } from 'lucide-react';
 
 interface AuthModalProps {
   open: boolean;
@@ -47,7 +45,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, setOpen }) => {
   const handleAuthSuccess = (email: string) => {
     setAlert({
       type: 'success',
-      message: `We've sent an email to ${email}. Please click on the link in the email to sign in. Be sure to check the spam folder!`,
+      message: t('magicLinkEmailSent', { email }),
       email,
     });
   };
@@ -74,33 +72,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, setOpen }) => {
 
         <div className="space-y-6">
           {alert ? (
-            <Alert
-              variant={alert.type === 'error' ? 'destructive' : 'default'}
-              className={`${
-                alert.type === 'success'
-                  ? 'border-green-500/50 bg-green-900 text-white shadow-lg'
-                  : ''
-              }`}
-            >
-              {alert.type === 'success' ? (
-                <CheckCircle className="h-4 w-4 text-green-400" />
-              ) : (
-                <XCircle className="h-4 w-4 text-red-600" />
-              )}
-              <AlertDescription className="text-sm">
-                {alert.message}
-                {alert.type === 'success' && (
-                  <div className="mt-2 text-right">
-                    <button
-                      onClick={handleChangeEmail}
-                      className="text-green-300 underline hover:text-green-200"
-                    >
-                      Change Email
-                    </button>
-                  </div>
-                )}
-              </AlertDescription>
-            </Alert>
+            <AuthAlert
+              type={alert.type}
+              message={alert.message}
+              onChangeEmail={handleChangeEmail}
+            />
           ) : (
             <>
               {isLogin ? (
@@ -118,22 +94,22 @@ const AuthModal: React.FC<AuthModalProps> = ({ open, setOpen }) => {
               <div className="flex justify-center">
                 {isLogin ? (
                   <span>
-                    Don&apos;t have an account?{' '}
+                    {t('dontHaveAccount')}{' '}
                     <span
                       onClick={toggleMode}
                       className="cursor-pointer text-primary"
                     >
-                      Sign up
+                      {t('signUp')}
                     </span>
                   </span>
                 ) : (
                   <span>
-                    Already have an account?{' '}
+                    {t('alreadyHaveAccount')}{' '}
                     <span
                       onClick={toggleMode}
                       className="cursor-pointer text-primary"
                     >
-                      Sign in
+                      {t('signIn')}
                     </span>
                   </span>
                 )}

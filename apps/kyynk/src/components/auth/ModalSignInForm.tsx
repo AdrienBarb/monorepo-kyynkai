@@ -58,8 +58,7 @@ const ModalSignInForm: React.FC<ModalSignInFormProps> = ({
           onSuccess?.(values.email);
         },
         onError: (ctx) => {
-          const errorMessage =
-            ctx.error.message || 'An error occurred. Please try again.';
+          const errorMessage = ctx.error.message || t('somethingWentWrong');
           onError?.(errorMessage);
         },
       },
