@@ -26,7 +26,15 @@
     "field_required": "Ce champ est obligatoire",
     "password_to_short": "Le mot de passe est trop court",
     "pseudo_invalid": "Le pseudo est invalide",
-    "password_confirmation_invalid": "La confirmation du mot de passe ne correspond pas"
+    "password_confirmation_invalid": "La confirmation du mot de passe ne correspond pas",
+    "invalidToken": "Ce lien a expiré ou est invalide. Veuillez réessayer.",
+    "expiredToken": "Ce lien a expiré. Veuillez en demander un nouveau.",
+    "unauthorized": "Vous n'êtes pas autorisé à accéder à cette ressource.",
+    "forbidden": "Accès refusé.",
+    "notFound": "La ressource demandée n'a pas été trouvée.",
+    "rateLimited": "Trop de requêtes. Veuillez réessayer plus tard.",
+    "serverError": "Quelque chose s'est mal passé. Veuillez réessayer plus tard.",
+    "generic": "Une erreur s'est produite. Veuillez réessayer."
   },
   "forgotPassword": "Mot de passe oublié",
   "error404Title": "404",

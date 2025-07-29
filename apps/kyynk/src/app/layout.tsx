@@ -19,6 +19,7 @@ import { AxiomWebVitals } from 'next-axiom';
 import UTMTracking from '@/components/tracking/UTMTracking';
 import ModalWrapper from '@/components/layout/ModalWrapper';
 import AuthModal from '@/components/auth/AuthModal';
+import AuthErrorHandler from '@/components/AuthErrorHandler';
 import { GoogleTagManager } from '@next/third-parties/google';
 
 config.autoAddCss = false;
@@ -112,6 +113,7 @@ const RootLayout: FC<Props> = async ({ children }) => {
               {/* Modals */}
               <ModalWrapper />
               <AuthModal />
+              <AuthErrorHandler />
               <AxiomWebVitals />
             </NuqsAdapter>
           </body>

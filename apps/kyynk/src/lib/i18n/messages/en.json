@@ -26,7 +26,15 @@
     "field_required": "This field is required",
     "password_to_short": "Password is too short",
     "pseudo_invalid": "Username is invalid",
-    "password_confirmation_invalid": "Password confirmation does not match"
+    "password_confirmation_invalid": "Password confirmation does not match",
+    "invalidToken": "This link has expired or is invalid. Please try again.",
+    "expiredToken": "This link has expired. Please request a new one.",
+    "unauthorized": "You are not authorized to access this resource.",
+    "forbidden": "Access denied.",
+    "notFound": "The requested resource was not found.",
+    "rateLimited": "Too many requests. Please try again later.",
+    "serverError": "Something went wrong. Please try again later.",
+    "generic": "An error occurred. Please try again."
   },
   "genderTitle": "Gender",
   "bodyTypeTitle": "Body Type",
