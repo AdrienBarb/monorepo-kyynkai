@@ -6,6 +6,7 @@ import { getCookie } from 'cookies-next/server';
 import Footer from '@/components/layout/Footer';
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
 import LoginButton from '@/components/layout/LoginButton';
+import { UserDropdown } from '@/components/layout/UserDropdown';
 import { auth } from '@/lib/better-auth/auth';
 
 interface Props {
@@ -31,7 +32,7 @@ const AppLayout: FC<Props> = async ({ children }) => {
           <SidebarTrigger />
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
-            {!isLoggedIn && <LoginButton />}
+            {isLoggedIn ? <UserDropdown /> : <LoginButton />}
           </div>
         </header>
         <main className="min-h-screen">{children}</main>

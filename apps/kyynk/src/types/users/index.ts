@@ -1,34 +1,6 @@
 import { User, UserSettings } from '@prisma/client';
 
-export type LoggedUserType = Pick<
-  User,
-  | 'id'
-  | 'pseudo'
-  | 'slug'
-  | 'userType'
-  | 'description'
-  | 'profileImageId'
-  | 'isArchived'
-  | 'age'
-  | 'gender'
-  | 'bodyType'
-  | 'hairColor'
-  | 'country'
-  | 'languages'
-  | 'tags'
-  | 'preferences'
-  | 'creditsAmount'
-  | 'isEmailVerified'
-  | 'identityVerificationStatus'
-  | 'nudesCount'
-  | 'contentProviderPolicyAccepted'
-  | 'lastSeenAt'
-> & {
-  settings: Pick<
-    UserSettings,
-    'fiatMessage' | 'creditMessage' | 'bankAccountName' | 'iban'
-  >;
-};
+export type LoggedUserType = Pick<User, 'id' | 'name'>;
 
 export type FetchedUserType = Pick<
   User,

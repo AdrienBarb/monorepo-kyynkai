@@ -5,11 +5,9 @@ import { getCurrentUser } from '@/services/users/getCurrentUser';
 import { updateUser } from '@/services/users/updateUser';
 import { NextResponse, NextRequest } from 'next/server';
 import { updateUserSchema } from '@/schemas/users/updateUserSchema';
-import { isBefore, subMinutes } from 'date-fns';
-import { prisma } from '@/lib/db/client';
 import { sendPostHogEvent } from '@/utils/tracking/sendPostHogEvent';
-import { UserType } from '@prisma/client';
 import { UTMValues } from '@/utils/tracking/getUTMFromLocalStorage';
+import { auth } from '@/lib/better-auth/auth';
 
 export const PUT = strictlyAuth(
   async (req: NextRequest): Promise<NextResponse> => {
@@ -58,8 +56,11 @@ export const PUT = strictlyAuth(
 export const GET = strictlyAuth(
   async (req: NextRequest): Promise<NextResponse> => {
     try {
-      const { auth } = req;
-      const userId = auth?.user.id;
+      const session = await auth.api.getSession({
+        headers: req.headers,
+      });
+
+      const userId = session?.user.id;
 
       if (!userId) {
         return NextResponse.json(
@@ -75,18 +76,6 @@ export const GET = strictlyAuth(
           { error: errorMessages.USER_NOT_FOUND },
           { status: 404 },
         );
-      }
-
-      const now = new Date();
-      const threshold = subMinutes(now, 2);
-
-      if (!user.lastSeenAt || isBefore(user.lastSeenAt, threshold)) {
-        await prisma.user.update({
-          where: { id: userId },
-          data: { lastSeenAt: now },
-        });
-
-        user.lastSeenAt = now;
       }
 
       return NextResponse.json(user, { status: 200 });
