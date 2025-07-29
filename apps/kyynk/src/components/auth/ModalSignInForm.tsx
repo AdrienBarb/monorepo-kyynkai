@@ -4,10 +4,9 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { useTranslations } from 'next-intl';
-import toast from 'react-hot-toast';
-import { Button } from '@/components/ui/Button';
 import {
   Form,
   FormControl,
@@ -18,19 +17,23 @@ import {
 } from '@/components/ui/Form';
 import { authClient } from '@/lib/better-auth/auth-client';
 
-interface ModalSignUpFormProps {
-  onSuccess?: () => void;
+interface ModalSignInFormProps {
+  onSuccess?: (email: string) => void;
+  onError?: (errorMessage: string) => void;
 }
 
-const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({ onSuccess }) => {
-  const t = useTranslations();
+const ModalSignInForm: React.FC<ModalSignInFormProps> = ({
+  onSuccess,
+  onError,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
+  const t = useTranslations();
 
   const formSchema = z.object({
     email: z
       .string()
-      .min(1, t('error.field_required'))
-      .email(t('error.field_not_valid')),
+      .email(t('error.field_not_valid'))
+      .min(1, t('error.field_required')),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -52,10 +55,12 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({ onSuccess }) => {
       },
       {
         onSuccess: () => {
-          onSuccess?.();
+          onSuccess?.(values.email);
         },
         onError: (ctx) => {
-          toast.error(ctx.error.message);
+          const errorMessage =
+            ctx.error.message || 'An error occurred. Please try again.';
+          onError?.(errorMessage);
         },
       },
     );
@@ -86,11 +91,11 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({ onSuccess }) => {
           isLoading={isLoading}
           disabled={isLoading}
         >
-          {t('signUp')}
+          {t('signIn')}
         </Button>
       </form>
     </Form>
   );
 };
 
-export default ModalSignUpForm;
+export default ModalSignInForm;
