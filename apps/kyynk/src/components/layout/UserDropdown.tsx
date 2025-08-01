@@ -1,20 +1,11 @@
 'use client';
 
-import {
-  BadgeCheck,
-  ChevronsUpDown,
-  Coins,
-  HelpCircle,
-  LogOut,
-  User,
-} from 'lucide-react';
-
+import { LogOut } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -23,13 +14,11 @@ import {
 import { useUser } from '@/hooks/users/useUser';
 import { formatCredits } from '@/utils/prices/formatCredits';
 import { useTranslations } from 'next-intl';
-import { useGlobalModalStore } from '@/stores/GlobalModalStore';
 import { signOut } from '@/lib/better-auth/auth-client';
 import { useRouter } from 'next/navigation';
 
 export const UserDropdown: React.FC = () => {
   const { user } = useUser();
-  const { openModal } = useGlobalModalStore();
   const t = useTranslations();
   const router = useRouter();
 
@@ -46,13 +35,8 @@ export const UserDropdown: React.FC = () => {
   const UserDetails = () => {
     return (
       <div className="flex items-center gap-2">
-        <Avatar
-          size={32}
-          imageId={user?.profileImageId || null}
-          pseudo={user?.pseudo || ''}
-        />
+        <Avatar size={32} />
         <div className="grid flex-1 text-left text-sm leading-tight">
-          <span className="truncate font-semibold">{user?.name}</span>
           <span className="truncate text-xs">
             {formatCredits(user?.creditsAmount || 0)} credits
           </span>
@@ -64,11 +48,7 @@ export const UserDropdown: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="cursor-pointer">
-        <Avatar
-          size={32}
-          imageId={user?.profileImageId || null}
-          pseudo={user?.name || ''}
-        />
+        <Avatar size={38} />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-md"
@@ -81,17 +61,6 @@ export const UserDropdown: React.FC = () => {
             <UserDetails />
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem
-            onClick={() => {
-              openModal('payment');
-            }}
-          >
-            <Coins />
-            {t('navUserBuyCredits')}
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout}>
           <LogOut />

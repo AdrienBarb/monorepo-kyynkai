@@ -9,50 +9,6 @@ import { sendPostHogEvent } from '@/utils/tracking/sendPostHogEvent';
 import { UTMValues } from '@/utils/tracking/getUTMFromLocalStorage';
 import { auth } from '@/lib/better-auth/auth';
 
-export const PUT = strictlyAuth(
-  async (req: NextRequest): Promise<NextResponse> => {
-    try {
-      const { auth } = req;
-      const userId = auth?.user.id;
-
-      const currentUser = await getCurrentUser({ userId: userId! });
-
-      if (!currentUser) {
-        return NextResponse.json(
-          { error: errorMessages.USER_NOT_FOUND },
-          { status: 400 },
-        );
-      }
-
-      const body = await req.json();
-      const validatedBody = updateUserSchema.parse(body);
-
-      const user = await updateUser({ userId: userId!, body: validatedBody });
-
-      // Send event to posthog when user choose his type
-      if (validatedBody.userType) {
-        const utmTracking = currentUser.utmTracking as UTMValues | null;
-
-        sendPostHogEvent({
-          distinctId: userId!,
-          event:
-            validatedBody.userType === UserType.creator
-              ? 'user_become_creator'
-              : 'user_become_buyer',
-          properties: {
-            ...(utmTracking && utmTracking),
-            $process_person_profile: false,
-          },
-        });
-      }
-
-      return NextResponse.json(user, { status: 200 });
-    } catch (error) {
-      return errorHandler(error);
-    }
-  },
-);
-
 export const GET = strictlyAuth(
   async (req: NextRequest): Promise<NextResponse> => {
     try {

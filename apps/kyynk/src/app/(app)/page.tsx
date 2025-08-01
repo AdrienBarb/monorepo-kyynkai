@@ -1,7 +1,7 @@
 import UsersList from '@/components/UsersList';
 import React from 'react';
-import { getUsers } from '@/services/users/getUsers';
-import { User } from '@prisma/client';
+import { getAiGirlfriends } from '@/services/users/getAiGirlfriends';
+import { AIGirlfriend } from '@prisma/client';
 import PaddingContainer from '@/components/layout/PaddingContainer';
 import Landing from '@/components/home/Landing';
 import AppFAQ from '@/components/home/AppFAQ';
@@ -27,12 +27,12 @@ export async function generateMetadata({
 }
 
 const HomePage = async () => {
-  // const initialUsersDatas = (await getUsers()) as User[];
+  const initialAiGirlfriends = (await getAiGirlfriends()) as AIGirlfriend[];
 
   return (
     <PaddingContainer>
       <Landing />
-      {/* <UsersList initialUsers={initialUsersDatas} /> */}
+      <UsersList initialAiGirlfriends={initialAiGirlfriends} />
       <AppFAQ />
     </PaddingContainer>
   );

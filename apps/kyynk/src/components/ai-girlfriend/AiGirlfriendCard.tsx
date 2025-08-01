@@ -1,14 +1,14 @@
 import React from 'react';
 import Image from 'next/image';
 import imgixLoader from '@/lib/imgix/loader';
-import { User } from '@prisma/client';
+import { AIGirlfriend } from '@prisma/client';
 import Link from 'next/link';
 
 interface Props {
-  user: User;
+  user: AIGirlfriend;
 }
 
-const UserCard = ({ user }: Props) => {
+const AiGirlfriendCard = ({ user }: Props) => {
   const imageUrl = imgixLoader({
     src: user.profileImageId || '',
     width: 400,
@@ -18,7 +18,7 @@ const UserCard = ({ user }: Props) => {
   return (
     <Link href={`/${user.slug}`} prefetch={true}>
       <div className="flex flex-col">
-        <div className="relative aspect-square w-full  overflow-hidden rounded-md">
+        <div className="relative aspect-[3/4] w-full  overflow-hidden rounded-md">
           <Image
             src={imageUrl}
             alt={user.pseudo}
@@ -32,4 +32,4 @@ const UserCard = ({ user }: Props) => {
   );
 };
 
-export default UserCard;
+export default AiGirlfriendCard;

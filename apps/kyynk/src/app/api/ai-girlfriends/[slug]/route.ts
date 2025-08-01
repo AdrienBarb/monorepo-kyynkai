@@ -1,6 +1,6 @@
 import { errorMessages } from '@/lib/constants/errorMessage';
 import { errorHandler } from '@/utils/errors/errorHandler';
-import { getUserBySlug } from '@/services/users/getUserBySlug';
+import { getAiGirlfriendBySlug } from '@/services/users/getAiGirlfriendBySlug';
 import { NextResponse } from 'next/server';
 
 export const GET = async (
@@ -17,16 +17,16 @@ export const GET = async (
       );
     }
 
-    const user = await getUserBySlug({ slug });
+    const aiGirlfriend = await getAiGirlfriendBySlug({ slug });
 
-    if (!user) {
+    if (!aiGirlfriend) {
       return NextResponse.json(
         { error: errorMessages.MISSING_FIELDS },
         { status: 404 },
       );
     }
 
-    return NextResponse.json(user, { status: 200 });
+    return NextResponse.json(aiGirlfriend, { status: 200 });
   } catch (error) {
     return errorHandler(error);
   }

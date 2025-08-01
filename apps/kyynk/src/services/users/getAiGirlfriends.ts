@@ -5,17 +5,14 @@ interface GetUsersOptions {
   offset?: number;
 }
 
-export const getUsers = async ({ limit, offset = 0 }: GetUsersOptions = {}) => {
+export const getAiGirlfriends = async ({
+  limit,
+  offset = 0,
+}: GetUsersOptions = {}) => {
   try {
-    const users = await prisma.user.findMany({
+    const users = await prisma.aIGirlfriend.findMany({
       where: {
-        isArchived: false,
-        userType: 'creator',
-        isEmailVerified: true,
-        identityVerificationStatus: 'verified',
-        profileImageId: {
-          not: null,
-        },
+        isActive: true,
       },
       orderBy: {
         createdAt: 'desc',

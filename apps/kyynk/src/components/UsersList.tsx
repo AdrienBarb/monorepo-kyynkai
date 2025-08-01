@@ -2,22 +2,22 @@
 
 import React, { FC } from 'react';
 import useApi from '@/hooks/requests/useApi';
-import { User } from '@prisma/client';
+import { AIGirlfriend } from '@prisma/client';
 import { cn } from '@/utils/tailwind/cn';
-import UserCard from './users/UserCard';
+import AiGirlfriendCard from './ai-girlfriend/AiGirlfriendCard';
 
 interface Props {
-  initialUsers: User[];
+  initialAiGirlfriends: AIGirlfriend[];
 }
 
-const UsersList: FC<Props> = ({ initialUsers }) => {
+const UsersList: FC<Props> = ({ initialAiGirlfriends }) => {
   const { useGet } = useApi();
 
   const { data: users } = useGet(
-    '/api/users',
+    '/api/ai-girlfriends',
     {},
     {
-      initialData: initialUsers,
+      initialData: initialAiGirlfriends,
       refetchOnWindowFocus: true,
     },
   );
@@ -29,8 +29,8 @@ const UsersList: FC<Props> = ({ initialUsers }) => {
         'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-screen-lg',
       )}
     >
-      {users.map((user: User) => (
-        <UserCard key={user.id} user={user} />
+      {users.map((user: AIGirlfriend) => (
+        <AiGirlfriendCard key={user.id} user={user} />
       ))}
     </div>
   );

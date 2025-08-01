@@ -5,9 +5,9 @@ import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import { cn } from '@/utils/tailwind/cn';
 import Image from 'next/image';
 import imgixLoader from '@/lib/imgix/loader';
+import { User, UserRound } from 'lucide-react';
 
 interface AvatarProps {
-  pseudo?: string;
   imageId?: string | null;
   size?: number;
 }
@@ -15,7 +15,7 @@ interface AvatarProps {
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Root> & AvatarProps
->(({ className, pseudo, imageId, size = 64, ...props }, ref) => (
+>(({ className, imageId, size = 64, ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(
@@ -26,9 +26,9 @@ const Avatar = React.forwardRef<
     {...props}
   >
     {imageId ? (
-      <AvatarImage alt={pseudo} imageId={imageId} size={size} />
+      <AvatarImage alt={imageId} imageId={imageId} size={size} />
     ) : (
-      <AvatarFallback pseudo={pseudo} size={size} />
+      <AvatarFallback size={size} />
     )}
   </AvatarPrimitive.Root>
 ));
@@ -66,21 +66,20 @@ AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 const AvatarFallback = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Fallback>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Fallback> & {
-    pseudo?: string;
     size?: number;
   }
->(({ className, pseudo, size = 64, ...props }, ref) => {
+>(({ className, size = 64, ...props }, ref) => {
   return (
     <AvatarPrimitive.Fallback
       ref={ref}
       className={cn(
-        'flex items-center justify-center rounded-full bg-primary text-white font-bold',
+        'flex items-center justify-center rounded-full bg-custom-black text-white font-bold',
         className,
       )}
       style={{ width: size, height: size, fontSize: size / 2 }}
       {...props}
     >
-      {pseudo?.charAt(0).toUpperCase() || '?'}
+      <UserRound />
     </AvatarPrimitive.Fallback>
   );
 });

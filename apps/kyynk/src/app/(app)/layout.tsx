@@ -22,7 +22,7 @@ const AppLayout: FC<Props> = async ({ children }) => {
         <header className="sticky top-0 z-10 p-4 flex justify-between align-center bg-secondary-dark border-b border-custom-black/20 h-[68px]">
           <SidebarTrigger />
           <div className="flex items-center gap-2">
-            <LanguageSwitcher />
+            {/* <LanguageSwitcher /> */}
             <LoginWrapper />
           </div>
         </header>

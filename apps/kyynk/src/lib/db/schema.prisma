@@ -65,3 +65,15 @@ model Verification {
 
   @@map("verification")
 }
+
+model AIGirlfriend {
+  id             String   @id @default(cuid())
+  pseudo         String   @unique
+  slug           String   @unique
+  profileImageId String
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("ai_girlfriend")
+}
