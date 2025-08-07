@@ -4,7 +4,6 @@ import { getAiGirlfriends } from '@/services/users/getAiGirlfriends';
 import { AIGirlfriend } from '@prisma/client';
 import PaddingContainer from '@/components/layout/PaddingContainer';
 import Landing from '@/components/home/Landing';
-import AppFAQ from '@/components/home/AppFAQ';
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { genPageMetadata } from '@/app/seo';
@@ -33,7 +32,6 @@ const HomePage = async () => {
     <PaddingContainer>
       <Landing />
       <UsersList initialAiGirlfriends={initialAiGirlfriends} />
-      <AppFAQ />
     </PaddingContainer>
   );
 };

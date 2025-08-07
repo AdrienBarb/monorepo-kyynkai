@@ -8,6 +8,7 @@ import PaddingContainer from '@/components/layout/PaddingContainer';
 import imgixLoader from '@/lib/imgix/loader';
 import ProfileConversationInput from '@/components/conversations/ProfileConversationInput';
 import { AiGirlfriendType } from '@/types/ai-girlfriends';
+import ConversationHeader from '@/components/conversations/ConversationHeader';
 
 export type PageProps = {
   params: Promise<{ slug: string }>;
@@ -45,11 +46,10 @@ const UserPage = async ({ params }: PageProps) => {
   }
 
   return (
-    <PageContainer>
-      <PaddingContainer>
-        <ProfileConversationInput user={aiGirlfriend} />
-      </PaddingContainer>
-    </PageContainer>
+    <div style={{ height: 'calc(100dvh - 68px)' }}>
+      <ConversationHeader aiGirlfriend={aiGirlfriend} />
+      <ProfileConversationInput />
+    </div>
   );
 };
 

@@ -36,11 +36,6 @@ export const UserDropdown: React.FC = () => {
     return (
       <div className="flex items-center gap-2">
         <Avatar size={32} />
-        <div className="grid flex-1 text-left text-sm leading-tight">
-          <span className="truncate text-xs">
-            {formatCredits(user?.creditsAmount || 0)} credits
-          </span>
-        </div>
       </div>
     );
   };

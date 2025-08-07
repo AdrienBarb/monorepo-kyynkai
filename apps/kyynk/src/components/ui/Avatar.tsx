@@ -73,13 +73,13 @@ const AvatarFallback = React.forwardRef<
     <AvatarPrimitive.Fallback
       ref={ref}
       className={cn(
-        'flex items-center justify-center rounded-full bg-custom-black text-white font-bold',
+        'flex items-center justify-center rounded-full bg-primary text-white font-bold',
         className,
       )}
       style={{ width: size, height: size, fontSize: size / 2 }}
       {...props}
     >
-      <UserRound />
+      <UserRound strokeWidth={1} />
     </AvatarPrimitive.Fallback>
   );
 });

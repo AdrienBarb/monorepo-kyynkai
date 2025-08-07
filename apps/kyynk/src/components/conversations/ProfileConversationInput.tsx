@@ -1,51 +1,54 @@
 'use client';
 
 import ConversationInput from './ConversationInput';
-import { FetchedUserType } from '@/types/users';
 import { useUser } from '@/hooks/users/useUser';
-import { isUserVerified } from '@/utils/users/isUserVerified';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useConversations } from '@/hooks/conversations/useConversations';
-import { useCreateConversation } from '@/hooks/conversations/useCreateConversation';
+import useApi from '@/hooks/requests/useApi';
+import { useAuthModal } from '@/utils/auth/openAuthModal';
+import MessageList from './MessageList';
+import { useChatScroll } from '@/lib/hooks/useChatScroll';
+import { useFetchMessages } from '@/hooks/messages/useFetchMessages';
+import { MessageType } from '@/types/messages';
 
-const ProfileConversationInput = ({ user }: { user: FetchedUserType }) => {
+const ProfileConversationInput = () => {
   const { slug } = useParams<{ slug: string }>();
   const router = useRouter();
-  const { user: loggedUser, refetch: refetchUser } = useUser();
+  const { user: loggedUser } = useUser();
+  const { openSignIn } = useAuthModal();
 
   const { refetch: refetchConversations } = useConversations();
+  const { usePost } = useApi();
+  const { messages, addMessageToCache } = useFetchMessages();
 
-  const { handleSendMessageAndCreateConversation, isPending } =
-    useCreateConversation({
-      user: loggedUser,
-      otherUser: user,
-      onSuccess: (newConversation) => {
-        refetchConversations();
-        refetchUser();
-        router.push(`/account/conversations/${newConversation.id}`);
-      },
-    });
+  const ref = useChatScroll(messages);
+
+  const { mutate: sendMessage, isPending } = usePost('/api/messages', {
+    onSuccess: (createdMessage: MessageType) => {
+      addMessageToCache(createdMessage);
+      refetchConversations();
+    },
+  });
 
   const handleSendMessage = ({ message }: { message: string }) => {
-    handleSendMessageAndCreateConversation({ message, slug: slug as string });
+    if (!loggedUser) {
+      openSignIn();
+      return;
+    }
+
+    sendMessage({ message, slug: slug as string });
   };
 
-  if (loggedUser?.slug !== slug && !isUserVerified({ user })) {
-    return null;
-  }
-
-  if (loggedUser?.slug === slug) {
-    return null;
-  }
-
   return (
-    <div className="w-full mx-auto mt-8 mb-16">
-      <ConversationInput
-        creditMessage={user.settings.creditMessage}
-        onSendMessage={handleSendMessage}
-        isCreationMessageLoading={isPending}
-      />
+    <div className="px-2">
+      <MessageList messages={messages} scrollRef={ref} />
+      <div className="sticky bottom-0 h-36">
+        <ConversationInput
+          onSendMessage={handleSendMessage}
+          isCreationMessageLoading={isPending}
+        />
+      </div>
     </div>
   );
 };

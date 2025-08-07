@@ -25,8 +25,12 @@ const AiGirlfriendCard = ({ user }: Props) => {
             layout="fill"
             objectFit="cover"
           />
+          <div className="absolute bottom-0 left-0 right-0 p-2 ">
+            <span className="text-base font-semibold font-karla text-white">
+              {user.pseudo}
+            </span>
+          </div>
         </div>
-        <span className="text-base font-light font-karla">{user.pseudo}</span>
       </div>
     </Link>
   );

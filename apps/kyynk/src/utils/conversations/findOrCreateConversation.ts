@@ -7,22 +7,19 @@ type TransactionClient = Omit<
 
 interface FindOrCreateConversationParams {
   userId: string;
-  recipientId: string;
+  aiGirlfriendId: string;
   tx: TransactionClient;
 }
 
 export const findOrCreateConversation = async ({
   userId,
-  recipientId,
+  aiGirlfriendId,
   tx,
 }: FindOrCreateConversationParams) => {
   const existingConversation = await tx.conversation.findFirst({
     where: {
-      participants: {
-        every: {
-          id: { in: [userId, recipientId] },
-        },
-      },
+      userId,
+      aiGirlfriendId,
     },
   });
 
@@ -32,9 +29,8 @@ export const findOrCreateConversation = async ({
 
   return await tx.conversation.create({
     data: {
-      participants: {
-        connect: [{ id: userId }, { id: recipientId }],
-      },
+      userId,
+      aiGirlfriendId,
     },
   });
 };

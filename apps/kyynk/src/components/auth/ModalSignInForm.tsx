@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/Form';
 import { authClient } from '@/lib/better-auth/auth-client';
+import { usePathname } from 'next/navigation';
 
 interface ModalSignInFormProps {
   onSuccess?: (email: string) => void;
@@ -28,6 +29,7 @@ const ModalSignInForm: React.FC<ModalSignInFormProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const t = useTranslations();
+  const pathname = usePathname();
 
   const formSchema = z.object({
     email: z
@@ -49,9 +51,9 @@ const ModalSignInForm: React.FC<ModalSignInFormProps> = ({
     await authClient.signIn.magicLink(
       {
         email: values.email.toLowerCase(),
-        callbackURL: '/',
-        newUserCallbackURL: '/',
-        errorCallbackURL: '/',
+        callbackURL: pathname,
+        newUserCallbackURL: pathname,
+        errorCallbackURL: pathname,
       },
       {
         onSuccess: () => {
