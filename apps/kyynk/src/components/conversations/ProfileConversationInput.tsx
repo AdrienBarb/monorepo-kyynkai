@@ -6,9 +6,9 @@ import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useConversations } from '@/hooks/conversations/useConversations';
 import useApi from '@/hooks/requests/useApi';
-import { useAuthModal } from '@/utils/auth/openAuthModal';
+import { useAuthModal } from '@/hooks/auth/openAuthModal';
 import MessageList from './MessageList';
-import { useChatScroll } from '@/lib/hooks/useChatScroll';
+import { useChatScroll } from '@/hooks/messages/useChatScroll';
 import { useFetchMessages } from '@/hooks/messages/useFetchMessages';
 import { MessageType } from '@/types/messages';
 

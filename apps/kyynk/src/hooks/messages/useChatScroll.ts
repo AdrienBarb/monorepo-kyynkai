@@ -1,7 +1,7 @@
-import { Message } from "@/types/models/Message";
-import { useEffect, useRef } from "react";
+import { MessageType } from '@/types/messages';
+import { useEffect, useRef } from 'react';
 
-export const useChatScroll = (dep: Message[]) => {
+export const useChatScroll = (dep: MessageType[]) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

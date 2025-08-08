@@ -13,7 +13,7 @@ import ModalSignInForm from './ModalSignInForm';
 import ModalSignUpForm from './ModalSignUpForm';
 import AuthAlert from './AuthAlert';
 import { useRouter } from 'next/navigation';
-import { useAuthModal } from '@/utils/auth/openAuthModal';
+import { useAuthModal } from '@/hooks/auth/openAuthModal';
 
 interface AlertState {
   type: 'success' | 'error';

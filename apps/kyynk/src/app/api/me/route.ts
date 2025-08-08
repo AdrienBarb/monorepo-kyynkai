@@ -2,11 +2,7 @@ import { errorMessages } from '@/lib/constants/errorMessage';
 import { errorHandler } from '@/utils/errors/errorHandler';
 import { strictlyAuth } from '@/hoc/strictlyAuth';
 import { getCurrentUser } from '@/services/users/getCurrentUser';
-import { updateUser } from '@/services/users/updateUser';
 import { NextResponse, NextRequest } from 'next/server';
-import { updateUserSchema } from '@/schemas/users/updateUserSchema';
-import { sendPostHogEvent } from '@/utils/tracking/sendPostHogEvent';
-import { UTMValues } from '@/utils/tracking/getUTMFromLocalStorage';
 import { auth } from '@/lib/better-auth/auth';
 
 export const GET = strictlyAuth(
