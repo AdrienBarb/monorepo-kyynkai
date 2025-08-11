@@ -5,6 +5,11 @@ import Maintenance from './Maintenance';
 import { useUserStore } from '@/stores/UserStore';
 import { useQueryState } from 'nuqs';
 import { useUser } from '@/hooks/users/useUser';
+import {
+  cleanUTMFromLocalStorage,
+  getUTMFromLocalStorage,
+} from '@/utils/tracking/getUTMFromLocalStorage';
+import useApi from '@/hooks/requests/useApi';
 
 interface Props {
   children: ReactNode;
@@ -12,8 +17,15 @@ interface Props {
 
 const GlobalConfig: FC<Props> = ({ children }) => {
   const [shouldAllowAccess, setShouldAllowAccess] = useState(true);
-  const { refetch } = useUser();
+  const { refetch, user } = useUser();
   const [shouldRefetch, setShouldRefetch] = useQueryState('shouldRefetch');
+  const { usePut } = useApi();
+
+  const { mutate: updateUser } = usePut('/api/me', {
+    onSuccess: () => {
+      cleanUTMFromLocalStorage();
+    },
+  });
 
   useEffect(() => {
     if (shouldRefetch) {
@@ -22,20 +34,15 @@ const GlobalConfig: FC<Props> = ({ children }) => {
     }
   }, [shouldRefetch, refetch]);
 
-  // TODO: DECOMMENT
-  // useEffect(() => {
-  //   const getConfig = async () => {
-  //     try {
-  //       const config = await configService.checkIsMaintenance();
+  useEffect(() => {
+    if (user) {
+      const utmValues = getUTMFromLocalStorage();
 
-  //       setShouldAllowAccess(config);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   getConfig();
-  // }, []);
+      if (utmValues) {
+        updateUser({ utmTracking: utmValues });
+      }
+    }
+  }, [user]);
 
   if (!shouldAllowAccess) {
     return <Maintenance />;

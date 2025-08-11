@@ -34,3 +34,9 @@ export const getUTMFromLocalStorage = (): UTMValues | null => {
     return null;
   }
 };
+
+export const cleanUTMFromLocalStorage = () => {
+  if (typeof window === 'undefined') return;
+
+  localStorage.removeItem(KYYNK_UTM_KEY);
+};

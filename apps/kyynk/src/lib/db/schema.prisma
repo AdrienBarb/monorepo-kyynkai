@@ -9,9 +9,12 @@ generator client {
 }
 
 model User {
-  id            String         @id
+  id            String  @id
+  name          String?
   email         String
   emailVerified Boolean
+  utmTracking   Json?
+
   createdAt     DateTime
   updatedAt     DateTime
   sessions      Session[]
