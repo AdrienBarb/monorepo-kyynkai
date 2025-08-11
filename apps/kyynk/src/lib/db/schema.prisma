@@ -68,14 +68,18 @@ model Verification {
 }
 
 model AIGirlfriend {
-  id             String         @id @default(cuid())
-  pseudo         String         @unique
-  slug           String         @unique
-  profileImageId String
-  isActive       Boolean        @default(true)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  conversations  Conversation[]
+  id              String         @id @default(cuid())
+  pseudo          String         @unique
+  slug            String         @unique
+  profileImageId  String
+  isActive        Boolean        @default(true)
+  hook            String?
+  chatOpeningLine String?
+  traits          String[]
+  archetype       String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  conversations   Conversation[]
 
   @@map("ai_girlfriend")
 }

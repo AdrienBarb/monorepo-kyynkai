@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 import bcrypt from 'bcryptjs';
-import { checkOrCreateSlug } from '@/utils/users/checkOrCreateSlug';
+import { checkOrCreateSlug } from '../../utils/users/checkOrCreateSlug.js';
 
 const prisma = new PrismaClient();
 
@@ -33,6 +33,10 @@ async function main() {
           pseudo: userData.pseudo,
           slug: await checkOrCreateSlug(userData.pseudo),
           profileImageId: userData.profileImageUrl,
+          hook: userData.hook,
+          chatOpeningLine: userData.chatOpeningLine,
+          traits: userData.traits,
+          archetype: userData.archetype,
         },
       });
     }

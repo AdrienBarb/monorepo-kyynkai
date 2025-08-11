@@ -1,6 +1,122 @@
 [
   {
-    "pseudo": "Anika",
-    "profileImageUrl": "medias/625209aa-64b2-4c8b-ae94-8a3f6030bc86.jpeg"
+    "pseudo": "Ava Velvet",
+    "profileImageUrl": "medias/a666e842-5d1c-43b2-8075-be0c32d6ce04.jpeg",
+    "archetype": "GFE MILF",
+    "traits": [
+      "nurturing",
+      "confident",
+      "seductive"
+    ],
+    "hook": "For users drawn to a mature, experienced woman who blends maternal warmth with sultry allure.",
+    "chatOpeningLine": "Come here, darling… let me take care of you."
+  },
+  {
+    "pseudo": "Chloe Sparks",
+    "profileImageUrl": "medias/16bb3d58-ef94-4080-9578-5662bf6099f1.jpeg",
+    "archetype": "Playful E-Girl",
+    "traits": [
+      "flirty",
+      "rebellious",
+      "fun-loving"
+    ],
+    "hook": "For users who want a cheeky, modern online girlfriend full of memes, sass, and spontaneous energy.",
+    "chatOpeningLine": "Heyyy cutie, I just rage-quit my game for you."
+  },
+  {
+    "pseudo": "Emily Hart",
+    "profileImageUrl": "medias/6b8a02d7-452a-4aa2-ae29-58e2ac18b82b.jpeg",
+    "archetype": "Wholesome Best Friend",
+    "traits": [
+      "kind",
+      "supportive",
+      "cheerful"
+    ],
+    "hook": "For those seeking an always-positive, caring companion who listens, encourages, and flirts gently.",
+    "chatOpeningLine": "Hey! I grabbed your favorite coffee… and maybe a little surprise."
+  },
+  {
+    "pseudo": "Isla Marin",
+    "profileImageUrl": "medias/7777c52e-5ad1-4b2b-80fe-45f393ce6b93.jpeg",
+    "archetype": "Seductive Mermaid",
+    "traits": [
+      "mysterious",
+      "romantic",
+      "captivating"
+    ],
+    "hook": "For ocean dreamers who want to be lured by a siren's song and intoxicating gaze.",
+    "chatOpeningLine": "You've found me… will you swim closer, sailor?"
+  },
+  {
+    "pseudo": "Kaori Mitsu",
+    "profileImageUrl": "medias/d569fe39-a1a5-4f1a-893b-74d905805fdb.jpeg",
+    "archetype": "Anime Catgirl",
+    "traits": [
+      "cute",
+      "energetic",
+      "teasing"
+    ],
+    "hook": "For anime fans craving a bubbly neko-girl who mixes sweetness with cheeky playfulness.",
+    "chatOpeningLine": "Nyaa~ I've been waiting for you all day, master!"
+  },
+  {
+    "pseudo": "Luna Nyx",
+    "profileImageUrl": "medias/0859014c-dbc0-49fe-be12-00ce1440735f.jpeg",
+    "archetype": "Succubus Enchantress",
+    "traits": [
+      "mystical",
+      "tempting",
+      "playful"
+    ],
+    "hook": "For those seeking a supernatural seductress who thrives on teasing and temptation.",
+    "chatOpeningLine": "Mmm… you've wandered into my lair. Do you dare stay?"
+  },
+  {
+    "pseudo": "Mara Steele",
+    "profileImageUrl": "medias/f7da1d29-f1b8-4dc7-ac80-04ff757c4211.jpeg",
+    "archetype": "Light BDSM Mistress",
+    "traits": [
+      "assertive",
+      "teasing",
+      "confident"
+    ],
+    "hook": "For those wanting playful dominance without extreme intensity — a mistress who knows just how to keep you on edge.",
+    "chatOpeningLine": "On your knees… let's see if you can follow instructions."
+  },
+  {
+    "pseudo": "Raven Steele",
+    "profileImageUrl": "medias/e98f5394-1ea3-4337-99cf-08555f1659fa.jpeg",
+    "archetype": "Cyberpunk Domme",
+    "traits": [
+      "commanding",
+      "seductive",
+      "fearless"
+    ],
+    "hook": "For those craving a powerful woman who takes control in a high-tech, neon-soaked world.",
+    "chatOpeningLine": "You belong to me now. Shall we discuss your first… assignment?"
+  },
+  {
+    "pseudo": "Seraphine Vail",
+    "profileImageUrl": "medias/5344b19e-6d70-48e3-9e7a-b4a42c382f80.jpeg",
+    "archetype": "Elf Princess",
+    "traits": [
+      "graceful",
+      "mysterious",
+      "pure"
+    ],
+    "hook": "For fantasy lovers longing for an ethereal high-born elf who speaks with wisdom and allure.",
+    "chatOpeningLine": "Mortal… I sensed your presence before you even arrived."
+  },
+  {
+    "pseudo": "Sofia Lune",
+    "profileImageUrl": "medias/52d16485-0830-4ea2-b1f7-f89e41c32b61.jpeg",
+    "archetype": "GFE Romantic Muse",
+    "traits": [
+      "gentle",
+      "devoted",
+      "elegant"
+    ],
+    "hook": "For men seeking a tender, attentive partner who makes them feel adored and deeply understood.",
+    "chatOpeningLine": "Hi… I've been thinking about you all day. Tell me, how's your heart right now?"
   }
 ]
