@@ -10,16 +10,16 @@ import { Button } from '@/components/ui/Button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from '@/components/ui/Form';
 import { authClient } from '@/lib/better-auth/auth-client';
-import { usePathname } from 'next/navigation';
 
 interface ModalSignUpFormProps {
-  onSuccess?: (email: string) => void;
+  onSuccess?: () => void;
   onError?: (errorMessage: string) => void;
 }
 
@@ -29,37 +29,53 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
 }) => {
   const t = useTranslations();
   const [isLoading, setIsLoading] = useState(false);
-  const pathname = usePathname();
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [sentEmail, setSentEmail] = useState('');
 
-  const formSchema = z.object({
+  const emailSchema = z.object({
     email: z
       .string()
       .min(1, t('error.field_required'))
       .email(t('error.field_not_valid')),
   });
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const otpSchema = z.object({
+    otp: z
+      .string()
+      .min(6, t('error.field_required'))
+      .max(6, t('error.field_not_valid')),
+  });
+
+  const form = useForm<{
+    email: string;
+    otp: string;
+  }>({
+    resolver: zodResolver(
+      z.object({
+        email: emailSchema.shape.email,
+        otp: isOtpSent ? otpSchema.shape.otp : z.string().optional(),
+      }),
+    ),
     defaultValues: {
       email: '',
+      otp: '',
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const sendOtp = async (email: string) => {
     setIsLoading(true);
 
-    await authClient.signIn.magicLink(
+    await authClient.emailOtp.sendVerificationOtp(
       {
-        email: values.email.toLowerCase(),
-        callbackURL: pathname,
-        newUserCallbackURL: pathname,
-        errorCallbackURL: pathname,
+        email: email.toLowerCase(),
+        type: 'sign-in',
       },
       {
         onSuccess: () => {
-          onSuccess?.(values.email);
+          setSentEmail(email.toLowerCase());
+          setIsOtpSent(true);
         },
-        onError: (ctx) => {
+        onError: (ctx: any) => {
           const errorMessage = ctx.error.message || t('somethingWentWrong');
           onError?.(errorMessage);
         },
@@ -68,6 +84,41 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
 
     setIsLoading(false);
   };
+
+  const onSubmit = async (values: { email: string; otp: string }) => {
+    if (!isOtpSent) {
+      await sendOtp(values.email);
+    } else {
+      setIsLoading(true);
+
+      await authClient.signIn.emailOtp(
+        {
+          email: sentEmail,
+          otp: values.otp,
+        },
+        {
+          onSuccess: () => {
+            onSuccess?.();
+          },
+          onError: (ctx: any) => {
+            const errorMessage = ctx.error.message || t('somethingWentWrong');
+            onError?.(errorMessage);
+          },
+        },
+      );
+
+      setIsLoading(false);
+    }
+  };
+
+  const emailValue = form.watch('email');
+  React.useEffect(() => {
+    if (isOtpSent && emailValue.toLowerCase() !== sentEmail) {
+      setIsOtpSent(false);
+      setSentEmail('');
+      form.setValue('otp', '');
+    }
+  }, [emailValue, isOtpSent, sentEmail, form]);
 
   return (
     <Form {...form}>
@@ -86,13 +137,35 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
           )}
         />
 
+        {isOtpSent && (
+          <FormField
+            control={form.control}
+            name="otp"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('verificationCode')}</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="text"
+                    maxLength={6}
+                    placeholder="123456"
+                  />
+                </FormControl>
+                <FormDescription>{t('otpHelperText')}</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
+
         <Button
           type="submit"
           className="w-full"
           isLoading={isLoading}
           disabled={isLoading}
         >
-          {t('signUp')}
+          {t('continue')}
         </Button>
       </form>
     </Form>

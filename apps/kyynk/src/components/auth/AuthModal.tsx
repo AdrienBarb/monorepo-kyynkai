@@ -14,6 +14,7 @@ import ModalSignUpForm from './ModalSignUpForm';
 import AuthAlert from './AuthAlert';
 import { useRouter } from 'next/navigation';
 import { useAuthModal } from '@/hooks/auth/openAuthModal';
+import toast from 'react-hot-toast';
 
 interface AlertState {
   type: 'success' | 'error';
@@ -31,11 +32,9 @@ const AuthModal: React.FC = () => {
     openSignUp,
   } = useAuthModal();
   const [isLogin, setIsLogin] = useState(false);
-  const [alert, setAlert] = useState<AlertState | null>(null);
-  const t = useTranslations();
-  const router = useRouter();
 
-  // Set initial mode based on URL parameter
+  const t = useTranslations();
+
   useEffect(() => {
     if (isSignInMode) {
       setIsLogin(true);
@@ -47,7 +46,6 @@ const AuthModal: React.FC = () => {
   const handleClose = () => {
     closeAuthModal();
     setIsLogin(true);
-    setAlert(null);
   };
 
   const toggleMode = () => {
@@ -58,26 +56,14 @@ const AuthModal: React.FC = () => {
     } else {
       openSignUp();
     }
-    setAlert(null);
   };
 
-  const handleAuthSuccess = (email: string) => {
-    setAlert({
-      type: 'success',
-      message: t('magicLinkEmailSent', { email }),
-      email,
-    });
+  const handleAuthSuccess = () => {
+    handleClose();
   };
 
   const handleAuthError = (errorMessage: string) => {
-    setAlert({
-      type: 'error',
-      message: errorMessage,
-    });
-  };
-
-  const handleChangeEmail = () => {
-    setAlert(null);
+    toast.error(errorMessage);
   };
 
   if (!isOpen) return null;
@@ -92,51 +78,41 @@ const AuthModal: React.FC = () => {
         </DialogHeader>
 
         <div className="space-y-6">
-          {alert ? (
-            <AuthAlert
-              type={alert.type}
-              message={alert.message}
-              onChangeEmail={handleChangeEmail}
+          {isLogin ? (
+            <ModalSignInForm
+              onSuccess={handleAuthSuccess}
+              onError={handleAuthError}
             />
           ) : (
-            <>
-              {isLogin ? (
-                <ModalSignInForm
-                  onSuccess={handleAuthSuccess}
-                  onError={handleAuthError}
-                />
-              ) : (
-                <ModalSignUpForm
-                  onSuccess={handleAuthSuccess}
-                  onError={handleAuthError}
-                />
-              )}
-
-              <div className="flex justify-center">
-                {isLogin ? (
-                  <span>
-                    {t('dontHaveAccount')}{' '}
-                    <span
-                      onClick={toggleMode}
-                      className="cursor-pointer text-primary"
-                    >
-                      {t('signUp')}
-                    </span>
-                  </span>
-                ) : (
-                  <span>
-                    {t('alreadyHaveAccount')}{' '}
-                    <span
-                      onClick={toggleMode}
-                      className="cursor-pointer text-primary"
-                    >
-                      {t('signIn')}
-                    </span>
-                  </span>
-                )}
-              </div>
-            </>
+            <ModalSignUpForm
+              onSuccess={handleAuthSuccess}
+              onError={handleAuthError}
+            />
           )}
+
+          <div className="flex justify-center">
+            {isLogin ? (
+              <span>
+                {t('dontHaveAccount')}{' '}
+                <span
+                  onClick={toggleMode}
+                  className="cursor-pointer text-primary"
+                >
+                  {t('signUp')}
+                </span>
+              </span>
+            ) : (
+              <span>
+                {t('alreadyHaveAccount')}{' '}
+                <span
+                  onClick={toggleMode}
+                  className="cursor-pointer text-primary"
+                >
+                  {t('signIn')}
+                </span>
+              </span>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

@@ -551,5 +551,7 @@
   "privateNudeSendDesc": "Ici, vous pouvez envoyer un nude privé à l'utilisateur.",
   "gallery": "Galerie",
   "galleryDesc": "Ici, vous pouvez gérer vos vidéos. Vous pouvez en ajouter, en supprimer et en sélectionner une à utiliser.",
-  "uploadNewVideo": "Uploader une nouvelle vidéo"
+  "uploadNewVideo": "Uploader une nouvelle vidéo",
+  "verificationCode": "Code de vérification",
+  "otpHelperText": "Nous vous avons envoyé un code par email"
 }

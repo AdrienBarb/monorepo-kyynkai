@@ -6,16 +6,17 @@ import { Textarea } from '@/components/ui/TextArea';
 import { cn } from '@/utils/tailwind/cn';
 import { Button } from '@/components/ui/Button';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
+import useApi from '@/hooks/requests/useApi';
+import { useConversations } from '@/hooks/conversations/useConversations';
+import { useFetchMessages } from '@/hooks/messages/useFetchMessages';
+import { MessageType } from '@/types/messages';
+import { useUser } from '@/hooks/users/useUser';
+import { useAuthModal } from '@/hooks/auth/openAuthModal';
 
 interface UseAutoResizeTextareaProps {
   minHeight: number;
   maxHeight?: number;
-}
-
-interface ConversationInputProps {
-  isDisabled?: boolean;
-  onSendMessage: ({ message }: { message: string }) => void;
-  isCreationMessageLoading?: boolean;
 }
 
 function useAutoResizeTextarea({
@@ -62,23 +63,41 @@ function useAutoResizeTextarea({
   return { textareaRef, adjustHeight };
 }
 
-const ConversationInput: React.FC<ConversationInputProps> = ({
-  isDisabled = false,
-  onSendMessage,
-  isCreationMessageLoading,
-}) => {
+const ConversationInput = () => {
   const [value, setValue] = useState('');
   const t = useTranslations();
+  const { user: loggedUser } = useUser();
+  const { openSignIn } = useAuthModal();
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
     minHeight: 72,
     maxHeight: 300,
   });
 
+  const { slug } = useParams<{ slug: string }>();
+
+  const { refetch: refetchConversations } = useConversations();
+  const { usePost } = useApi();
+  const { addMessageToCache } = useFetchMessages();
+
+  const { mutate: sendMessage, isPending } = usePost('/api/messages', {
+    onSuccess: (createdMessage: MessageType) => {
+      addMessageToCache(createdMessage);
+      refetchConversations();
+    },
+  });
+
   const handleSendMessage = () => {
-    if (!value.trim() || isDisabled) return;
-    setValue('');
+    if (!value.trim()) return;
+
+    if (!loggedUser) {
+      openSignIn();
+      return;
+    }
+
+    sendMessage({ message: value, slug: slug as string });
+
     adjustHeight(true);
-    onSendMessage({ message: value });
+    setValue('');
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -90,12 +109,7 @@ const ConversationInput: React.FC<ConversationInputProps> = ({
 
   return (
     <>
-      <div
-        className={cn(
-          'max-w-xl w-full mx-auto',
-          isDisabled && 'opacity-60 cursor-not-allowed',
-        )}
-      >
+      <div className={cn('max-w-xl w-full mx-auto')}>
         <div className="relative border border-custom-black/20 rounded-xl">
           <div className="relative flex flex-col">
             <div className="overflow-y-auto" style={{ maxHeight: '400px' }}>
@@ -104,17 +118,13 @@ const ConversationInput: React.FC<ConversationInputProps> = ({
                 placeholder={t('typeYourMessage')}
                 className={cn(
                   'w-full rounded-xl rounded-b-none px-4 py-3 border-none placeholder:text-black/70 resize-none focus-visible:ring-0 focus-visible:ring-offset-0 text-base',
-                  isDisabled && 'cursor-not-allowed bg-zinc-100/50',
                 )}
                 ref={textareaRef}
                 onKeyDown={handleKeyDown}
                 onChange={(e) => {
-                  if (!isDisabled) {
-                    setValue(e.target.value);
-                    adjustHeight();
-                  }
+                  setValue(e.target.value);
+                  adjustHeight();
                 }}
-                disabled={isDisabled}
               />
             </div>
 
@@ -125,10 +135,8 @@ const ConversationInput: React.FC<ConversationInputProps> = ({
                   aria-label="Send message"
                   variant="default"
                   size="icon"
-                  disabled={
-                    !value.trim() || isDisabled || isCreationMessageLoading
-                  }
-                  isLoading={isCreationMessageLoading}
+                  disabled={!value.trim()}
+                  isLoading={isPending}
                   onClick={handleSendMessage}
                 >
                   <ArrowRight className={cn('w-4 h-4 text-secondary')} />
