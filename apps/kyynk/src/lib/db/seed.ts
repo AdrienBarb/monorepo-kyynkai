@@ -5,43 +5,66 @@ import { checkOrCreateSlug } from '../../utils/users/checkOrCreateSlug.js';
 
 const prisma = new PrismaClient();
 
-interface SeedUser {
+interface SeedAIGirlfriend {
+  id: string;
   pseudo: string;
+  slug: string;
   profileImageUrl: string;
-  description: string;
-  nudes: {
-    description: string;
-    thumbnail: string;
-    videoKey: string;
-    fiatPrice: number;
-  }[];
+  archetype: string;
+  traits: string[];
+  hook: string;
+  chatOpeningLine: string;
+  voice: string;
+  boundaries: string[];
+  styleReminders: string[];
+  petNames: string[];
+  emojiRatio: number;
+  sentenceLength: string;
+  aftercare: boolean;
+  consentChecks: string[];
+  genTemperature: number;
+  genTopP: number;
+  genMaxTokens: number;
+  visualStylePrompt: string;
 }
 
 async function main() {
   try {
     const seedDataPath = join(process.cwd(), 'src/lib/db/seed.json');
-    const seedData: SeedUser[] = JSON.parse(
+    const seedData: SeedAIGirlfriend[] = JSON.parse(
       await readFile(seedDataPath, 'utf8'),
     );
 
     console.log('Starting database seeding...');
 
-    for (const userData of seedData) {
+    for (const aiGirlfriendData of seedData) {
       const aiGirlfriend = await prisma.aIGirlfriend.create({
         data: {
-          pseudo: userData.pseudo,
-          slug: await checkOrCreateSlug(userData.pseudo),
-          profileImageId: userData.profileImageUrl,
-          // @ts-ignore
-          hook: userData.hook,
-          // @ts-ignore
-          chatOpeningLine: userData.chatOpeningLine,
-          // @ts-ignore
-          traits: userData.traits,
-          // @ts-ignore
-          archetype: userData.archetype,
+          pseudo: aiGirlfriendData.pseudo,
+          slug: aiGirlfriendData.slug,
+          profileImageId: aiGirlfriendData.profileImageUrl,
+          archetype: aiGirlfriendData.archetype,
+          traits: aiGirlfriendData.traits,
+          hook: aiGirlfriendData.hook,
+          chatOpeningLine: aiGirlfriendData.chatOpeningLine,
+          voice: aiGirlfriendData.voice,
+          boundaries: aiGirlfriendData.boundaries,
+          styleReminders: aiGirlfriendData.styleReminders,
+          petNames: aiGirlfriendData.petNames,
+          emojiRatio: aiGirlfriendData.emojiRatio,
+          sentenceLength: aiGirlfriendData.sentenceLength,
+          aftercare: aiGirlfriendData.aftercare,
+          consentChecks: aiGirlfriendData.consentChecks,
+          genTemperature: aiGirlfriendData.genTemperature,
+          genTopP: aiGirlfriendData.genTopP,
+          genMaxTokens: aiGirlfriendData.genMaxTokens,
+          visualStylePrompt: aiGirlfriendData.visualStylePrompt,
         },
       });
+
+      console.log(
+        `Created AI Girlfriend: ${aiGirlfriend.pseudo} (${aiGirlfriend.slug})`,
+      );
     }
 
     console.log('Database seeding completed successfully!');
