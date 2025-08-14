@@ -2,9 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import { genPageMetadata } from '@/app/seo';
 import { redirect } from 'next/navigation';
-import PageContainer from '@/components/PageContainer';
 import { getAiGirlfriendBySlug } from '@/services/users/getAiGirlfriendBySlug';
-import PaddingContainer from '@/components/layout/PaddingContainer';
 import imgixLoader from '@/lib/imgix/loader';
 import ProfileConversationInput from '@/components/conversations/ProfileConversationInput';
 import { AiGirlfriendType } from '@/types/ai-girlfriends';
@@ -48,7 +46,9 @@ const UserPage = async ({ params }: PageProps) => {
   return (
     <div style={{ height: 'calc(100dvh - 68px)' }}>
       <ConversationHeader aiGirlfriend={aiGirlfriend} />
-      <ProfileConversationInput />
+      <ProfileConversationInput
+        chatOpeningLine={aiGirlfriend.chatOpeningLine ?? ''}
+      />
     </div>
   );
 };

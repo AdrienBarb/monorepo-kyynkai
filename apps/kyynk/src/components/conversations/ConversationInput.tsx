@@ -79,9 +79,19 @@ const ConversationInput = () => {
   const { usePost } = useApi();
   const { addMessageToCache } = useFetchMessages();
 
+  const { mutate: sendAiMessage, isPending: isAiPending } = usePost(
+    '/api/messages/ai',
+    {
+      onSuccess: (createdMessage: MessageType) => {
+        addMessageToCache(createdMessage);
+      },
+    },
+  );
+
   const { mutate: sendMessage, isPending } = usePost('/api/messages', {
     onSuccess: (createdMessage: MessageType) => {
       addMessageToCache(createdMessage);
+      sendAiMessage({ message: createdMessage.content, slug: slug as string });
       refetchConversations();
     },
   });
@@ -135,8 +145,8 @@ const ConversationInput = () => {
                   aria-label="Send message"
                   variant="default"
                   size="icon"
-                  disabled={!value.trim()}
-                  isLoading={isPending}
+                  disabled={!value.trim() || isAiPending || isPending}
+                  isLoading={isPending || isAiPending || isPending}
                   onClick={handleSendMessage}
                 >
                   <ArrowRight className={cn('w-4 h-4 text-secondary')} />

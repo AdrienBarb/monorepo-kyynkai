@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
-import { checkOrCreateSlug } from '../../utils/users/checkOrCreateSlug.js';
 
 const prisma = new PrismaClient();
 

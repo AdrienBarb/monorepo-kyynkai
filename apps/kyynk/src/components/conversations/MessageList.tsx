@@ -6,15 +6,30 @@ import { MessageSender } from '@prisma/client';
 interface Props {
   messages: MessageType[];
   scrollRef: React.RefObject<HTMLDivElement>;
+  chatOpeningLine: string;
 }
 
-const MessageList: FC<Props> = ({ messages, scrollRef }) => {
+const MessageList: FC<Props> = ({ messages, scrollRef, chatOpeningLine }) => {
   return (
     <div
       className="flex flex-col gap-4 px-4 py-4 w-full overflow-y-scroll"
       ref={scrollRef}
       style={{ height: 'calc(100dvh - 5rem - 9rem - 68px)' }}
     >
+      <div
+        key={chatOpeningLine}
+        className={cn('max-w-[80%] flex flex-col', 'self-start', 'items-start')}
+      >
+        <p
+          className={cn(
+            'p-2 rounded-lg',
+            'bg-secondary-dark text-custom-black',
+          )}
+        >
+          {chatOpeningLine}
+        </p>
+      </div>
+
       {messages?.map((currentMessage) => {
         const isMyMessage = currentMessage.sender === MessageSender.USER;
 
