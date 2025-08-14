@@ -1,60 +1,42 @@
-import { FC } from 'react';
+import { FC, useMemo } from 'react';
 import { MessageType } from '@/types/messages';
-import { cn } from '@/utils/tailwind/cn';
-import { MessageSender } from '@prisma/client';
+import { useTypingIndicatorStore } from '@/stores/TypingIndicatorStore';
+import MessageItem from './MessageItem';
+import OpeningMessage from './OpeningMessage';
+import TypingIndicator from './TypingIndicator';
 
-interface Props {
+interface MessageListProps {
   messages: MessageType[];
   scrollRef: React.RefObject<HTMLDivElement>;
   chatOpeningLine: string;
+  isAiTyping?: boolean;
 }
 
-const MessageList: FC<Props> = ({ messages, scrollRef, chatOpeningLine }) => {
+const MessageList: FC<MessageListProps> = ({
+  messages,
+  scrollRef,
+  chatOpeningLine,
+}) => {
+  const { isAiTyping } = useTypingIndicatorStore();
+
+  const memoizedMessages = useMemo(() => messages, [messages]);
+
   return (
     <div
-      className="flex flex-col gap-4 px-4 py-4 w-full overflow-y-scroll"
+      className="flex flex-col gap-4 px-4 py-4 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
       ref={scrollRef}
       style={{ height: 'calc(100dvh - 5rem - 9rem - 68px)' }}
+      role="log"
+      aria-label="Chat messages"
+      aria-live="polite"
     >
-      <div
-        key={chatOpeningLine}
-        className={cn('max-w-[80%] flex flex-col', 'self-start', 'items-start')}
-      >
-        <p
-          className={cn(
-            'p-2 rounded-lg',
-            'bg-secondary-dark text-custom-black',
-          )}
-        >
-          {chatOpeningLine}
-        </p>
-      </div>
+      <OpeningMessage content={chatOpeningLine} />
 
-      {messages?.map((currentMessage) => {
-        const isMyMessage = currentMessage.sender === MessageSender.USER;
+      {memoizedMessages?.map((message) => (
+        <MessageItem key={message.id} message={message} />
+      ))}
 
-        return (
-          <div
-            key={currentMessage.id}
-            className={cn(
-              'max-w-[80%] flex flex-col',
-              isMyMessage ? 'self-end' : 'self-start',
-              isMyMessage ? 'items-end' : 'items-start',
-            )}
-          >
-            <p
-              className={cn(
-                'p-2 rounded-lg',
-                isMyMessage
-                  ? 'bg-primary text-custom-black'
-                  : 'bg-secondary-dark text-custom-black',
-              )}
-            >
-              {currentMessage.content}
-            </p>
-          </div>
-        );
-      })}
+      {isAiTyping && <TypingIndicator />}
     </div>
   );
 };

@@ -107,8 +107,8 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
 
       const data = llmResponse.data;
       const generatedText = Array.isArray(data)
-        ? (data[0]?.generated_text ?? '')
-        : (data.generated_text ?? '');
+        ? data[0]?.generated_text ?? ''
+        : data.generated_text ?? '';
 
       if (generatedText.trim()) {
         assistantText = generatedText;

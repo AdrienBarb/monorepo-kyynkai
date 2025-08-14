@@ -13,6 +13,7 @@ import { useFetchMessages } from '@/hooks/messages/useFetchMessages';
 import { MessageType } from '@/types/messages';
 import { useUser } from '@/hooks/users/useUser';
 import { useAuthModal } from '@/hooks/auth/openAuthModal';
+import { useTypingIndicatorStore } from '@/stores/TypingIndicatorStore';
 
 interface UseAutoResizeTextareaProps {
   minHeight: number;
@@ -68,6 +69,7 @@ const ConversationInput = () => {
   const t = useTranslations();
   const { user: loggedUser } = useUser();
   const { openSignIn } = useAuthModal();
+  const { setIsAiTyping } = useTypingIndicatorStore();
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
     minHeight: 72,
     maxHeight: 300,
@@ -84,6 +86,10 @@ const ConversationInput = () => {
     {
       onSuccess: (createdMessage: MessageType) => {
         addMessageToCache(createdMessage);
+        setIsAiTyping(false);
+      },
+      onError: () => {
+        setIsAiTyping(false);
       },
     },
   );
@@ -91,6 +97,7 @@ const ConversationInput = () => {
   const { mutate: sendMessage, isPending } = usePost('/api/messages', {
     onSuccess: (createdMessage: MessageType) => {
       addMessageToCache(createdMessage);
+      setIsAiTyping(true);
       sendAiMessage({ message: createdMessage.content, slug: slug as string });
       refetchConversations();
     },
