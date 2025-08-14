@@ -8,6 +8,7 @@ export const getCurrentUser = async ({ userId }: { userId: string }) => {
       },
       select: {
         id: true,
+        email: true,
       },
     });
 

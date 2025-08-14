@@ -10,7 +10,10 @@ import { auth } from '@/lib/better-auth/auth';
 import { headers } from 'next/headers';
 import { getRecentHistory } from '@/utils/llm/getRecentHistory';
 import { systemFromCard } from '@/utils/llm/systemFromCard';
-import { buildQwenPromptTGI } from '@/utils/llm/buildQwenPromptTGI';
+import {
+  buildQwenPromptTGI,
+  ChatHistory,
+} from '@/utils/llm/buildQwenPromptTGI';
 import axios from 'axios';
 
 const conversationSchema = z.object({
@@ -67,7 +70,10 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
       );
     }
 
-    const history = await getRecentHistory(conversation.id, 20);
+    const history = (await getRecentHistory(
+      conversation.id,
+      20,
+    )) as ChatHistory[];
 
     const system = systemFromCard(aiGirlfriend);
 
@@ -78,7 +84,6 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
     const genMaxTokens = aiGirlfriend.genMaxTokens ?? 220;
 
     const HF_ENDPOINT = process.env.HF_ENDPOINT!;
-
     const HF_TOKEN = process.env.HF_TOKEN!;
 
     let assistantText =

@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import { useUser } from '@/hooks/users/useUser';
-import { formatCredits } from '@/utils/prices/formatCredits';
 import { useTranslations } from 'next-intl';
 import { signOut } from '@/lib/better-auth/auth-client';
 import { useRouter } from 'next/navigation';
@@ -36,6 +35,7 @@ export const UserDropdown: React.FC = () => {
     return (
       <div className="flex items-center gap-2">
         <Avatar size={32} />
+        <span className="text-xs">{user?.email}</span>
       </div>
     );
   };

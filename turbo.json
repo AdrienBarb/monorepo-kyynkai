@@ -10,7 +10,9 @@
     "BETTER_AUTH_SECRET",
     "BETTER_AUTH_URL",
     "DATABASE_URL",
-    "DIRECT_URL"
+    "DIRECT_URL",
+    "HF_ENDPOINT",
+    "HF_TOKEN"
   ],
   "tasks": {
     "dev": {
@@ -30,7 +32,9 @@
         "BETTER_AUTH_SECRET",
         "BETTER_AUTH_URL",
         "DATABASE_URL",
-        "DIRECT_URL"
+        "DIRECT_URL",
+        "HF_ENDPOINT",
+        "HF_TOKEN"
       ]
     },
     "start": {
