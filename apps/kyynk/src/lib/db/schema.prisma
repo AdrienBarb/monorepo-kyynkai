@@ -77,7 +77,7 @@ model AIGirlfriend {
   profileImageId    String
   isActive          Boolean  @default(true)
   hook              String?
-  chatOpeningLine   String?
+  chatOpeningLine   Json?
   traits            String[] @default([])
   archetype         String?
   voice             String?

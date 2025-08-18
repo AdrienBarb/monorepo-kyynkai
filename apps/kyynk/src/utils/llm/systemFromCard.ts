@@ -35,7 +35,7 @@ export const systemFromCard = (card: any, memorySummary?: string | null) => {
     styleBits,
     sigBits,
     memory,
-    'Always reply in English.',
+    'Always reply in the same language the user is writing in. If unclear, default to English.',
     'Default to 1–3 short, intimate sentences. Keep an erotic tone by default and end with a small question.',
   ]
     .filter(Boolean)

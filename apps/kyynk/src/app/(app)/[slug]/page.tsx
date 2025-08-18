@@ -7,6 +7,7 @@ import imgixLoader from '@/lib/imgix/loader';
 import ProfileConversationInput from '@/components/conversations/ProfileConversationInput';
 import { AiGirlfriendType } from '@/types/ai-girlfriends';
 import ConversationHeader from '@/components/conversations/ConversationHeader';
+import { getLocale } from 'next-intl/server';
 
 export type PageProps = {
   params: Promise<{ slug: string }>;
@@ -34,6 +35,7 @@ export async function generateMetadata({
 
 const UserPage = async ({ params }: PageProps) => {
   const { slug } = await params;
+  const locale = await getLocale();
 
   const aiGirlfriend = (await getAiGirlfriendBySlug({
     slug,
@@ -47,7 +49,7 @@ const UserPage = async ({ params }: PageProps) => {
     <div style={{ height: 'calc(100dvh - 68px)' }}>
       <ConversationHeader aiGirlfriend={aiGirlfriend} />
       <ProfileConversationInput
-        chatOpeningLine={aiGirlfriend.chatOpeningLine ?? ''}
+        chatOpeningLine={aiGirlfriend.chatOpeningLine?.[locale || 'en'] ?? ''}
       />
     </div>
   );
