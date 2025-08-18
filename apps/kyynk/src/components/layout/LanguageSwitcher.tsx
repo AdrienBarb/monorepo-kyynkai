@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 import {
   DropdownMenu,
@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
+import { useQueryState } from 'nuqs';
 
 interface Language {
   code: string;
@@ -23,7 +24,9 @@ const languages: Language[] = [
 ];
 
 const LanguageSwitcher: FC = () => {
-  const currentLocale = useLocale();
+  const [lang, setLang] = useQueryState('lang');
+  const nextLocale = useLocale();
+  const currentLocale = lang || nextLocale;
   const router = useRouter();
 
   const handleLanguageChange = (languageCode: string) => {
@@ -33,6 +36,13 @@ const LanguageSwitcher: FC = () => {
 
     router.refresh();
   };
+
+  useEffect(() => {
+    if (lang && languages.some((l) => l.code === lang)) {
+      handleLanguageChange(lang);
+      setLang(null);
+    }
+  }, [lang]);
 
   const currentLanguage =
     languages.find((lang) => lang.code === currentLocale) || languages[0];
