@@ -1,11 +1,12 @@
 'use client';
 
-import { LogOut } from 'lucide-react';
+import { Coins, LogOut } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -35,7 +36,12 @@ export const UserDropdown: React.FC = () => {
     return (
       <div className="flex items-center gap-2">
         <Avatar size={32} />
-        <span className="text-xs">{user?.email}</span>
+        <div className="grid flex-1 text-left text-sm leading-tight">
+          <span className="text-sm truncate">{user?.email}</span>
+          <span className="text-xs truncate">
+            {user?.creditBalance} credits
+          </span>
+        </div>
       </div>
     );
   };
@@ -56,6 +62,16 @@ export const UserDropdown: React.FC = () => {
             <UserDetails />
           </div>
         </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            onClick={() => {
+              window.location.href = `${process.env.NEXT_PUBLIC_PAYMENT_PAGE}?userId=${user?.id}&redirectUrl=${window.location.href}`;
+            }}
+          >
+            <Coins />
+            {t('navUserBuyCredits')}
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout}>
           <LogOut />

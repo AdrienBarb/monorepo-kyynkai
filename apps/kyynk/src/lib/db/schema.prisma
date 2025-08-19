@@ -14,12 +14,14 @@ model User {
   email         String
   emailVerified Boolean
   utmTracking   Json?
+  creditBalance Int     @default(0)
 
-  createdAt     DateTime
-  updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
-  conversations Conversation[]
+  createdAt         DateTime
+  updatedAt         DateTime
+  sessions          Session[]
+  accounts          Account[]
+  conversations     Conversation[]
+  CreditTransaction CreditTransaction[]
 
   @@unique([email])
   @@map("user")
@@ -135,7 +137,29 @@ model Message {
   @@index([createdAt])
 }
 
+model CreditTransaction {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  packageId             Int
+  amountCents           Int
+  currency              String
+  credits               Int
+  stripePaymentIntentId String
+  status                TransactionStatus @default(PROCESSING)
+
+  createdAt DateTime @default(now())
+}
+
 enum MessageSender {
   USER
   AI
+}
+
+enum TransactionStatus {
+  SUCCEEDED
+  PROCESSING
+  CANCELED
+  REFUNDED
 }
