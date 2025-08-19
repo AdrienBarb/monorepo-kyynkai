@@ -553,5 +553,8 @@
   "galleryDesc": "Ici, vous pouvez gérer vos vidéos. Vous pouvez en ajouter, en supprimer et en sélectionner une à utiliser.",
   "uploadNewVideo": "Uploader une nouvelle vidéo",
   "verificationCode": "Code de vérification",
-  "otpHelperText": "Nous vous avons envoyé un code par email"
+  "otpHelperText": "Nous vous avons envoyé un code par email",
+  "privacyPolicy": "Politique de Confidentialité",
+  "termsConditions": "Conditions d'Utilisation",
+  "contactUs": "Nous Contacter"
 }

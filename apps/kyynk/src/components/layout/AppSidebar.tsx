@@ -4,6 +4,7 @@ import { UsersRound } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -36,8 +37,8 @@ export function AppSidebar() {
   }
 
   return (
-    <Sidebar className="mt-[68px]">
-      <SidebarContent>
+    <Sidebar className="mt-[68px] flex flex-col h-[calc(100vh-68px)]">
+      <SidebarContent className="flex-1 overflow-auto">
         <SidebarGroup>
           <SidebarGroupLabel>{t('sideBarPlatform')}</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -80,6 +81,39 @@ export function AppSidebar() {
           </SidebarGroup>
         )}
       </SidebarContent>
+      <SidebarFooter className="flex-shrink-0">
+        <div className="flex items-center flex-wrap justify-center gap-1 px-2 text-xs">
+          <Link
+            href="https://www.notion.so/Privacy-Policy-254effb69c7d80f8bcc2efcbc63e7cab?source=copy_link"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={closeSidebarOnMobile}
+            className="text-xs"
+          >
+            {t('privacyPolicy')}
+          </Link>
+          <span>•</span>
+          <Link
+            href="https://www.notion.so/Terms-Conditions-254effb69c7d80cd82ddc7cd8959a508?source=copy_link"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={closeSidebarOnMobile}
+            className="text-xs"
+          >
+            {t('termsConditions')}
+          </Link>
+          <span>•</span>
+          <Link
+            href="https://www.notion.so/Contact-Us-254effb69c7d80c1978fd3028d34c880?source=copy_link"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={closeSidebarOnMobile}
+            className="text-xs"
+          >
+            {t('contactUs')}
+          </Link>
+        </div>
+      </SidebarFooter>
     </Sidebar>
   );
 }

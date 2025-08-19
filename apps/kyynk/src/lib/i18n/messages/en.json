@@ -554,5 +554,8 @@
   "galleryDesc": "Here you can manage your videos. You can upload new videos, delete existing ones, and select a video to use.",
   "uploadNewVideo": "Upload a new video",
   "verificationCode": "Verification Code",
-  "otpHelperText": "We have sent you a code by email"
+  "otpHelperText": "We have sent you a code by email",
+  "privacyPolicy": "Privacy Policy",
+  "termsConditions": "Terms & Conditions",
+  "contactUs": "Contact Us"
 }
