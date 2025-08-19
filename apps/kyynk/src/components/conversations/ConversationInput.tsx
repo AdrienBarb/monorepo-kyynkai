@@ -14,6 +14,8 @@ import { MessageType } from '@/types/messages';
 import { useUser } from '@/hooks/users/useUser';
 import { useAuthModal } from '@/hooks/auth/openAuthModal';
 import { useTypingIndicatorStore } from '@/stores/TypingIndicatorStore';
+import { hasEnoughCredits } from '@/utils/users/hasEnoughCredits';
+import { useGlobalModalStore } from '@/stores/GlobalModalStore';
 
 interface UseAutoResizeTextareaProps {
   minHeight: number;
@@ -67,9 +69,10 @@ function useAutoResizeTextarea({
 const ConversationInput = () => {
   const [value, setValue] = useState('');
   const t = useTranslations();
-  const { user: loggedUser } = useUser();
+  const { user: loggedUser, refetch: refetchUser } = useUser();
   const { openSignIn } = useAuthModal();
   const { setIsAiTyping } = useTypingIndicatorStore();
+  const { openModal } = useGlobalModalStore();
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
     minHeight: 72,
     maxHeight: 300,
@@ -100,6 +103,7 @@ const ConversationInput = () => {
       setIsAiTyping(true);
       sendAiMessage({ message: createdMessage.content, slug: slug as string });
       refetchConversations();
+      refetchUser();
     },
   });
 
@@ -108,6 +112,16 @@ const ConversationInput = () => {
 
     if (!loggedUser) {
       openSignIn();
+      return;
+    }
+
+    if (
+      !hasEnoughCredits({
+        user: loggedUser,
+        requiredCredits: 1,
+      })
+    ) {
+      openModal('notEnoughCredits');
       return;
     }
 

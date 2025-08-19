@@ -36,3 +36,5 @@ export const creditPackages = [
     coinsAmount: 22000,
   },
 ];
+
+export const MESSAGE_COST = 1;

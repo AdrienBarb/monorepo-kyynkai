@@ -18,8 +18,8 @@ import { PostHogProvider } from '@/components/provider/PostHogProvider';
 import { AxiomWebVitals } from 'next-axiom';
 import UTMTracking from '@/components/tracking/UTMTracking';
 import AuthModal from '@/components/auth/AuthModal';
-import AuthErrorHandler from '@/components/AuthErrorHandler';
 import { GoogleTagManager } from '@next/third-parties/google';
+import ModalWrapper from '@/components/layout/ModalWrapper';
 
 config.autoAddCss = false;
 
@@ -110,7 +110,7 @@ const RootLayout: FC<Props> = async ({ children }) => {
               <GlobalErrorProvider />
 
               <AuthModal />
-              <AuthErrorHandler />
+              <ModalWrapper />
               <AxiomWebVitals />
             </NuqsAdapter>
           </body>

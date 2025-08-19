@@ -16,6 +16,7 @@ import { useUser } from '@/hooks/users/useUser';
 import { useTranslations } from 'next-intl';
 import { signOut } from '@/lib/better-auth/auth-client';
 import { useRouter } from 'next/navigation';
+import { getPaymentPageLink } from '@/utils/navigation/getPaymentPageLink';
 
 export const UserDropdown: React.FC = () => {
   const { user } = useUser();
@@ -65,7 +66,10 @@ export const UserDropdown: React.FC = () => {
         <DropdownMenuGroup>
           <DropdownMenuItem
             onClick={() => {
-              window.location.href = `${process.env.NEXT_PUBLIC_PAYMENT_PAGE}?userId=${user?.id}&redirectUrl=${window.location.href}`;
+              window.location.href = getPaymentPageLink(
+                user?.id!,
+                window.location.href,
+              );
             }}
           >
             <Coins />
