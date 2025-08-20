@@ -84,9 +84,7 @@ export function AppSidebar() {
       <SidebarFooter className="flex-shrink-0">
         <div className="flex items-center flex-wrap justify-center gap-1 px-2 text-xs">
           <Link
-            href="https://www.notion.so/Privacy-Policy-254effb69c7d80f8bcc2efcbc63e7cab?source=copy_link"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/privacy-policy"
             onClick={closeSidebarOnMobile}
             className="text-xs"
           >
@@ -94,9 +92,7 @@ export function AppSidebar() {
           </Link>
           <span>•</span>
           <Link
-            href="https://www.notion.so/Terms-Conditions-254effb69c7d80cd82ddc7cd8959a508?source=copy_link"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/terms"
             onClick={closeSidebarOnMobile}
             className="text-xs"
           >
@@ -104,9 +100,7 @@ export function AppSidebar() {
           </Link>
           <span>•</span>
           <Link
-            href="https://www.notion.so/Contact-Us-254effb69c7d80c1978fd3028d34c880?source=copy_link"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/contact"
             onClick={closeSidebarOnMobile}
             className="text-xs"
           >

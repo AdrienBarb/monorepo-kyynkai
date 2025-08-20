@@ -121,54 +121,62 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
   }, [emailValue, isOtpSent, sentEmail, form]);
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t('email')}</FormLabel>
-              <FormControl>
-                <Input {...field} type="email" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {isOtpSent && (
+    <div>
+      <div className="text-center">
+        <p className="text-lg">
+          sign up now and get{' '}
+          <span className="font-semibold">30 free credits</span>
+        </p>
+      </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
-            name="otp"
+            name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t('verificationCode')}</FormLabel>
+                <FormLabel>{t('email')}</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    type="text"
-                    maxLength={6}
-                    placeholder="123456"
-                  />
+                  <Input {...field} type="email" />
                 </FormControl>
-                <FormDescription>{t('otpHelperText')}</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
-        )}
 
-        <Button
-          type="submit"
-          className="w-full"
-          isLoading={isLoading}
-          disabled={isLoading}
-        >
-          {t('continue')}
-        </Button>
-      </form>
-    </Form>
+          {isOtpSent && (
+            <FormField
+              control={form.control}
+              name="otp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('verificationCode')}</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="text"
+                      maxLength={6}
+                      placeholder="123456"
+                    />
+                  </FormControl>
+                  <FormDescription>{t('otpHelperText')}</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
+
+          <Button
+            type="submit"
+            className="w-full"
+            isLoading={isLoading}
+            disabled={isLoading}
+          >
+            {t('continue')}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 };
 
