@@ -67,7 +67,7 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
       otp: '',
       ageVerification: false,
     },
-    mode: 'onChange',
+    mode: 'onBlur',
   });
 
   const sendOtp = async (email: string) => {
@@ -211,7 +211,7 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
               type="submit"
               className="w-full"
               isLoading={isLoading}
-              disabled={isLoading || !form.formState.isValid}
+              disabled={isLoading || !form.getValues('ageVerification')}
             >
               {isOtpSent ? t('continue') : t('signUp')}
             </Button>
