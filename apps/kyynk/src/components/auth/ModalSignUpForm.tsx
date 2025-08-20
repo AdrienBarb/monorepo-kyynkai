@@ -133,7 +133,7 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
   }, [emailValue, isOtpSent, sentEmail, form]);
 
   return (
-    <div className="space-y-6 p-4">
+    <div className="space-y-6 px-4 pb-4">
       <div className="bg-primary rounded-lg p-4 text-white text-center shadow-lg">
         <div className="flex items-center justify-center mb-2">
           <span className="text-2xl mr-2">🎉</span>
@@ -142,10 +142,6 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
         <p className="text-sm mb-2 font-medium">
           {t('signUpBonusDescription')}
         </p>
-        <p className="text-xs opacity-90">{t('signUpBonusSubtext')}</p>
-        <div className="mt-3 bg-white/20 rounded-full px-3 py-1 inline-block">
-          <span className="text-sm font-bold">30 Credits</span>
-        </div>
       </div>
 
       <Form {...form}>
