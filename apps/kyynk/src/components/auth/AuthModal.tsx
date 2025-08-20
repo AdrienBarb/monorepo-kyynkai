@@ -15,6 +15,7 @@ import AuthAlert from './AuthAlert';
 import { useRouter } from 'next/navigation';
 import { useAuthModal } from '@/hooks/auth/openAuthModal';
 import toast from 'react-hot-toast';
+import { Separator } from '../ui/Separator';
 
 interface AlertState {
   type: 'success' | 'error';
@@ -70,14 +71,14 @@ const AuthModal: React.FC = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-md p-0">
+        <DialogHeader className="p-4">
           <DialogTitle className="text-center">
             {isLogin ? t('signIn') : t('signUp')}
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="">
           {isLogin ? (
             <ModalSignInForm
               onSuccess={handleAuthSuccess}
@@ -90,7 +91,9 @@ const AuthModal: React.FC = () => {
             />
           )}
 
-          <div className="flex justify-center">
+          <Separator className="my-0 bg-black/10" />
+
+          <div className="flex justify-center p-4">
             {isLogin ? (
               <span>
                 {t('dontHaveAccount')}{' '}

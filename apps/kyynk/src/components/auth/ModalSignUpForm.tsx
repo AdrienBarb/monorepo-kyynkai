@@ -7,6 +7,8 @@ import { z } from 'zod';
 import { Input } from '@/components/ui/Input';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
+import { Checkbox } from '@/components/ui/Checkbox';
+import Link from 'next/link';
 import {
   Form,
   FormControl,
@@ -49,17 +51,23 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
   const form = useForm<{
     email: string;
     otp: string;
+    ageVerification: boolean;
   }>({
     resolver: zodResolver(
       z.object({
         email: emailSchema.shape.email,
         otp: isOtpSent ? otpSchema.shape.otp : z.string().optional(),
+        ageVerification: z.boolean().refine((val) => val === true, {
+          message: t('error.field_required'),
+        }),
       }),
     ),
     defaultValues: {
       email: '',
       otp: '',
+      ageVerification: false,
     },
+    mode: 'onChange',
   });
 
   const sendOtp = async (email: string) => {
@@ -85,7 +93,11 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
     setIsLoading(false);
   };
 
-  const onSubmit = async (values: { email: string; otp: string }) => {
+  const onSubmit = async (values: {
+    email: string;
+    otp: string;
+    ageVerification: boolean;
+  }) => {
     if (!isOtpSent) {
       await sendOtp(values.email);
     } else {
@@ -121,13 +133,21 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
   }, [emailValue, isOtpSent, sentEmail, form]);
 
   return (
-    <div>
-      <div className="text-center">
-        <p className="text-lg">
-          sign up now and get{' '}
-          <span className="font-semibold">30 free credits</span>
+    <div className="space-y-6 p-4">
+      <div className="bg-primary rounded-lg p-4 text-white text-center shadow-lg">
+        <div className="flex items-center justify-center mb-2">
+          <span className="text-2xl mr-2">🎉</span>
+          <h3 className="text-lg font-bold">{t('signUpBonusTitle')}</h3>
+        </div>
+        <p className="text-sm mb-2 font-medium">
+          {t('signUpBonusDescription')}
         </p>
+        <p className="text-xs opacity-90">{t('signUpBonusSubtext')}</p>
+        <div className="mt-3 bg-white/20 rounded-full px-3 py-1 inline-block">
+          <span className="text-sm font-bold">30 Credits</span>
+        </div>
       </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -140,6 +160,27 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
                   <Input {...field} type="email" />
                 </FormControl>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="ageVerification"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel className="text-sm font-normal">
+                    {t('ageVerificationCheckbox')}
+                  </FormLabel>
+                  <FormMessage />
+                </div>
               </FormItem>
             )}
           />
@@ -165,15 +206,35 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
               )}
             />
           )}
+          <div>
+            <Button
+              type="submit"
+              className="w-full"
+              isLoading={isLoading}
+              disabled={isLoading || !form.formState.isValid}
+            >
+              {isOtpSent ? t('continue') : t('signUp')}
+            </Button>
 
-          <Button
-            type="submit"
-            className="w-full"
-            isLoading={isLoading}
-            disabled={isLoading}
-          >
-            {t('continue')}
-          </Button>
+            <p className="text-xs text-gray-600 text-center mt-2">
+              By signing up, you agree to our{' '}
+              <Link
+                href="/terms"
+                className="text-xs text-gray-600"
+                target="_blank"
+              >
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link
+                href="/privacy-policy"
+                className="text-xs text-gray-600"
+                target="_blank"
+              >
+                Privacy Policy
+              </Link>
+            </p>
+          </div>
         </form>
       </Form>
     </div>
