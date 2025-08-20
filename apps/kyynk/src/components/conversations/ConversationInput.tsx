@@ -70,7 +70,7 @@ const ConversationInput = () => {
   const [value, setValue] = useState('');
   const t = useTranslations();
   const { user: loggedUser, refetch: refetchUser } = useUser();
-  const { openSignIn } = useAuthModal();
+  const { openSignUp } = useAuthModal();
   const { setIsAiTyping } = useTypingIndicatorStore();
   const { openModal } = useGlobalModalStore();
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
@@ -111,7 +111,7 @@ const ConversationInput = () => {
     if (!value.trim()) return;
 
     if (!loggedUser) {
-      openSignIn();
+      openSignUp();
       return;
     }
 
