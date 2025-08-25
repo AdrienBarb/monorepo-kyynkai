@@ -22,6 +22,7 @@ model User {
   accounts          Account[]
   conversations     Conversation[]
   CreditTransaction CreditTransaction[]
+  roles             UserRole[]          @default([USER])
 
   @@unique([email])
   @@map("user")
@@ -162,4 +163,9 @@ enum TransactionStatus {
   PROCESSING
   CANCELED
   REFUNDED
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }
