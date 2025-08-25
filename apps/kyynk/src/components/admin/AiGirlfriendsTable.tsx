@@ -31,7 +31,7 @@ interface AiGirlfriendsTableProps {
 
 const columns: ColumnDef<
   any & {
-    onEdit?: (slug: string) => void;
+    onEdit?: (id: string) => void;
   }
 >[] = [
   {
@@ -95,7 +95,7 @@ const columns: ColumnDef<
         <Button
           variant="link"
           size="sm"
-          onClick={() => row.original.onEdit?.(row.original.slug)}
+          onClick={() => row.original.onEdit?.(row.original.id)}
         >
           Edit
         </Button>
@@ -111,7 +111,7 @@ export function AiGirlfriendsTable({ data }: AiGirlfriendsTableProps) {
 
   const tableData = data.map((item) => ({
     ...item,
-    onEdit: (slug: string) => router.push(`/admin/ai/${slug}`),
+    onEdit: (id: string) => router.push(`/admin/ai/${id}`),
   }));
 
   const table = useReactTable({

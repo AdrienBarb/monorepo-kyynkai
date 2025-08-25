@@ -80,7 +80,15 @@ const useApi = () => {
 
   const usePut = (url: string, options = {}) =>
     useMutation({
-      mutationFn: (data: any) => editer({ url, data }),
+      mutationFn: (data: any) => {
+        // If data contains a url property, use that instead of the base url
+        // This allows for dynamic URLs in mutations
+        if (data && typeof data === 'object' && data.url) {
+          return editer({ url: data.url, data: { ...data, url: undefined } });
+        }
+        // Otherwise use the base url
+        return editer({ url, data });
+      },
       ...options,
     });
 

@@ -3,6 +3,7 @@ import { updateAdminAiGirlfriend } from '@/services/admin/updateAdminAiGirlfrien
 import { errorHandler } from '@/utils/errors/errorHandler';
 import { withAdminSecret } from '@/hoc/withAdminSecret';
 import { z } from 'zod';
+import { getAdminAiGirlfriend } from '@/services/admin/getAdminAiGirlfriend';
 
 const updateSchema = z.object({
   isActive: z.boolean().optional(),
@@ -21,5 +22,13 @@ export const PUT = withAdminSecret(
     } catch (error) {
       return errorHandler(error);
     }
+  },
+);
+
+export const GET = withAdminSecret(
+  async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+    const { id } = await params;
+    const aiGirlfriend = await getAdminAiGirlfriend(id);
+    return NextResponse.json(aiGirlfriend, { status: 200 });
   },
 );
