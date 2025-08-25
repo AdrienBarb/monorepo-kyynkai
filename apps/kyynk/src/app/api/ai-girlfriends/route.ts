@@ -1,5 +1,5 @@
+import { getAiGirlfriends } from '@/services/ai-girlfriends/getAiGirlfriends';
 import { errorHandler } from '@/utils/errors/errorHandler';
-import { getAiGirlfriends } from '@/services/users/getAiGirlfriends';
 import { NextResponse } from 'next/server';
 
 export const GET = async (req: Request) => {

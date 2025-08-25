@@ -4,13 +4,13 @@ import { prisma } from '@/lib/db/client';
 import { errorHandler } from '@/utils/errors/errorHandler';
 import { strictlyAuth } from '@/hoc/strictlyAuth';
 import { findOrCreateConversation } from '@/utils/conversations/findOrCreateConversation';
-import { getAiGirlfriendBySlug } from '@/services/users/getAiGirlfriendBySlug';
 import { errorMessages } from '@/lib/constants/errorMessage';
 import { MessageSender } from '@prisma/client';
 import { auth } from '@/lib/better-auth/auth';
 import { headers } from 'next/headers';
 import { getCurrentUser } from '@/services/users/getCurrentUser';
 import { MESSAGE_COST } from '@/constants/creditPackages';
+import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends/getAiGirlfriendBySlug';
 
 const conversationSchema = z.object({
   slug: z.string(),

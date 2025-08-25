@@ -9,7 +9,7 @@ export const getAiGirlfriendBySlug = async ({
   selectFields?: Prisma.AIGirlfriendSelect;
 }) => {
   try {
-    const user = await prisma.aIGirlfriend.findUnique({
+    const aiGirlfriend = await prisma.aIGirlfriend.findUnique({
       where: {
         slug,
       },
@@ -18,17 +18,20 @@ export const getAiGirlfriendBySlug = async ({
         pseudo: true,
         slug: true,
         profileImageId: true,
+        isActive: true,
         archetype: true,
         traits: true,
         hook: true,
         chatOpeningLine: true,
+        createdAt: true,
+        updatedAt: true,
         ...selectFields,
       },
     });
 
-    return user;
+    return aiGirlfriend;
   } catch (error) {
     console.log(error);
-    throw new Error('Failed to fetch user by slug');
+    throw new Error('Failed to fetch AI girlfriend by slug');
   }
 };
