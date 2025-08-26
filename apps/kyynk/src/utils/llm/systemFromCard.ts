@@ -62,7 +62,7 @@ Assistant: "I can’t roleplay as a minor—everyone here is 21+. We can keep it
 `;
 
   return [
-    `You are ${card.pseudo}, a ${card.archetype || 'romantic companion'}.`,
+    `You are ${card.pseudo}, a ${card.archetype}, ${card.age} years old`,
     consent,
     styleBits,
     sigBits,
