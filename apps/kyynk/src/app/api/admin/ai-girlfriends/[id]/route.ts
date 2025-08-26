@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { updateAdminAiGirlfriend } from '@/services/admin/updateAdminAiGirlfriend';
 import { errorHandler } from '@/utils/errors/errorHandler';
 import { withAdminSecret } from '@/hoc/withAdminSecret';
-import { z } from 'zod';
 import { getAdminAiGirlfriend } from '@/services/admin/getAdminAiGirlfriend';
 import { aiGirlfriendSchema } from '@/schemas/ai-girlfriends/aiGirlfriendSchema';
 import slugify from 'slugify';
@@ -17,9 +16,11 @@ export const PUT = withAdminSecret(
       const updatedAiGirlfriend = await updateAdminAiGirlfriend(id, {
         pseudo: payload.pseudo,
         slug: slugify(payload.pseudo, { lower: true, strict: true }),
+        archetype: payload.archetype,
+        traits: payload.traits,
+        hook: payload.hook,
+        isActive: payload.isActive,
       });
-
-      console.log('🚀 ~ updatedAiGirlfriend:', updatedAiGirlfriend);
 
       return NextResponse.json(updatedAiGirlfriend, { status: 200 });
     } catch (error) {

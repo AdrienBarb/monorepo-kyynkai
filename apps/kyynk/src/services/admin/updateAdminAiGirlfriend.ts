@@ -3,7 +3,10 @@ import { AIGirlfriend } from '@prisma/client';
 
 export const updateAdminAiGirlfriend = async (
   id: string,
-  data: Pick<AIGirlfriend, 'pseudo' | 'slug'>,
+  data: Pick<
+    AIGirlfriend,
+    'pseudo' | 'slug' | 'archetype' | 'traits' | 'hook' | 'isActive'
+  >,
 ) => {
   try {
     const updatedAiGirlfriend = await prisma.aIGirlfriend.update({

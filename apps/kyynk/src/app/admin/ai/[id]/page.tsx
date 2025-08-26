@@ -77,15 +77,12 @@ export default function EditAiGirlfriendPage() {
     },
   });
 
-  console.log('🚀 ~ form:', form.getValues());
-
   useEffect(() => {
-    console.log('🚀 ~ EditAiGirlfriendPage ~ aiGirlfriend:', aiGirlfriend);
     if (aiGirlfriend) {
       form.reset({
         ...form.getValues(),
         pseudo: aiGirlfriend.pseudo,
-        archetype: aiGirlfriend.archetype || 'none',
+        archetype: aiGirlfriend.archetype,
         isActive: aiGirlfriend.isActive,
         traits: aiGirlfriend.traits,
         hook: aiGirlfriend.hook || '',
@@ -94,14 +91,7 @@ export default function EditAiGirlfriendPage() {
   }, [aiGirlfriend, form]);
 
   const onSubmit = (data: AiGirlfriendFormData) => {
-    if (!aiGirlfriend) return;
-
-    const submissionData = {
-      ...data,
-      archetype: data.archetype === 'none' ? null : data.archetype,
-    };
-
-    updateAiGirlfriend(submissionData);
+    updateAiGirlfriend(data);
   };
 
   const handleTraitToggle = (trait: string) => {
@@ -186,7 +176,7 @@ export default function EditAiGirlfriendPage() {
                       <FormLabel>Archetype</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        value={field.value}
+                        value={field.value || aiGirlfriend.archetype}
                       >
                         <FormControl>
                           <SelectTrigger>
