@@ -25,10 +25,13 @@ const AiGirlfriendCard = ({ user }: Props) => {
             layout="fill"
             objectFit="cover"
           />
-          <div className="absolute bottom-0 left-0 right-0 p-2 ">
-            <span className="text-base font-semibold font-karla text-white">
-              {user.pseudo}
-            </span>
+          <div className="absolute bottom-0 left-0 right-0 p-2">
+            <div className="text-xl font-bold font-karla text-white leading-tight">
+              {`${user.pseudo} ${user.age}`}
+            </div>
+            <div className="text-sm font-semibold font-karla text-white leading-tight">
+              {user.archetype}
+            </div>
           </div>
         </div>
       </div>

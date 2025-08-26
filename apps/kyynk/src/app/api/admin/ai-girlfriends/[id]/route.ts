@@ -5,6 +5,7 @@ import { withAdminSecret } from '@/hoc/withAdminSecret';
 import { getAdminAiGirlfriend } from '@/services/admin/getAdminAiGirlfriend';
 import { aiGirlfriendSchema } from '@/schemas/ai-girlfriends/aiGirlfriendSchema';
 import slugify from 'slugify';
+import { prisma } from '@/lib/db/client';
 
 export const PUT = withAdminSecret(
   async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
@@ -33,6 +34,18 @@ export const GET = withAdminSecret(
   async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params;
     const aiGirlfriend = await getAdminAiGirlfriend(id);
+    return NextResponse.json(aiGirlfriend, { status: 200 });
+  },
+);
+
+export const DELETE = withAdminSecret(
+  async (req: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+    const { id } = await params;
+    const aiGirlfriend = await prisma.aIGirlfriend.delete({
+      where: {
+        id,
+      },
+    });
     return NextResponse.json(aiGirlfriend, { status: 200 });
   },
 );

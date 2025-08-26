@@ -29,11 +29,13 @@ import Image from 'next/image';
 
 interface AiGirlfriendsTableProps {
   data: any[];
+  deleteAIGirlfriend: (id: string) => void;
 }
 
 const columns: ColumnDef<
   any & {
     onEdit?: (id: string) => void;
+    onDelete?: (id: string) => void;
   }
 >[] = [
   {
@@ -105,12 +107,22 @@ const columns: ColumnDef<
         >
           Edit
         </Button>
+        <Button
+          variant="link"
+          size="sm"
+          onClick={() => row.original.onDelete?.(row.original.id)}
+        >
+          Delete
+        </Button>
       </div>
     ),
   },
 ];
 
-export function AiGirlfriendsTable({ data }: AiGirlfriendsTableProps) {
+export function AiGirlfriendsTable({
+  data,
+  deleteAIGirlfriend,
+}: AiGirlfriendsTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const router = useRouter();
@@ -118,6 +130,7 @@ export function AiGirlfriendsTable({ data }: AiGirlfriendsTableProps) {
   const tableData = data.map((item) => ({
     ...item,
     onEdit: (id: string) => router.push(`/admin/ai/${id}`),
+    onDelete: (id: string) => deleteAIGirlfriend(id),
     imageUrl: imgixLoader({
       src: item.profileImageId || '',
       width: 400,

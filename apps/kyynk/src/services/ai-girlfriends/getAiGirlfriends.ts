@@ -22,6 +22,8 @@ export const getAiGirlfriends = async ({
         pseudo: true,
         slug: true,
         profileImageId: true,
+        age: true,
+        archetype: true,
       },
       ...(limit && { take: limit }),
       ...(offset && { skip: offset }),

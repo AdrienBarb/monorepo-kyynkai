@@ -2,6 +2,7 @@
 
 import { AiGirlfriendsTable } from '@/components/admin/AiGirlfriendsTable';
 import useApi from '@/hooks/requests/useApi';
+import axios from 'axios';
 
 export default function AdminAiPage() {
   const { useGet } = useApi();
@@ -10,7 +11,17 @@ export default function AdminAiPage() {
     data: aiGirlfriends = [],
     isLoading,
     error,
+    refetch,
   } = useGet('/api/admin/ai-girlfriends');
+
+  const deleteAIGirlfriend = async (id: string) => {
+    try {
+      await axios.delete(`/api/admin/ai-girlfriends/${id}`);
+      refetch();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -43,7 +54,10 @@ export default function AdminAiPage() {
 
       <div className="bg-white rounded-lg shadow">
         <div className="p-6">
-          <AiGirlfriendsTable data={aiGirlfriends} />
+          <AiGirlfriendsTable
+            data={aiGirlfriends}
+            deleteAIGirlfriend={deleteAIGirlfriend}
+          />
         </div>
       </div>
     </div>
