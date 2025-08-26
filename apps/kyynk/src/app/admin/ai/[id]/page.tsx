@@ -35,25 +35,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select';
-import { traits } from '@/constants/traits';
-
-// Form validation schema
-const aiGirlfriendSchema = z.object({
-  pseudo: z
-    .string()
-    .min(1, 'Name is required')
-    .max(50, 'Name must be less than 50 characters'),
-  slug: z
-    .string()
-    .min(1, 'Slug is required')
-    .max(50, 'Slug must be less than 50 characters'),
-  archetype: z.string().optional(),
-  isActive: z.boolean(),
-  traits: z.array(z.string()).min(1, 'At least one trait is required'),
-  hook: z.string().optional(),
-});
-
-type AiGirlfriendFormData = z.infer<typeof aiGirlfriendSchema>;
+import { TRAITS } from '@/constants/ai-girlfriends/traits';
+import { toast } from 'react-hot-toast';
+import {
+  AiGirlfriendFormData,
+  aiGirlfriendSchema,
+} from '@/schemas/ai-girlfriends/aiGirlfriendSchema';
+import { AI_GIRLFRIEND_ARCHETYPES } from '@/constants/ai-girlfriends/archetypes';
 
 export default function EditAiGirlfriendPage() {
   const params = useParams();
@@ -72,6 +60,7 @@ export default function EditAiGirlfriendPage() {
     `/api/admin/ai-girlfriends/${id}`,
     {
       onSuccess: () => {
+        toast.success('AI girlfriend updated successfully');
         refetch();
       },
     },
@@ -81,7 +70,6 @@ export default function EditAiGirlfriendPage() {
     resolver: zodResolver(aiGirlfriendSchema),
     defaultValues: {
       pseudo: '',
-      slug: '',
       archetype: '',
       isActive: false,
       traits: [],
@@ -89,11 +77,14 @@ export default function EditAiGirlfriendPage() {
     },
   });
 
+  console.log('🚀 ~ form:', form.getValues());
+
   useEffect(() => {
+    console.log('🚀 ~ EditAiGirlfriendPage ~ aiGirlfriend:', aiGirlfriend);
     if (aiGirlfriend) {
       form.reset({
+        ...form.getValues(),
         pseudo: aiGirlfriend.pseudo,
-        slug: aiGirlfriend.slug,
         archetype: aiGirlfriend.archetype || 'none',
         isActive: aiGirlfriend.isActive,
         traits: aiGirlfriend.traits,
@@ -146,7 +137,7 @@ export default function EditAiGirlfriendPage() {
     <div className="container mx-auto py-8 px-4">
       <div className="mb-6">
         <Button
-          variant="secondary"
+          variant="link"
           onClick={() => router.push('/admin/ai')}
           className="mb-4"
         >
@@ -165,7 +156,6 @@ export default function EditAiGirlfriendPage() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Basic Information Card */}
             <Card>
               <CardHeader>
                 <CardTitle>Basic Information</CardTitle>
@@ -190,23 +180,6 @@ export default function EditAiGirlfriendPage() {
 
                 <FormField
                   control={form.control}
-                  name="slug"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Slug</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter slug" {...field} />
-                      </FormControl>
-                      <FormDescription>
-                        URL-friendly identifier (e.g., &quot;sarah-smith&quot;)
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
                   name="archetype"
                   render={({ field }) => (
                     <FormItem>
@@ -221,18 +194,11 @@ export default function EditAiGirlfriendPage() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="none">None</SelectItem>
-                          <SelectItem value="girl-next-door">
-                            Girl Next Door
-                          </SelectItem>
-                          <SelectItem value="femme-fatale">
-                            Femme Fatale
-                          </SelectItem>
-                          <SelectItem value="innocent">Innocent</SelectItem>
-                          <SelectItem value="dominant">Dominant</SelectItem>
-                          <SelectItem value="submissive">Submissive</SelectItem>
-                          <SelectItem value="caregiver">Caregiver</SelectItem>
-                          <SelectItem value="adventurer">Adventurer</SelectItem>
+                          {AI_GIRLFRIEND_ARCHETYPES.map((archetype) => (
+                            <SelectItem key={archetype} value={archetype}>
+                              {archetype}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
@@ -256,13 +222,6 @@ export default function EditAiGirlfriendPage() {
                         <FormDescription>
                           Enable or disable this AI girlfriend
                         </FormDescription>
-                        <div className="mt-2">
-                          <Badge
-                            variant={field.value ? 'default' : 'secondary'}
-                          >
-                            {field.value ? 'Active' : 'Inactive'}
-                          </Badge>
-                        </div>
                       </div>
                     </FormItem>
                   )}
@@ -270,7 +229,6 @@ export default function EditAiGirlfriendPage() {
               </CardContent>
             </Card>
 
-            {/* Traits & Characteristics Card */}
             <Card>
               <CardHeader>
                 <CardTitle>Traits & Characteristics</CardTitle>
@@ -285,8 +243,8 @@ export default function EditAiGirlfriendPage() {
                   render={() => (
                     <FormItem>
                       <FormLabel>Traits</FormLabel>
-                      <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
-                        {traits.map((trait) => (
+                      <div className="grid grid-cols-2 gap-2">
+                        {TRAITS.map((trait) => (
                           <div
                             key={trait}
                             className="flex items-center space-x-2"
@@ -360,15 +318,7 @@ export default function EditAiGirlfriendPage() {
             </CardContent>
           </Card>
 
-          {/* Form Actions */}
           <div className="flex justify-end space-x-4">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => router.push('/admin/ai')}
-            >
-              Cancel
-            </Button>
             <Button type="submit" disabled={isSaving}>
               {isSaving ? (
                 <>

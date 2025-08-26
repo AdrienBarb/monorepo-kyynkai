@@ -1,8 +1,9 @@
 import { prisma } from '@/lib/db/client';
+import { AIGirlfriend } from '@prisma/client';
 
 export const updateAdminAiGirlfriend = async (
   id: string,
-  data: { isActive?: boolean },
+  data: Pick<AIGirlfriend, 'pseudo' | 'slug'>,
 ) => {
   try {
     const updatedAiGirlfriend = await prisma.aIGirlfriend.update({

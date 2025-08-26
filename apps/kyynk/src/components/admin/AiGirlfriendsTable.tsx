@@ -24,6 +24,8 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
+import imgixLoader from '@/lib/imgix/loader';
+import Image from 'next/image';
 
 interface AiGirlfriendsTableProps {
   data: any[];
@@ -39,10 +41,14 @@ const columns: ColumnDef<
     header: 'Name',
     cell: ({ row }) => (
       <div className="flex items-center space-x-3">
-        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-          <span className="text-sm font-medium text-gray-600">
-            {row.original.pseudo.charAt(0)}
-          </span>
+        <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+          <Image
+            src={row.original.imageUrl}
+            alt={row.original.pseudo}
+            fill
+            style={{ objectFit: 'cover' }}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
         </div>
         <div>
           <div className="font-medium">{row.original.pseudo}</div>
@@ -112,6 +118,11 @@ export function AiGirlfriendsTable({ data }: AiGirlfriendsTableProps) {
   const tableData = data.map((item) => ({
     ...item,
     onEdit: (id: string) => router.push(`/admin/ai/${id}`),
+    imageUrl: imgixLoader({
+      src: item.profileImageId || '',
+      width: 400,
+      quality: 80,
+    }),
   }));
 
   const table = useReactTable({
@@ -130,17 +141,6 @@ export function AiGirlfriendsTable({ data }: AiGirlfriendsTableProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <Input
-          placeholder="Filter by name..."
-          value={(table.getColumn('pseudo')?.getFilterValue() as string) ?? ''}
-          onChange={(event) =>
-            table.getColumn('pseudo')?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-      </div>
-
       <div className="rounded-md border">
         <Table>
           <TableHeader>
