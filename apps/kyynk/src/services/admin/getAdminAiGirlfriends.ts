@@ -1,19 +1,16 @@
 import { prisma } from '@/lib/db/client';
 
-interface GetUsersOptions {
+interface GetAdminAiGirlfriendsOptions {
   limit?: number;
   offset?: number;
 }
 
-export const getAiGirlfriends = async ({
+export const getAdminAiGirlfriends = async ({
   limit,
   offset = 0,
-}: GetUsersOptions = {}) => {
+}: GetAdminAiGirlfriendsOptions = {}) => {
   try {
-    const users = await prisma.aIGirlfriend.findMany({
-      where: {
-        isActive: true,
-      },
+    const aiGirlfriends = await prisma.aIGirlfriend.findMany({
       orderBy: {
         createdAt: 'desc',
       },
@@ -22,14 +19,18 @@ export const getAiGirlfriends = async ({
         pseudo: true,
         slug: true,
         profileImageId: true,
+        isActive: true,
+        archetype: true,
+        createdAt: true,
+        updatedAt: true,
       },
       ...(limit && { take: limit }),
       ...(offset && { skip: offset }),
     });
 
-    return users;
+    return aiGirlfriends;
   } catch (error) {
     console.log(error);
-    throw new Error('Failed to fetch users');
+    throw new Error('Failed to fetch AI girlfriends');
   }
 };

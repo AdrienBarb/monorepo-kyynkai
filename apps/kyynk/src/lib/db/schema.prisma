@@ -22,6 +22,7 @@ model User {
   accounts          Account[]
   conversations     Conversation[]
   CreditTransaction CreditTransaction[]
+  roles             UserRole[]          @default([USER])
 
   @@unique([email])
   @@map("user")
@@ -77,6 +78,8 @@ model AIGirlfriend {
   pseudo            String   @unique
   slug              String   @unique
   profileImageId    String
+  secondaryImageIds String[] @default([])
+  age               Int      @default(40)
   isActive          Boolean  @default(true)
   hook              String?
   chatOpeningLine   Json?
@@ -162,4 +165,9 @@ enum TransactionStatus {
   PROCESSING
   CANCELED
   REFUNDED
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }

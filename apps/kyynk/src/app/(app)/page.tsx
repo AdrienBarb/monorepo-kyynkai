@@ -1,11 +1,12 @@
 import UsersList from '@/components/UsersList';
 import React from 'react';
-import { getAiGirlfriends } from '@/services/users/getAiGirlfriends';
+
 import { AIGirlfriend } from '@prisma/client';
 import PaddingContainer from '@/components/layout/PaddingContainer';
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { genPageMetadata } from '@/app/seo';
+import { getAiGirlfriends } from '@/services/ai-girlfriends/getAiGirlfriends';
 
 export type PageProps = {
   params: Promise<{ locale: string }>;

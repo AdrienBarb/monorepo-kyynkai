@@ -2,12 +2,12 @@ import React from 'react';
 import { Metadata } from 'next';
 import { genPageMetadata } from '@/app/seo';
 import { redirect } from 'next/navigation';
-import { getAiGirlfriendBySlug } from '@/services/users/getAiGirlfriendBySlug';
 import imgixLoader from '@/lib/imgix/loader';
 import ProfileConversationInput from '@/components/conversations/ProfileConversationInput';
 import { AiGirlfriendType } from '@/types/ai-girlfriends';
 import ConversationHeader from '@/components/conversations/ConversationHeader';
 import { getLocale } from 'next-intl/server';
+import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends/getAiGirlfriendBySlug';
 
 export type PageProps = {
   params: Promise<{ slug: string }>;

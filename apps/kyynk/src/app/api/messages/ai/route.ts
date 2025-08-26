@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/client';
 import { errorHandler } from '@/utils/errors/errorHandler';
 import { strictlyAuth } from '@/hoc/strictlyAuth';
-import { getAiGirlfriendBySlug } from '@/services/users/getAiGirlfriendBySlug';
 import { errorMessages } from '@/lib/constants/errorMessage';
 import { MessageSender } from '@prisma/client';
 import { auth } from '@/lib/better-auth/auth';
@@ -15,6 +14,7 @@ import {
   ChatHistory,
 } from '@/utils/llm/buildQwenPromptTGI';
 import axios from 'axios';
+import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends/getAiGirlfriendBySlug';
 
 const conversationSchema = z.object({
   slug: z.string(),

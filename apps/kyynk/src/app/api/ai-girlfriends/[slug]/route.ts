@@ -1,6 +1,6 @@
 import { errorMessages } from '@/lib/constants/errorMessage';
+import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends/getAiGirlfriendBySlug';
 import { errorHandler } from '@/utils/errors/errorHandler';
-import { getAiGirlfriendBySlug } from '@/services/users/getAiGirlfriendBySlug';
 import { NextResponse } from 'next/server';
 
 export const GET = async (
