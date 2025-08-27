@@ -17,6 +17,7 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { PostHogProvider } from '@/components/provider/PostHogProvider';
 import { AxiomWebVitals } from 'next-axiom';
 import UTMTracking from '@/components/tracking/UTMTracking';
+import VisitorTracking from '@/components/tracking/VisitorTracking';
 import AuthModal from '@/components/auth/AuthModal';
 import { GoogleTagManager } from '@next/third-parties/google';
 import ModalWrapper from '@/components/layout/ModalWrapper';
@@ -107,6 +108,7 @@ const RootLayout: FC<Props> = async ({ children }) => {
                 <PostHogProvider>{children}</PostHogProvider>
               </GlobalConfig>
               <UTMTracking />
+              <VisitorTracking />
               <GlobalErrorProvider />
 
               <AuthModal />

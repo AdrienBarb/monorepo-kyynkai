@@ -1,13 +1,16 @@
 import { useUserStore } from '@/stores/UserStore';
 import useApi from '@/hooks/requests/useApi';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { LoggedUserType } from '@/types/users';
 import { useSession } from '@/lib/better-auth/auth-client';
+import { getCookie } from 'cookies-next';
+import { VISITOR_TRACKING } from '@/constants/visitorTracking';
 
 export const useUser = () => {
   const { user, setUser: setUserStore, clearUser } = useUserStore();
   const { useGet } = useApi();
   const { data: session } = useSession();
+  const [visitorId, setVisitorId] = useState<string | null>(null);
 
   const {
     data: fetchedUser,
@@ -41,6 +44,11 @@ export const useUser = () => {
     }
   }, [session?.user?.id, clearUser]);
 
+  useEffect(() => {
+    const id = getCookie(VISITOR_TRACKING.COOKIE_NAME) as string | null;
+    setVisitorId(id);
+  }, []);
+
   return {
     user,
     isLoading,
@@ -48,5 +56,6 @@ export const useUser = () => {
     refetch,
     isLoggedIn: () => !!user,
     setUser,
+    visitorId,
   };
 };
