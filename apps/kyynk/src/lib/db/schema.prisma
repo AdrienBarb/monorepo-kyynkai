@@ -79,6 +79,7 @@ model AIGirlfriend {
   slug              String   @unique
   profileImageId    String
   secondaryImageIds String[] @default([])
+  profileVideoId    String?
   age               Int      @default(40)
   isActive          Boolean  @default(true)
   hook              String?

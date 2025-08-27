@@ -23,6 +23,7 @@ export const getAiGirlfriendBySlug = async ({
         traits: true,
         hook: true,
         chatOpeningLine: true,
+        profileVideoId: true,
         createdAt: true,
         updatedAt: true,
         ...selectFields,
