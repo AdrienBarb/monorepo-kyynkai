@@ -50,6 +50,7 @@ const UserPage = async ({ params }: PageProps) => {
       <ConversationHeader aiGirlfriend={aiGirlfriend} />
       <ProfileConversationInput
         chatOpeningLine={aiGirlfriend.chatOpeningLine?.[locale || 'en'] ?? ''}
+        profileVideoId={aiGirlfriend.profileVideoId}
       />
     </div>
   );

@@ -11,6 +11,7 @@ export type AiGirlfriendType = Omit<
     | 'traits'
     | 'hook'
     | 'chatOpeningLine'
+    | 'profileVideoId'
   >,
   'chatOpeningLine'
 > & {

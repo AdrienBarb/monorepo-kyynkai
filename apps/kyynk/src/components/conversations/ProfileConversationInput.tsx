@@ -7,8 +7,10 @@ import { useFetchMessages } from '@/hooks/messages/useFetchMessages';
 
 const ProfileConversationInput = ({
   chatOpeningLine,
+  profileVideoId,
 }: {
   chatOpeningLine: string;
+  profileVideoId?: string | null;
 }) => {
   const { messages } = useFetchMessages();
 
@@ -20,6 +22,7 @@ const ProfileConversationInput = ({
         messages={messages}
         scrollRef={ref}
         chatOpeningLine={chatOpeningLine}
+        profileVideoId={profileVideoId}
       />
       <div className="sticky bottom-0 h-36">
         <ConversationInput />

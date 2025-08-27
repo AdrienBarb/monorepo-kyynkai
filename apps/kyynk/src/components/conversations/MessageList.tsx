@@ -9,6 +9,7 @@ interface MessageListProps {
   messages: MessageType[];
   scrollRef: React.RefObject<HTMLDivElement>;
   chatOpeningLine: string;
+  profileVideoId?: string | null;
   isAiTyping?: boolean;
 }
 
@@ -16,6 +17,7 @@ const MessageList: FC<MessageListProps> = ({
   messages,
   scrollRef,
   chatOpeningLine,
+  profileVideoId,
 }) => {
   const { isAiTyping } = useTypingIndicatorStore();
 
@@ -30,7 +32,10 @@ const MessageList: FC<MessageListProps> = ({
       aria-label="Chat messages"
       aria-live="polite"
     >
-      <OpeningMessage content={chatOpeningLine} />
+      <OpeningMessage
+        content={chatOpeningLine}
+        profileVideoId={profileVideoId}
+      />
 
       {memoizedMessages?.map((message) => (
         <MessageItem key={message.id} message={message} />
