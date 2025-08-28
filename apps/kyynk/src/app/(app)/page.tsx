@@ -4,7 +4,6 @@ import React from 'react';
 import { AIGirlfriend } from '@prisma/client';
 import PaddingContainer from '@/components/layout/PaddingContainer';
 import { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
 import { genPageMetadata } from '@/app/seo';
 import { getAiGirlfriends } from '@/services/ai-girlfriends/getAiGirlfriends';
 
@@ -17,11 +16,11 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata | undefined> {
   const { locale } = await params;
-  const t = await getTranslations({ locale });
 
   return genPageMetadata({
-    title: t('homeTitle'),
-    description: t('homeDescription'),
+    title: 'MILF AI Girlfriend App – Realistic Virtual Companions 24/7',
+    description:
+      'Chat with lifelike MILF AI girlfriends anytime. Flirty, private & realistic virtual companions designed for adults. Start your AI girlfriend experience today.',
   });
 }
 

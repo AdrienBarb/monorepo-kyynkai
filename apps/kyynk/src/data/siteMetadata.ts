@@ -1,9 +1,9 @@
 /** @type {import("pliny/config").PlinyConfig } */
 
 export default {
-  title: 'KYYNK',
+  title: 'KYYNK.AI',
   description:
-    'Get closer than ever to the hottest creators. Unlock and enjoy exclusive content, connect directly with creators, and more.',
+    'Chat with lifelike MILF AI girlfriends anytime. Flirty, private & realistic virtual companions designed for adults. Start your AI girlfriend experience today.',
   language: 'en-us',
   siteUrl: process.env.NEXT_PUBLIC_BASE_URL,
   siteLogo: `${process.env.NEXT_PUBLIC_BASE_URL}/images/logo-kyynk.jpg`,
