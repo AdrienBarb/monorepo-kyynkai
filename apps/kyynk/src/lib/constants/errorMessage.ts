@@ -16,4 +16,5 @@ export const errorMessages = {
   INSUFFICIENT_CREDITS: 'insufficientCredits',
   MISSING_BANK_ACCOUNT_INFORMATION: 'missingBankAccountInformation',
   NOT_FOUND: 'notFound',
+  AUTH_REQUIRED: 'authRequired',
 };

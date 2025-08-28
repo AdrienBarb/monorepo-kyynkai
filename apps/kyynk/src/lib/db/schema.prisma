@@ -109,21 +109,33 @@ model AIGirlfriend {
 
 model Conversation {
   id             String   @id @default(cuid())
-  userId         String
+  userId         String?
   aiGirlfriendId String
   isActive       Boolean  @default(true)
   lastMessageAt  DateTime @default(now())
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  aiGirlfriend AIGirlfriend @relation(fields: [aiGirlfriendId], references: [id], onDelete: Cascade)
-  messages     Message[]
+  user          User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  aiGirlfriend  AIGirlfriend @relation(fields: [aiGirlfriendId], references: [id], onDelete: Cascade)
+  messages      Message[]
+  Guest         Guest?       @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  guestId       String?
+  freeGuestUsed Boolean      @default(false)
 
   @@unique([userId, aiGirlfriendId])
+  @@unique([guestId, aiGirlfriendId])
   @@index([userId])
+  @@index([guestId])
   @@index([aiGirlfriendId])
   @@index([lastMessageAt])
+}
+
+model Guest {
+  id            String         @id @default(cuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  conversations Conversation[]
 }
 
 model Message {

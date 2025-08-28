@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db/client';
+import { getConversationsFields } from '@/utils/conversations/getConversationsFields';
 
 export const getUserConversations = async ({ userId }: { userId: string }) => {
   try {
@@ -6,17 +7,7 @@ export const getUserConversations = async ({ userId }: { userId: string }) => {
       where: {
         userId,
       },
-      select: {
-        id: true,
-        aiGirlfriend: {
-          select: {
-            id: true,
-            pseudo: true,
-            profileImageId: true,
-            slug: true,
-          },
-        },
-      },
+      select: getConversationsFields,
       orderBy: {
         updatedAt: 'desc',
       },
