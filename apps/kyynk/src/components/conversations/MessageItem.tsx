@@ -2,13 +2,24 @@ import { FC } from 'react';
 import { MessageType } from '@/types/messages';
 import { cn } from '@/utils/tailwind/cn';
 import { MessageSender } from '@prisma/client';
+import { useUser } from '@/hooks/users/useUser';
+import HiddenMessage from './HiddenMessage';
 
 interface MessageItemProps {
   message: MessageType;
 }
 
 const MessageItem: FC<MessageItemProps> = ({ message }) => {
+  const { isLoggedIn } = useUser();
   const isUserMessage = message.sender === MessageSender.USER;
+
+  if (!isLoggedIn() && !isUserMessage) {
+    return (
+      <div className="max-w-[80%] self-start items-start">
+        <HiddenMessage />
+      </div>
+    );
+  }
 
   return (
     <div
