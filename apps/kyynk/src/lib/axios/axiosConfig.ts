@@ -17,7 +17,7 @@ axiosInstance.interceptors.response.use(
     const setIsError = useErrorStore.getState().setIsError;
 
     if (errorStatus === 404) {
-      let message = error.response?.data?.message || 'Server error';
+      let message = error.response?.data?.error || 'Server error';
 
       if (isServer) {
         redirect('/404');
@@ -31,7 +31,7 @@ axiosInstance.interceptors.response.use(
     }
 
     if (errorStatus >= 500) {
-      let message = error.response?.data?.message || 'Server error';
+      let message = error.response?.data?.error || 'Server error';
       if (isServer) {
         redirect('/500');
       } else {
@@ -43,7 +43,7 @@ axiosInstance.interceptors.response.use(
     }
 
     if (errorStatus === 400) {
-      let message = error.response?.data?.message || 'Bad request';
+      let message = error.response?.data?.error || 'Bad request';
 
       if (isServer) {
         redirect('/500');
@@ -57,7 +57,7 @@ axiosInstance.interceptors.response.use(
     }
 
     if (errorStatus === 401) {
-      let message = error.response?.data?.message || 'Need to login';
+      let message = error.response?.data?.error || 'Need to login';
       if (isServer) {
         redirect('/401');
       } else {
@@ -69,7 +69,7 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(
-      error.response?.data?.message || 'Something went wrong',
+      error.response?.data?.error || 'Something went wrong',
     );
   },
 );

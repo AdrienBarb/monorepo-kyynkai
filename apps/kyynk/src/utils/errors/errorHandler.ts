@@ -17,5 +17,5 @@ export function errorHandler(error: unknown) {
       ? error.message
       : errorMessages.SERVER_ERROR;
 
-  return NextResponse.json({ message: errorMessage }, { status: 500 });
+  return NextResponse.json({ error: errorMessage }, { status: 500 });
 }

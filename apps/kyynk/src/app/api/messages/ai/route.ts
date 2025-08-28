@@ -15,19 +15,19 @@ import {
 } from '@/utils/llm/buildQwenPromptTGI';
 import axios from 'axios';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends/getAiGirlfriendBySlug';
+import { getGuestFromCookie } from '@/services/guests/getGuestFromCookie';
 
 const conversationSchema = z.object({
   slug: z.string(),
   message: z.string(),
 });
 
-export const POST = strictlyAuth(async (req: NextRequest) => {
+export const POST = async (req: NextRequest) => {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
     });
-
-    const userId = session?.user?.id;
+    const userId = session?.user?.id ?? null;
 
     const body = await req.json();
     const payload = conversationSchema.parse(body);
@@ -56,12 +56,38 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
       );
     }
 
-    const conversation = await prisma.conversation.findFirst({
-      where: {
-        userId,
-        aiGirlfriendId: aiGirlfriend.id,
-      },
-    });
+    let conversation = null;
+
+    if (userId) {
+      conversation = await prisma.conversation.findFirst({
+        where: {
+          userId,
+          aiGirlfriendId: aiGirlfriend.id,
+        },
+      });
+    } else {
+      const guest = await getGuestFromCookie();
+      if (!guest) {
+        return NextResponse.json(
+          { error: errorMessages.NOT_AUTHORIZED },
+          { status: 400 },
+        );
+      }
+      conversation = await prisma.conversation.findFirst({
+        where: { guestId: guest.id, aiGirlfriendId: aiGirlfriend.id },
+        select: { id: true },
+      });
+
+      const aiRepliesCount = await prisma.message.count({
+        where: { conversationId: conversation?.id!, sender: MessageSender.AI },
+      });
+      if (aiRepliesCount > 0) {
+        return NextResponse.json(
+          { error: errorMessages.NOT_AUTHORIZED },
+          { status: 400 },
+        );
+      }
+    }
 
     if (!conversation) {
       return NextResponse.json(
@@ -134,4 +160,4 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
   } catch (error) {
     return errorHandler(error);
   }
-});
+};

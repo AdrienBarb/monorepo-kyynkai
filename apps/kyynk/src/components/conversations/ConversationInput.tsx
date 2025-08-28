@@ -16,6 +16,7 @@ import { useAuthModal } from '@/hooks/auth/openAuthModal';
 import { useTypingIndicatorStore } from '@/stores/TypingIndicatorStore';
 import { hasEnoughCredits } from '@/utils/users/hasEnoughCredits';
 import { useGlobalModalStore } from '@/stores/GlobalModalStore';
+import { errorMessages } from '@/lib/constants/errorMessage';
 
 interface UseAutoResizeTextareaProps {
   minHeight: number;
@@ -103,26 +104,31 @@ const ConversationInput = () => {
       setIsAiTyping(true);
       sendAiMessage({ message: createdMessage.content, slug: slug as string });
       refetchConversations();
-      refetchUser();
+
+      if (loggedUser) {
+        refetchUser();
+      }
+    },
+    onError: (err: any) => {
+      if (err === errorMessages.AUTH_REQUIRED) {
+        openSignUp();
+      }
     },
   });
 
   const handleSendMessage = () => {
     if (!value.trim()) return;
 
-    if (!loggedUser) {
-      openSignUp();
-      return;
-    }
-
-    if (
-      !hasEnoughCredits({
-        user: loggedUser,
-        requiredCredits: 1,
-      })
-    ) {
-      openModal('notEnoughCredits');
-      return;
+    if (loggedUser) {
+      if (
+        !hasEnoughCredits({
+          user: loggedUser,
+          requiredCredits: 1,
+        })
+      ) {
+        openModal('notEnoughCredits');
+        return;
+      }
     }
 
     sendMessage({ message: value, slug: slug as string });

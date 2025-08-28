@@ -7,31 +7,28 @@ import { findOrCreateConversation } from '@/utils/conversations/findOrCreateConv
 import { errorMessages } from '@/lib/constants/errorMessage';
 import { MessageSender } from '@prisma/client';
 import { auth } from '@/lib/better-auth/auth';
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { getCurrentUser } from '@/services/users/getCurrentUser';
 import { MESSAGE_COST } from '@/constants/creditPackages';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends/getAiGirlfriendBySlug';
+import { getOrCreateGuest } from '@/services/guests/getOrCreateGuest';
+import { getGuestFromCookie } from '@/services/guests/getGuestFromCookie';
 
 const conversationSchema = z.object({
   slug: z.string(),
   message: z.string(),
 });
 
-export const POST = strictlyAuth(async (req: NextRequest) => {
+export const POST = async (req: NextRequest) => {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    const userId = session?.user?.id;
+    const h = await headers();
+    const session = await auth.api.getSession({ headers: h });
+    const userId = session?.user?.id ?? null;
 
     const body = await req.json();
     const payload = conversationSchema.parse(body);
 
-    const aiGirlfriend = await getAiGirlfriendBySlug({
-      slug: payload.slug,
-    });
-
+    const aiGirlfriend = await getAiGirlfriendBySlug({ slug: payload.slug });
     if (!aiGirlfriend) {
       return NextResponse.json(
         { error: errorMessages.NOT_FOUND },
@@ -39,23 +36,73 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
       );
     }
 
-    const loggedUser = await getCurrentUser({
-      userId: userId!,
-    });
+    // User
+    if (userId) {
+      const loggedUser = await getCurrentUser({
+        userId: userId!,
+      });
 
-    if (MESSAGE_COST > loggedUser?.creditBalance!) {
-      return NextResponse.json(
-        { error: errorMessages.INSUFFICIENT_CREDITS },
-        { status: 400 },
-      );
+      if (MESSAGE_COST > loggedUser?.creditBalance!) {
+        return NextResponse.json(
+          { error: errorMessages.INSUFFICIENT_CREDITS },
+          { status: 400 },
+        );
+      }
+
+      const result = await prisma.$transaction(async (tx) => {
+        const conversation = await findOrCreateConversation({
+          userId: userId!,
+          aiGirlfriendId: aiGirlfriend.id,
+          tx,
+        });
+
+        const message = await tx.message.create({
+          data: {
+            content: payload.message,
+            conversationId: conversation.id,
+            sender: MessageSender.USER,
+          },
+        });
+
+        await tx.user.update({
+          where: {
+            id: userId!,
+          },
+          data: {
+            creditBalance: { decrement: MESSAGE_COST },
+          },
+        });
+
+        return message;
+      });
+
+      return NextResponse.json(result, { status: 201 });
     }
 
+    // Guest
+    const guest = await getOrCreateGuest();
+
     const result = await prisma.$transaction(async (tx) => {
-      const conversation = await findOrCreateConversation({
-        userId: userId!,
-        aiGirlfriendId: aiGirlfriend.id,
-        tx,
+      let conversation = await tx.conversation.findFirst({
+        where: { guestId: guest.id, aiGirlfriendId: aiGirlfriend.id },
       });
+
+      if (!conversation) {
+        conversation = await tx.conversation.create({
+          data: {
+            guestId: guest.id,
+            aiGirlfriendId: aiGirlfriend.id,
+          },
+        });
+      }
+
+      const updated = await tx.conversation.updateMany({
+        where: { id: conversation.id, freeGuestUsed: false },
+        data: { freeGuestUsed: true },
+      });
+      if (updated.count === 0) {
+        throw new Error(errorMessages.AUTH_REQUIRED);
+      }
 
       const message = await tx.message.create({
         data: {
@@ -65,31 +112,32 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
         },
       });
 
-      await tx.user.update({
-        where: {
-          id: userId!,
-        },
-        data: {
-          creditBalance: { decrement: MESSAGE_COST },
-        },
-      });
-
       return message;
     });
 
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === errorMessages.AUTH_REQUIRED
+    ) {
+      return NextResponse.json(
+        { error: errorMessages.AUTH_REQUIRED },
+        { status: 422 },
+      );
+    }
+
     return errorHandler(error);
   }
-});
+};
 
-export const GET = strictlyAuth(async (req: NextRequest) => {
+export const GET = async (req: NextRequest) => {
   try {
+    const h = await headers();
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: h,
     });
-
-    const userId = session?.user?.id;
+    const userId = session?.user?.id ?? null;
 
     const searchParams = req.nextUrl.searchParams;
     const slug = searchParams.get('slug');
@@ -105,25 +153,44 @@ export const GET = strictlyAuth(async (req: NextRequest) => {
       );
     }
 
-    const conversation = await prisma.conversation.findFirst({
-      where: {
-        aiGirlfriendId: aiGirlfriend.id,
-        userId: userId!,
-      },
-    });
+    if (userId) {
+      const conversation = await prisma.conversation.findFirst({
+        where: {
+          aiGirlfriendId: aiGirlfriend.id,
+          userId: userId!,
+        },
+      });
 
+      if (!conversation) {
+        return NextResponse.json([], { status: 200 });
+      }
+
+      const messages = await prisma.message.findMany({
+        where: {
+          conversationId: conversation.id,
+        },
+      });
+
+      return NextResponse.json(messages, { status: 200 });
+    }
+
+    const guest = await getGuestFromCookie();
+    if (!guest) {
+      return NextResponse.json([], { status: 200 });
+    }
+
+    const conversation = await prisma.conversation.findFirst({
+      where: { aiGirlfriendId: aiGirlfriend.id, guestId: guest.id },
+    });
     if (!conversation) {
       return NextResponse.json([], { status: 200 });
     }
 
     const messages = await prisma.message.findMany({
-      where: {
-        conversationId: conversation.id,
-      },
+      where: { conversationId: conversation.id },
     });
-
     return NextResponse.json(messages, { status: 200 });
   } catch (error) {
     return errorHandler(error);
   }
-});
+};
