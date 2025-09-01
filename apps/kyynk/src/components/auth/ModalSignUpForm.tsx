@@ -19,6 +19,8 @@ import {
   FormMessage,
 } from '@/components/ui/Form';
 import { authClient } from '@/lib/better-auth/auth-client';
+import GoogleSignInButton from './GoogleSignInButton';
+import { Separator } from '@/components/ui/Separator';
 
 interface ModalSignUpFormProps {
   onSuccess?: () => void;
@@ -143,6 +145,15 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
           {t('signUpBonusDescription')}
         </p>
       </div>
+
+      <GoogleSignInButton
+        onSuccess={onSuccess}
+        onError={onError}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+      />
+
+      <Separator />
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
