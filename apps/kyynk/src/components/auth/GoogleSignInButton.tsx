@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { authClient } from '@/lib/better-auth/auth-client';
 import { FcGoogle } from 'react-icons/fc';
 import { usePathname } from 'next/navigation';
+import useApi from '@/hooks/requests/useApi';
 
 interface GoogleSignInButtonProps {
   onSuccess?: () => void;
@@ -14,7 +15,6 @@ interface GoogleSignInButtonProps {
 }
 
 const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
-  onSuccess,
   onError,
   isLoading = false,
   setIsLoading,
@@ -31,9 +31,6 @@ const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
           callbackURL: pathname,
         },
         {
-          onSuccess: () => {
-            onSuccess?.();
-          },
           onError: (ctx: any) => {
             const errorMessage = ctx.error?.message || 'Google sign-in failed';
             onError?.(errorMessage);

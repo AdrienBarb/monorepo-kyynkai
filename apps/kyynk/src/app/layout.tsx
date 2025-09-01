@@ -21,6 +21,7 @@ import VisitorTracking from '@/components/tracking/VisitorTracking';
 import AuthModal from '@/components/auth/AuthModal';
 import { GoogleTagManager } from '@next/third-parties/google';
 import ModalWrapper from '@/components/layout/ModalWrapper';
+import AutoMergeWrapper from '@/components/auth/AutoMergeWrapper';
 
 config.autoAddCss = false;
 
@@ -110,6 +111,7 @@ const RootLayout: FC<Props> = async ({ children }) => {
               <UTMTracking />
               <VisitorTracking />
               <GlobalErrorProvider />
+              <AutoMergeWrapper />
 
               <AuthModal />
               <ModalWrapper />

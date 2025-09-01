@@ -14,8 +14,6 @@ import ModalSignUpForm from './ModalSignUpForm';
 import { useAuthModal } from '@/hooks/auth/openAuthModal';
 import toast from 'react-hot-toast';
 import { Separator } from '../ui/Separator';
-import useApi from '@/hooks/requests/useApi';
-import { useConversations } from '@/hooks/conversations/useConversations';
 
 const AuthModal: React.FC = () => {
   const {
@@ -27,15 +25,6 @@ const AuthModal: React.FC = () => {
     openSignUp,
   } = useAuthModal();
   const [isLogin, setIsLogin] = useState(false);
-
-  const { usePost } = useApi();
-  const { refetch: refetchConversations } = useConversations();
-
-  const { mutate: mergeGuest } = usePost('/api/me/merge', {
-    onSuccess: () => {
-      refetchConversations();
-    },
-  });
 
   const t = useTranslations();
 
@@ -63,7 +52,6 @@ const AuthModal: React.FC = () => {
   };
 
   const handleAuthSuccess = () => {
-    mergeGuest({});
     handleClose();
   };
 

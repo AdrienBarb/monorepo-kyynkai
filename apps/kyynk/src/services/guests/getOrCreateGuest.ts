@@ -16,7 +16,7 @@ export async function getOrCreateGuest() {
   });
 
   store.set('guest_id', guest.id, {
-    httpOnly: true,
+    httpOnly: false,
     sameSite: 'lax',
     secure: true,
     path: '/',
