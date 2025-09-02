@@ -8,6 +8,7 @@ import { AiGirlfriendType } from '@/types/ai-girlfriends';
 import ConversationHeader from '@/components/conversations/ConversationHeader';
 import { getLocale } from 'next-intl/server';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends/getAiGirlfriendBySlug';
+import CharacterPageView from '@/components/tracking/CharacterPageView';
 
 export type PageProps = {
   params: Promise<{ slug: string }>;
@@ -52,6 +53,7 @@ const UserPage = async ({ params }: PageProps) => {
         chatOpeningLine={aiGirlfriend.chatOpeningLine?.[locale || 'en'] ?? ''}
         profileVideoId={aiGirlfriend.profileVideoId}
       />
+      <CharacterPageView />
     </div>
   );
 };

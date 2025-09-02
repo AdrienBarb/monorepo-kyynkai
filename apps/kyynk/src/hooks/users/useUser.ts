@@ -5,12 +5,14 @@ import { LoggedUserType } from '@/types/users';
 import { useSession } from '@/lib/better-auth/auth-client';
 import { getCookie } from 'cookies-next';
 import { VISITOR_TRACKING } from '@/constants/visitorTracking';
+import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 
 export const useUser = () => {
   const { user, setUser: setUserStore, clearUser } = useUserStore();
   const { useGet } = useApi();
   const { data: session } = useSession();
   const [visitorId, setVisitorId] = useState<string | null>(null);
+  const { identify } = useClientPostHogEvent();
 
   const {
     data: fetchedUser,
@@ -43,6 +45,13 @@ export const useUser = () => {
       clearUser();
     }
   }, [session?.user?.id, clearUser]);
+
+  // Identify the user in PostHog
+  useEffect(() => {
+    if (session?.user?.id) {
+      identify(session.user.id);
+    }
+  }, [session?.user?.id, identify]);
 
   useEffect(() => {
     const id = getCookie(VISITOR_TRACKING.COOKIE_NAME) as string | null;
