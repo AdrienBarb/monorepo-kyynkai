@@ -2,6 +2,7 @@
 
 import { isProduction } from '../environments';
 import { usePostHog } from 'posthog-js/react';
+import { useRef } from 'react';
 
 interface SendPostHogEventParams {
   eventName: string;
@@ -10,6 +11,7 @@ interface SendPostHogEventParams {
 
 export const useClientPostHogEvent = () => {
   const posthog = usePostHog();
+  const sentEvents = useRef<Set<string>>(new Set());
 
   const sendEvent = ({ eventName, properties }: SendPostHogEventParams) => {
     if (isProduction) {
@@ -17,6 +19,17 @@ export const useClientPostHogEvent = () => {
     } else {
       console.log('Client PostHog event:', eventName, properties);
     }
+  };
+
+  const sendEventOnce = ({ eventName, properties }: SendPostHogEventParams) => {
+    const key = `${eventName}_${JSON.stringify(properties || {})}`;
+
+    if (sentEvents.current.has(key)) {
+      return;
+    }
+
+    sentEvents.current.add(key);
+    sendEvent({ eventName, properties });
   };
 
   const identify = (distinctId: string) => {
@@ -27,5 +40,5 @@ export const useClientPostHogEvent = () => {
     }
   };
 
-  return { sendEvent, identify };
+  return { sendEvent, sendEventOnce, identify };
 };
