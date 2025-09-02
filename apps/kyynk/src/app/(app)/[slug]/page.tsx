@@ -7,7 +7,7 @@ import ProfileConversationInput from '@/components/conversations/ProfileConversa
 import { AiGirlfriendType } from '@/types/ai-girlfriends';
 import ConversationHeader from '@/components/conversations/ConversationHeader';
 import { getLocale } from 'next-intl/server';
-import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends/getAiGirlfriendBySlug';
+import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import CharacterPageView from '@/components/tracking/CharacterPageView';
 
 export type PageProps = {

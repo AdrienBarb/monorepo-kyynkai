@@ -1,4 +1,4 @@
-import { getAiGirlfriends } from '@/services/ai-girlfriends/getAiGirlfriends';
+import { getAiGirlfriends } from '@/services/ai-girlfriends-service/getAiGirlfriends';
 import { errorHandler } from '@/utils/errors/errorHandler';
 import { NextResponse } from 'next/server';
 

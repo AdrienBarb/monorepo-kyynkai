@@ -1,5 +1,5 @@
 import { errorMessages } from '@/lib/constants/errorMessage';
-import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends/getAiGirlfriendBySlug';
+import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import { errorHandler } from '@/utils/errors/errorHandler';
 import { NextResponse } from 'next/server';
 

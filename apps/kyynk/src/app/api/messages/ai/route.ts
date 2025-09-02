@@ -14,7 +14,7 @@ import {
   ChatHistory,
 } from '@/utils/llm/buildQwenPromptTGI';
 import axios from 'axios';
-import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends/getAiGirlfriendBySlug';
+import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import { getGuestFromCookie } from '@/services/guests/getGuestFromCookie';
 
 const conversationSchema = z.object({

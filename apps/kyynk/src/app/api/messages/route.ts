@@ -10,7 +10,7 @@ import { auth } from '@/lib/better-auth/auth';
 import { cookies, headers } from 'next/headers';
 import { getCurrentUser } from '@/services/users/getCurrentUser';
 import { MESSAGE_COST } from '@/constants/creditPackages';
-import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends/getAiGirlfriendBySlug';
+import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import { getOrCreateGuest } from '@/services/guests/getOrCreateGuest';
 import { getGuestFromCookie } from '@/services/guests/getGuestFromCookie';
 

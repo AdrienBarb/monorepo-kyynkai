@@ -9,9 +9,9 @@ import { auth } from '@/lib/better-auth/auth';
 import { headers } from 'next/headers';
 import { getCurrentUser } from '@/services/users/getCurrentUser';
 import { MESSAGE_COST } from '@/constants/creditPackages';
-import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends/getAiGirlfriendBySlug';
+import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import { getOrCreateGuest } from '@/services/guests/getOrCreateGuest';
-import { generatePicture } from '@/services/ai-girlfriends/generatePicture';
+import { generatePicture } from '@/services/ai-girlfriends-service/generateMedia';
 
 const askPictureSchema = z.object({
   slug: z.string(),

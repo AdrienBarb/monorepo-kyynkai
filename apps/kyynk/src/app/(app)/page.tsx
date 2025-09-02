@@ -5,7 +5,7 @@ import { AIGirlfriend } from '@prisma/client';
 import PaddingContainer from '@/components/layout/PaddingContainer';
 import { Metadata } from 'next';
 import { genPageMetadata } from '@/app/seo';
-import { getAiGirlfriends } from '@/services/ai-girlfriends/getAiGirlfriends';
+import { getAiGirlfriends } from '@/services/ai-girlfriends-service/getAiGirlfriends';
 
 export type PageProps = {
   params: Promise<{ locale: string }>;
