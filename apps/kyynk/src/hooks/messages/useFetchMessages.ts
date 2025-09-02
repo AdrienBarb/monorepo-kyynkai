@@ -10,7 +10,11 @@ export const useFetchMessages = () => {
 
   const url = `/api/messages`;
 
-  const { data: messages, refetch } = useGet(url, { slug });
+  const { data: messages, refetch } = useGet(
+    url,
+    { slug },
+    { enabled: !!slug },
+  );
 
   const addMessageToCache = (newMessage: MessageType) => {
     const queryKey = ['get', { url, params: { slug } }];

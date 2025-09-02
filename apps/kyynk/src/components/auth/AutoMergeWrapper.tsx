@@ -5,6 +5,7 @@ import { useSession } from '@/lib/better-auth/auth-client';
 import { getCookie } from 'cookies-next';
 import useApi from '@/hooks/requests/useApi';
 import { useConversations } from '@/hooks/conversations/useConversations';
+import { useFetchMessages } from '@/hooks/messages/useFetchMessages';
 
 const AutoMergeWrapper: React.FC = () => {
   const { data: session } = useSession();
@@ -12,9 +13,12 @@ const AutoMergeWrapper: React.FC = () => {
   const { refetch: refetchConversations } = useConversations();
   const mergeAttempted = useRef(false);
 
+  const { refetch: refetchMessages } = useFetchMessages();
+
   const { mutate: mergeGuest } = usePost('/api/me/merge', {
     onSuccess: () => {
       refetchConversations();
+      refetchMessages();
     },
     onError: () => {
       mergeAttempted.current = false;
