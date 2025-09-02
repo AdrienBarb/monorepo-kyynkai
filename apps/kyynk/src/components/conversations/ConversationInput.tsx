@@ -1,10 +1,16 @@
 'use client';
 
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Camera } from 'lucide-react';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Textarea } from '@/components/ui/TextArea';
 import { cn } from '@/utils/tailwind/cn';
 import { Button } from '@/components/ui/Button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/DropdownMenu';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import useApi from '@/hooks/requests/useApi';
@@ -83,7 +89,7 @@ const ConversationInput = () => {
 
   const { refetch: refetchConversations } = useConversations();
   const { usePost } = useApi();
-  const { addMessageToCache } = useFetchMessages();
+  const { addMessageToCache, refetch: refetchMessages } = useFetchMessages();
 
   const { mutate: sendAiMessage, isPending: isAiPending } = usePost(
     '/api/messages/ai',
@@ -116,6 +122,26 @@ const ConversationInput = () => {
     },
   });
 
+  const { mutate: sendPictureRequest, isPending: isPictureRequestPending } =
+    usePost('/api/ask-picture', {
+      onSuccess: (response: {
+        userMessage: MessageType;
+        aiMessage: MessageType;
+      }) => {
+        refetchMessages();
+        refetchConversations();
+
+        if (loggedUser) {
+          refetchUser();
+        }
+      },
+      onError: (err: any) => {
+        if (err === errorMessages.AUTH_REQUIRED) {
+          openSignUp();
+        }
+      },
+    });
+
   const handleSendMessage = () => {
     if (!value.trim()) return;
 
@@ -144,6 +170,22 @@ const ConversationInput = () => {
     }
   };
 
+  const handlePictureRequest = (pictureType: 'ass' | 'pussy' | 'tits') => {
+    if (loggedUser) {
+      if (
+        !hasEnoughCredits({
+          user: loggedUser,
+          requiredCredits: 1,
+        })
+      ) {
+        openModal('notEnoughCredits');
+        return;
+      }
+    }
+
+    sendPictureRequest({ pictureType, slug: slug as string });
+  };
+
   return (
     <>
       <div className={cn('max-w-xl w-full mx-auto')}>
@@ -167,13 +209,54 @@ const ConversationInput = () => {
 
             <div className="h-14 rounded-b-xl flex items-center">
               <div className="absolute left-3 right-3 bottom-3 flex items-center justify-between w-[calc(100%-24px)]">
-                <div className="flex items-center gap-2"></div>
+                <div className="flex items-center gap-2">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        aria-label="Get a picture"
+                        variant="secondary"
+                        size="sm"
+                        disabled={
+                          isAiPending || isPending || isPictureRequestPending
+                        }
+                        className="flex items-center gap-2 px-3 py-2 h-9"
+                      >
+                        <Camera className="w-4 h-4" />
+                        <span className="text-sm">Get a picture</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" side="top">
+                      <DropdownMenuItem
+                        onClick={() => handlePictureRequest('ass')}
+                      >
+                        My ass
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handlePictureRequest('pussy')}
+                      >
+                        My pussy
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handlePictureRequest('tits')}
+                      >
+                        My tits
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
                 <Button
                   aria-label="Send message"
                   variant="default"
                   size="icon"
-                  disabled={!value.trim() || isAiPending || isPending}
-                  isLoading={isPending || isAiPending || isPending}
+                  disabled={
+                    !value.trim() ||
+                    isAiPending ||
+                    isPending ||
+                    isPictureRequestPending
+                  }
+                  isLoading={
+                    isPending || isAiPending || isPictureRequestPending
+                  }
                   onClick={handleSendMessage}
                 >
                   <ArrowRight className={cn('w-4 h-4 text-secondary')} />

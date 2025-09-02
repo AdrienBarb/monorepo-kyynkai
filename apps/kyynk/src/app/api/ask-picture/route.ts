@@ -2,22 +2,33 @@ import { z } from 'zod';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db/client';
 import { errorHandler } from '@/utils/errors/errorHandler';
-import { strictlyAuth } from '@/hoc/strictlyAuth';
 import { findOrCreateConversation } from '@/utils/conversations/findOrCreateConversation';
 import { errorMessages } from '@/lib/constants/errorMessage';
 import { MessageSender } from '@prisma/client';
 import { auth } from '@/lib/better-auth/auth';
-import { cookies, headers } from 'next/headers';
+import { headers } from 'next/headers';
 import { getCurrentUser } from '@/services/users/getCurrentUser';
 import { MESSAGE_COST } from '@/constants/creditPackages';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends/getAiGirlfriendBySlug';
 import { getOrCreateGuest } from '@/services/guests/getOrCreateGuest';
-import { getGuestFromCookie } from '@/services/guests/getGuestFromCookie';
+import { generatePicture } from '@/services/ai-girlfriends/generatePicture';
 
-const conversationSchema = z.object({
+const askPictureSchema = z.object({
   slug: z.string(),
-  message: z.string(),
+  pictureType: z.enum(['ass', 'pussy', 'tits']),
 });
+
+const pictureMessages = {
+  ass: 'Send me a picture of your ass',
+  pussy: 'Send me a picture of your pussy',
+  tits: 'Send me a picture of your tits',
+} as const;
+
+const pictureResponses = {
+  ass: 'Here you go baby... my ass just for you 😏',
+  pussy: 'Look what I have for you... my wet pussy 💦',
+  tits: 'Just for you sweetheart... my tits 😘',
+} as const;
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -26,7 +37,7 @@ export const POST = async (req: NextRequest) => {
     const userId = session?.user?.id ?? null;
 
     const body = await req.json();
-    const payload = conversationSchema.parse(body);
+    const payload = askPictureSchema.parse(body);
 
     const aiGirlfriend = await getAiGirlfriendBySlug({ slug: payload.slug });
     if (!aiGirlfriend) {
@@ -36,7 +47,8 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    // User
+    const messageContent = pictureMessages[payload.pictureType];
+
     if (userId) {
       const loggedUser = await getCurrentUser({
         userId: userId!,
@@ -56,11 +68,24 @@ export const POST = async (req: NextRequest) => {
           tx,
         });
 
-        const message = await tx.message.create({
+        const userMessage = await tx.message.create({
           data: {
-            content: payload.message,
+            content: messageContent,
             conversationId: conversation.id,
             sender: MessageSender.USER,
+          },
+        });
+
+        const pictureId = await generatePicture({
+          pictureType: payload.pictureType,
+        });
+
+        const aiMessage = await tx.message.create({
+          data: {
+            content: pictureResponses[payload.pictureType],
+            conversationId: conversation.id,
+            sender: MessageSender.AI,
+            mediaId: pictureId,
           },
         });
 
@@ -73,13 +98,12 @@ export const POST = async (req: NextRequest) => {
           },
         });
 
-        return message;
+        return { userMessage, aiMessage };
       });
 
       return NextResponse.json(result, { status: 201 });
     }
 
-    // Guest
     const guest = await getOrCreateGuest();
 
     const result = await prisma.$transaction(async (tx) => {
@@ -104,15 +128,28 @@ export const POST = async (req: NextRequest) => {
         throw new Error(errorMessages.AUTH_REQUIRED);
       }
 
-      const message = await tx.message.create({
+      const userMessage = await tx.message.create({
         data: {
-          content: payload.message,
+          content: messageContent,
           conversationId: conversation.id,
           sender: MessageSender.USER,
         },
       });
 
-      return message;
+      const pictureId = await generatePicture({
+        pictureType: payload.pictureType,
+      });
+
+      const aiMessage = await tx.message.create({
+        data: {
+          content: pictureResponses[payload.pictureType],
+          conversationId: conversation.id,
+          sender: MessageSender.AI,
+          mediaId: pictureId,
+        },
+      });
+
+      return { userMessage, aiMessage };
     });
 
     return NextResponse.json(result, { status: 201 });
@@ -127,77 +164,6 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    return errorHandler(error);
-  }
-};
-
-export const GET = async (req: NextRequest) => {
-  try {
-    const h = await headers();
-    const session = await auth.api.getSession({
-      headers: h,
-    });
-    const userId = session?.user?.id ?? null;
-
-    const searchParams = req.nextUrl.searchParams;
-    const slug = searchParams.get('slug');
-
-    const aiGirlfriend = await getAiGirlfriendBySlug({
-      slug: slug as string,
-    });
-
-    if (!aiGirlfriend) {
-      return NextResponse.json(
-        { error: errorMessages.NOT_FOUND },
-        { status: 404 },
-      );
-    }
-
-    if (userId) {
-      const conversation = await prisma.conversation.findFirst({
-        where: {
-          aiGirlfriendId: aiGirlfriend.id,
-          userId: userId!,
-        },
-      });
-
-      if (!conversation) {
-        return NextResponse.json([], { status: 200 });
-      }
-
-      const messages = await prisma.message.findMany({
-        where: {
-          conversationId: conversation.id,
-        },
-        include: {
-          media: true,
-        },
-      });
-
-      return NextResponse.json(messages, { status: 200 });
-    }
-
-    const guest = await getGuestFromCookie();
-    if (!guest) {
-      return NextResponse.json([], { status: 200 });
-    }
-
-    const conversation = await prisma.conversation.findFirst({
-      where: { aiGirlfriendId: aiGirlfriend.id, guestId: guest.id },
-    });
-    if (!conversation) {
-      return NextResponse.json([], { status: 200 });
-    }
-
-    const messages = await prisma.message.findMany({
-      where: { conversationId: conversation.id },
-      include: {
-        media: true,
-      },
-    });
-
-    return NextResponse.json(messages, { status: 200 });
-  } catch (error) {
     return errorHandler(error);
   }
 };

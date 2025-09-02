@@ -139,19 +139,35 @@ model Guest {
   conversations Conversation[]
 }
 
+model Media {
+  id          String    @id @default(cuid())
+  type        MediaType
+  mediaKey    String
+  unlockUsers String[]  @default([])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  messages Message[]
+
+  @@index([type])
+}
+
 model Message {
   id             String        @id @default(cuid())
   conversationId String
   sender         MessageSender
   content        String
+  mediaId        String?
   isRead         Boolean       @default(false)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
   conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  media        Media?       @relation(fields: [mediaId], references: [id], onDelete: SetNull)
 
   @@index([conversationId])
   @@index([createdAt])
+  @@index([mediaId])
 }
 
 model CreditTransaction {
@@ -184,4 +200,9 @@ enum TransactionStatus {
 enum UserRole {
   USER
   ADMIN
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
 }
