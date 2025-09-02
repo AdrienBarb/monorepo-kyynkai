@@ -13,6 +13,7 @@ import { MEDIA_UNLOCK_COST } from '@/constants/creditPackages';
 import useApi from '@/hooks/requests/useApi';
 import { useFetchMessages } from '@/hooks/messages/useFetchMessages';
 import MediaViewerModal from '@/components/modals/MediaViewerModal';
+import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 
 interface MediaMessageProps {
   message: MessageType;
@@ -26,11 +27,15 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
   const { refetch: refetchMessages } = useFetchMessages();
   const { usePost } = useApi();
   const [showMediaModal, setShowMediaModal] = useState(false);
+  const { sendEvent } = useClientPostHogEvent();
 
   const { mutate: unlockMedia, isPending: isUnlocking } = usePost(
     '/api/unlock-media',
     {
       onSuccess: () => {
+        sendEvent({
+          eventName: 'media_unlocked',
+        });
         refetchMessages();
         if (loggedUser) {
           refetchUser();
