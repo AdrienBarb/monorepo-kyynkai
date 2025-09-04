@@ -5,7 +5,7 @@ import { errorHandler } from '@/utils/errors/errorHandler';
 import { strictlyAuth } from '@/hoc/strictlyAuth';
 import { findOrCreateConversation } from '@/utils/conversations/findOrCreateConversation';
 import { errorMessages } from '@/lib/constants/errorMessage';
-import { MessageSender } from '@prisma/client';
+import { CreditSaleType, MessageSender } from '@prisma/client';
 import { auth } from '@/lib/better-auth/auth';
 import { cookies, headers } from 'next/headers';
 import { getCurrentUser } from '@/services/users/getCurrentUser';
@@ -13,6 +13,7 @@ import { MESSAGE_COST } from '@/constants/creditPackages';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import { getOrCreateGuest } from '@/services/guests/getOrCreateGuest';
 import { getGuestFromCookie } from '@/services/guests/getGuestFromCookie';
+import { sendPostHogEvent } from '@/utils/tracking/sendPostHogEvent';
 
 const conversationSchema = z.object({
   slug: z.string(),
@@ -73,6 +74,14 @@ export const POST = async (req: NextRequest) => {
           },
         });
 
+        await tx.creditSale.create({
+          data: {
+            userId: userId!,
+            type: CreditSaleType.CHAT,
+            amount: MESSAGE_COST,
+          },
+        });
+
         return message;
       });
 
@@ -93,6 +102,11 @@ export const POST = async (req: NextRequest) => {
             guestId: guest.id,
             aiGirlfriendId: aiGirlfriend.id,
           },
+        });
+
+        sendPostHogEvent({
+          distinctId: guest.id,
+          event: 'guest_conversation_created',
         });
       }
 

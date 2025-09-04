@@ -23,6 +23,8 @@ import { useTypingIndicatorStore } from '@/stores/TypingIndicatorStore';
 import { hasEnoughCredits } from '@/utils/users/hasEnoughCredits';
 import { useGlobalModalStore } from '@/stores/GlobalModalStore';
 import { errorMessages } from '@/lib/constants/errorMessage';
+import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
+import { trackingEvent } from '@/constants/trackingEvent';
 
 interface UseAutoResizeTextareaProps {
   minHeight: number;
@@ -90,7 +92,7 @@ const ConversationInput = () => {
   const { refetch: refetchConversations } = useConversations();
   const { usePost } = useApi();
   const { addMessageToCache, refetch: refetchMessages } = useFetchMessages();
-
+  const { sendEventOnce } = useClientPostHogEvent();
   const { mutate: sendAiMessage, isPending: isAiPending } = usePost(
     '/api/messages/ai',
     {
@@ -117,6 +119,9 @@ const ConversationInput = () => {
     },
     onError: (err: any) => {
       if (err === errorMessages.AUTH_REQUIRED) {
+        sendEventOnce({
+          eventName: trackingEvent.signup_message_wall_shown,
+        });
         openSignUp();
       }
     },
@@ -128,6 +133,10 @@ const ConversationInput = () => {
         userMessage: MessageType;
         aiMessage: MessageType;
       }) => {
+        sendEventOnce({
+          eventName: trackingEvent.media_requested,
+        });
+
         refetchMessages();
         refetchConversations();
 
@@ -137,6 +146,9 @@ const ConversationInput = () => {
       },
       onError: (err: any) => {
         if (err === errorMessages.AUTH_REQUIRED) {
+          sendEventOnce({
+            eventName: trackingEvent.signup_picture_wall_shown,
+          });
           openSignUp();
         }
       },
@@ -178,6 +190,9 @@ const ConversationInput = () => {
           requiredCredits: 1,
         })
       ) {
+        sendEventOnce({
+          eventName: trackingEvent.credit_message_unlock_wall_shown,
+        });
         openModal('notEnoughCredits');
         return;
       }

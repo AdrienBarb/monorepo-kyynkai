@@ -73,6 +73,15 @@ export async function claimGuestConversationsForUser(
     // 5) Remove the guest row (conversations are now reassigned/merged)
     await tx.guest.delete({ where: { id: guestId } }).catch(() => {});
 
+    await tx.user
+      .update({
+        where: { id: userId },
+        data: {
+          originGuestId: guestId,
+        },
+      })
+      .catch(() => {});
+
     return { claimed: toClaimIds.length, merged: toMergePairs.length };
   });
 }

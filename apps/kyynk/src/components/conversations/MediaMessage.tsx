@@ -14,6 +14,7 @@ import useApi from '@/hooks/requests/useApi';
 import { useFetchMessages } from '@/hooks/messages/useFetchMessages';
 import MediaViewerModal from '@/components/modals/MediaViewerModal';
 import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
+import { trackingEvent } from '@/constants/trackingEvent';
 
 interface MediaMessageProps {
   message: MessageType;
@@ -34,7 +35,7 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
     {
       onSuccess: () => {
         sendEvent({
-          eventName: 'media_unlocked',
+          eventName: trackingEvent.media_unlocked,
         });
         refetchMessages();
         if (loggedUser) {
@@ -51,6 +52,9 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
 
   const handleUnlockMedia = () => {
     if (!loggedUser) {
+      sendEvent({
+        eventName: trackingEvent.signup_media_unlock_wall_shown,
+      });
       openSignUp();
       return;
     }
@@ -61,6 +65,9 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
         requiredCredits: MEDIA_UNLOCK_COST,
       })
     ) {
+      sendEvent({
+        eventName: trackingEvent.credit_media_unlock_wall_shown,
+      });
       openModal('notEnoughCredits');
       return;
     }
@@ -114,17 +121,17 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
             {isLocked && (
               <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                 <div className="text-center text-white">
-                  <Lock className="w-8 h-8 mx-auto mb-2" />
                   <Button
                     size="sm"
                     variant="default"
                     disabled={isUnlocking}
                     isLoading={isUnlocking}
-                    className="text-xs"
+                    className="text-xs text-custom-black"
                   >
+                    🔓
                     {loggedUser
-                      ? `Unlock for ${MEDIA_UNLOCK_COST} credits`
-                      : 'Sign up to unlock'}
+                      ? ` Unlock for ${MEDIA_UNLOCK_COST} credits`
+                      : ' Sign up to unlock'}
                   </Button>
                 </div>
               </div>

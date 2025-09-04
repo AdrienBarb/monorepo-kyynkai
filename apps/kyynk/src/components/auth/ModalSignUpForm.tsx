@@ -21,6 +21,8 @@ import {
 import { authClient } from '@/lib/better-auth/auth-client';
 import GoogleSignInButton from './GoogleSignInButton';
 import { Separator } from '@/components/ui/Separator';
+import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
+import { trackingEvent } from '@/constants/trackingEvent';
 
 interface ModalSignUpFormProps {
   onSuccess?: () => void;
@@ -35,7 +37,7 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [sentEmail, setSentEmail] = useState('');
-
+  const { sendEventOnce } = useClientPostHogEvent();
   const emailSchema = z.object({
     email: z
       .string()
@@ -112,6 +114,9 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
         },
         {
           onSuccess: () => {
+            sendEventOnce({
+              eventName: trackingEvent.signup_completed,
+            });
             onSuccess?.();
           },
           onError: (ctx: any) => {
@@ -147,7 +152,7 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
       </div>
 
       <GoogleSignInButton
-        onSuccess={onSuccess}
+        isSignUp={true}
         onError={onError}
         isLoading={isLoading}
         setIsLoading={setIsLoading}

@@ -7,6 +7,7 @@ import { strictlyAuth } from '@/hoc/strictlyAuth';
 import { getCurrentUser } from '@/services/users/getCurrentUser';
 import { MEDIA_UNLOCK_COST } from '@/constants/creditPackages';
 import { auth } from '@/lib/better-auth/auth';
+import { CreditSaleType } from '@prisma/client';
 
 const unlockMediaSchema = z.object({
   messageId: z.string(),
@@ -84,6 +85,14 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
         },
         data: {
           creditBalance: { decrement: MEDIA_UNLOCK_COST },
+        },
+      });
+
+      await tx.creditSale.create({
+        data: {
+          userId: userId!,
+          type: CreditSaleType.MEDIA,
+          amount: MEDIA_UNLOCK_COST,
         },
       });
 

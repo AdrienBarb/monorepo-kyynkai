@@ -84,6 +84,7 @@
     "embla-carousel-react": "^8.5.2",
     "fathom-client": "^3.6.0",
     "formik": "^2.4.5",
+    "framer-motion": "^12.23.12",
     "html-react-parser": "^5.1.8",
     "javascript-time-ago": "^2.5.9",
     "lodash": "^4.17.21",

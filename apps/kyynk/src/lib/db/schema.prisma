@@ -16,6 +16,7 @@ model User {
   emailVerified Boolean
   utmTracking   Json?
   creditBalance Int     @default(20)
+  originGuestId String?
 
   createdAt         DateTime
   updatedAt         DateTime
@@ -24,6 +25,7 @@ model User {
   conversations     Conversation[]
   CreditTransaction CreditTransaction[]
   roles             UserRole[]          @default([USER])
+  CreditSale        CreditSale[]
 
   @@unique([email])
   @@map("user")
@@ -185,6 +187,15 @@ model CreditTransaction {
   createdAt DateTime @default(now())
 }
 
+model CreditSale {
+  id        String         @id @default(cuid())
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      CreditSaleType
+  amount    Int
+  createdAt DateTime       @default(now())
+}
+
 enum MessageSender {
   USER
   AI
@@ -195,6 +206,11 @@ enum TransactionStatus {
   PROCESSING
   CANCELED
   REFUNDED
+}
+
+enum CreditSaleType {
+  CHAT
+  MEDIA
 }
 
 enum UserRole {

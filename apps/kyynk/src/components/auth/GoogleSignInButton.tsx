@@ -5,22 +5,24 @@ import { Button } from '@/components/ui/Button';
 import { authClient } from '@/lib/better-auth/auth-client';
 import { FcGoogle } from 'react-icons/fc';
 import { usePathname } from 'next/navigation';
-import useApi from '@/hooks/requests/useApi';
+import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
+import { trackingEvent } from '@/constants/trackingEvent';
 
 interface GoogleSignInButtonProps {
-  onSuccess?: () => void;
+  isSignUp?: boolean;
   onError?: (error: string) => void;
   isLoading?: boolean;
   setIsLoading?: (loading: boolean) => void;
 }
 
 const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
+  isSignUp = false,
   onError,
   isLoading = false,
   setIsLoading,
 }) => {
   const pathname = usePathname();
-
+  const { sendEventOnce } = useClientPostHogEvent();
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading?.(true);
@@ -31,6 +33,13 @@ const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
           callbackURL: pathname,
         },
         {
+          onSuccess: () => {
+            if (isSignUp) {
+              sendEventOnce({
+                eventName: trackingEvent.signup_completed,
+              });
+            }
+          },
           onError: (ctx: any) => {
             const errorMessage = ctx.error?.message || 'Google sign-in failed';
             onError?.(errorMessage);
