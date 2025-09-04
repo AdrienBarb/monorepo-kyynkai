@@ -127,7 +127,6 @@ const ModalSignInForm: React.FC<ModalSignInFormProps> = ({
   return (
     <div className="space-y-4 px-4 pb-4">
       <GoogleSignInButton
-        onSuccess={onSuccess}
         onError={onError}
         isLoading={isLoading}
         setIsLoading={setIsLoading}
