@@ -1,12 +1,11 @@
 'use client';
 
 import { FC, useState } from 'react';
-import { Lock, Eye } from 'lucide-react';
+import { Eye } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/utils/tailwind/cn';
 import { MessageType } from '@/types/messages';
 import { useUser } from '@/hooks/users/useUser';
-import { useAuthModal } from '@/hooks/auth/openAuthModal';
 import { useGlobalModalStore } from '@/stores/GlobalModalStore';
 import { hasEnoughCredits } from '@/utils/users/hasEnoughCredits';
 import { MEDIA_UNLOCK_COST } from '@/constants/creditPackages';
@@ -23,7 +22,6 @@ interface MediaMessageProps {
 
 const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
   const { user: loggedUser, refetch: refetchUser } = useUser();
-  const { openSignUp } = useAuthModal();
   const { openModal } = useGlobalModalStore();
   const { refetch: refetchMessages } = useFetchMessages();
   const { usePost } = useApi();
@@ -44,7 +42,7 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
       },
       onError: (err: any) => {
         if (err === 'AUTH_REQUIRED') {
-          openSignUp();
+          openModal('auth');
         }
       },
     },
@@ -55,7 +53,7 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
       sendEvent({
         eventName: trackingEvent.signup_media_unlock_wall_shown,
       });
-      openSignUp();
+      openModal('auth');
       return;
     }
 

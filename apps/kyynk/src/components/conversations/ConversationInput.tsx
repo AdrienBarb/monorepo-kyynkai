@@ -18,7 +18,6 @@ import { useConversations } from '@/hooks/conversations/useConversations';
 import { useFetchMessages } from '@/hooks/messages/useFetchMessages';
 import { MessageType } from '@/types/messages';
 import { useUser } from '@/hooks/users/useUser';
-import { useAuthModal } from '@/hooks/auth/openAuthModal';
 import { useTypingIndicatorStore } from '@/stores/TypingIndicatorStore';
 import { hasEnoughCredits } from '@/utils/users/hasEnoughCredits';
 import { useGlobalModalStore } from '@/stores/GlobalModalStore';
@@ -79,7 +78,6 @@ const ConversationInput = () => {
   const [value, setValue] = useState('');
   const t = useTranslations();
   const { user: loggedUser, refetch: refetchUser } = useUser();
-  const { openSignUp } = useAuthModal();
   const { setIsAiTyping } = useTypingIndicatorStore();
   const { openModal } = useGlobalModalStore();
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
@@ -122,7 +120,7 @@ const ConversationInput = () => {
         sendEventOnce({
           eventName: trackingEvent.signup_message_wall_shown,
         });
-        openSignUp();
+        openModal('auth');
       }
     },
   });
@@ -149,7 +147,7 @@ const ConversationInput = () => {
           sendEventOnce({
             eventName: trackingEvent.signup_picture_wall_shown,
           });
-          openSignUp();
+          openModal('auth');
         }
       },
     });

@@ -2,6 +2,7 @@
 
 import { useGlobalModalStore } from '@/stores/GlobalModalStore';
 import NotEnoughCreditsModal from '../modals/NotEnoughCreditsModal';
+import AuthModal from '../auth/AuthModal';
 
 const ModalWrapper = () => {
   const stack = useGlobalModalStore((s) => s.stack);
@@ -13,6 +14,9 @@ const ModalWrapper = () => {
   switch (top.type) {
     case 'notEnoughCredits':
       return <NotEnoughCreditsModal {...top.data} open setOpen={closeModal} />;
+    case 'auth':
+      return <AuthModal {...top.data} open setOpen={closeModal} />;
+
     default:
       return null;
   }

@@ -3,14 +3,14 @@
 import React from 'react';
 import { Button } from '@/components/ui/Button';
 import { useTranslations } from 'next-intl';
-import { useAuthModal } from '@/hooks/auth/openAuthModal';
+import { useGlobalModalStore } from '@/stores/GlobalModalStore';
 
 const LoginButton: React.FC = () => {
   const t = useTranslations();
-  const { openSignIn } = useAuthModal();
+  const { openModal } = useGlobalModalStore();
 
   const handleLoginClick = () => {
-    openSignIn();
+    openModal('auth', { isSignInMode: true });
   };
 
   return <Button onClick={handleLoginClick}>{t('login')}</Button>;

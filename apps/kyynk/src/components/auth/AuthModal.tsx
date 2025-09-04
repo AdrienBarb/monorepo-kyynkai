@@ -11,19 +11,20 @@ import {
 import { useTranslations } from 'next-intl';
 import ModalSignInForm from './ModalSignInForm';
 import ModalSignUpForm from './ModalSignUpForm';
-import { useAuthModal } from '@/hooks/auth/openAuthModal';
 import toast from 'react-hot-toast';
 import { Separator } from '../ui/Separator';
 
-const AuthModal: React.FC = () => {
-  const {
-    isOpen,
-    isSignInMode,
-    isSignUpMode,
-    closeAuthModal,
-    openSignIn,
-    openSignUp,
-  } = useAuthModal();
+interface AuthModalProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  isSignInMode: boolean;
+}
+
+const AuthModal: React.FC<AuthModalProps> = ({
+  open,
+  setOpen,
+  isSignInMode,
+}) => {
   const [isLogin, setIsLogin] = useState(false);
 
   const t = useTranslations();
@@ -31,24 +32,19 @@ const AuthModal: React.FC = () => {
   useEffect(() => {
     if (isSignInMode) {
       setIsLogin(true);
-    } else if (isSignUpMode) {
+    } else {
       setIsLogin(false);
     }
-  }, [isSignInMode, isSignUpMode]);
+  }, [isSignInMode]);
 
   const handleClose = () => {
-    closeAuthModal();
+    setOpen(false);
     setIsLogin(true);
   };
 
   const toggleMode = () => {
     const newMode = !isLogin;
     setIsLogin(newMode);
-    if (newMode) {
-      openSignIn();
-    } else {
-      openSignUp();
-    }
   };
 
   const handleAuthSuccess = () => {
@@ -59,10 +55,8 @@ const AuthModal: React.FC = () => {
     toast.error(errorMessage);
   };
 
-  if (!isOpen) return null;
-
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-md p-0">
         <DialogHeader className="p-4">
           <DialogTitle className="text-center">
