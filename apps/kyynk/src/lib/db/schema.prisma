@@ -15,7 +15,7 @@ model User {
   email         String
   emailVerified Boolean
   utmTracking   Json?
-  creditBalance Int     @default(30)
+  creditBalance Int     @default(20)
 
   createdAt         DateTime
   updatedAt         DateTime
