@@ -19,7 +19,6 @@ import { AxiomWebVitals } from 'next-axiom';
 import UTMTracking from '@/components/tracking/UTMTracking';
 import VisitorTracking from '@/components/tracking/VisitorTracking';
 import PostHogIdentify from '@/components/tracking/PostHogIdentify';
-import AuthModal from '@/components/auth/AuthModal';
 import { GoogleTagManager } from '@next/third-parties/google';
 import ModalWrapper from '@/components/layout/ModalWrapper';
 import AutoMergeWrapper from '@/components/auth/AutoMergeWrapper';
@@ -117,7 +116,6 @@ const RootLayout: FC<Props> = async ({ children }) => {
               <GlobalErrorProvider />
               <AutoMergeWrapper />
 
-              <AuthModal />
               <ModalWrapper />
               <AxiomWebVitals />
             </NuqsAdapter>
