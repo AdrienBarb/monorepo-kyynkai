@@ -24,6 +24,7 @@ import { useGlobalModalStore } from '@/stores/GlobalModalStore';
 import { errorMessages } from '@/lib/constants/errorMessage';
 import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 import { trackingEvent } from '@/constants/trackingEvent';
+import { useFetchCurrentAiGirlfriend } from '@/hooks/ai-girlfriends/useFetchCurrentAiGirlfriend';
 
 interface UseAutoResizeTextareaProps {
   minHeight: number;
@@ -91,6 +92,12 @@ const ConversationInput = () => {
   const { usePost } = useApi();
   const { addMessageToCache, refetch: refetchMessages } = useFetchMessages();
   const { sendEventOnce } = useClientPostHogEvent();
+
+  const { aiGirlfriend, refetch: refetchAiGirlfriend } =
+    useFetchCurrentAiGirlfriend();
+
+  console.log('🚀 ~ ConversationInput ~ aiGirlfriend:', aiGirlfriend);
+
   const { mutate: sendAiMessage, isPending: isAiPending } = usePost(
     '/api/messages/ai',
     {

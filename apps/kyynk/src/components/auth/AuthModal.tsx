@@ -13,18 +13,29 @@ import ModalSignInForm from './ModalSignInForm';
 import ModalSignUpForm from './ModalSignUpForm';
 import toast from 'react-hot-toast';
 import { Separator } from '../ui/Separator';
+import SignUpOffer from './SignUpOffer';
+import { SignUpOfferVariant } from './SignUpOffer';
 
 interface AuthModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   isSignInMode: boolean;
+  context: SignUpOfferVariant;
+  girlfriendName: string;
+  avatarImageId: string;
 }
 
 const AuthModal: React.FC<AuthModalProps> = ({
   open,
   setOpen,
   isSignInMode,
+  context = 'default',
+  girlfriendName,
+  avatarImageId,
 }) => {
+  console.log('🚀 ~ AuthModal ~ context:', context);
+  console.log('🚀 ~ AuthModal ~ girlfriendName:', girlfriendName);
+  console.log('🚀 ~ AuthModal ~ avatarImageId:', avatarImageId);
   const [isLogin, setIsLogin] = useState(false);
 
   const t = useTranslations();
@@ -58,12 +69,21 @@ const AuthModal: React.FC<AuthModalProps> = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-md p-0">
-        <DialogHeader className="p-4">
-          <DialogTitle className="text-center">
-            {isLogin ? t('signIn') : t('signUp')}
-          </DialogTitle>
-        </DialogHeader>
-
+        {isLogin ? (
+          <DialogHeader className="p-4">
+            <DialogTitle className="text-center">{t('signIn')}</DialogTitle>
+          </DialogHeader>
+        ) : (
+          <DialogHeader>
+            <SignUpOffer
+              girlfriendName={girlfriendName}
+              context={context}
+              avatarImageId={
+                avatarImageId ?? process.env.NEXT_PUBLIC_DEFAULT_SIGN_UP_IMAGE
+              }
+            />
+          </DialogHeader>
+        )}
         <div className="">
           {isLogin ? (
             <ModalSignInForm

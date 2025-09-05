@@ -22,7 +22,7 @@ const HiddenMessage: FC<HiddenMessageProps> = () => {
           variant="default"
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-sm font-medium w-min text-custom-black"
         >
-          🔓 Unlock
+          🔓 Read her reply
         </Button>
 
         <div className="absolute bottom-2 right-3 flex gap-1">

@@ -129,7 +129,7 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
                     🔓
                     {loggedUser
                       ? ` Unlock for ${MEDIA_UNLOCK_COST} credits`
-                      : ' Sign up to unlock'}
+                      : ' See her picture'}
                   </Button>
                 </div>
               </div>
