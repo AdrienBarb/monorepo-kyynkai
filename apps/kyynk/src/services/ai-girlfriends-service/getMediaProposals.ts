@@ -7,7 +7,6 @@ export async function getMediaProposals({ slug }: { slug: string }) {
         slug,
         isActive: true,
       },
-      isActive: true,
     },
     orderBy: {
       createdAt: 'asc',

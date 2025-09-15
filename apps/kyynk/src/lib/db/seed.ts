@@ -8,11 +8,12 @@ interface SeedAIGirlfriend {
   id: string;
   pseudo: string;
   slug: string;
-  profileImageUrl: string;
+  profileImageId: string;
   archetype: string;
   traits: string[];
   hook: string;
   chatOpeningLine: string;
+  age: number;
   voice: string;
   boundaries: string[];
   styleReminders: string[];
@@ -41,10 +42,11 @@ async function main() {
         data: {
           pseudo: aiGirlfriendData.pseudo,
           slug: aiGirlfriendData.slug,
-          profileImageId: aiGirlfriendData.profileImageUrl,
+          profileImageId: aiGirlfriendData.profileImageId,
           archetype: aiGirlfriendData.archetype,
           traits: aiGirlfriendData.traits,
           hook: aiGirlfriendData.hook,
+          age: aiGirlfriendData.age,
           chatOpeningLine: aiGirlfriendData.chatOpeningLine,
           voice: aiGirlfriendData.voice,
           boundaries: aiGirlfriendData.boundaries,
