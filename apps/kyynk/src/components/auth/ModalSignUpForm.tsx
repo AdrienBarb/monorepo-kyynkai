@@ -71,7 +71,6 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
       otp: '',
       ageVerification: false,
     },
-    mode: 'onBlur',
   });
 
   const sendOtp = async (email: string) => {

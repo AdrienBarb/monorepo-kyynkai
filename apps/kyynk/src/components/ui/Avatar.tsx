@@ -45,7 +45,7 @@ const AvatarImage = React.forwardRef<
   const imageUrl = imgixLoader({
     src: imageId,
     width: size,
-    quality: 80,
+    quality: 90,
   });
 
   return (
@@ -55,7 +55,7 @@ const AvatarImage = React.forwardRef<
       alt={alt ?? 'Image'}
       width={size}
       height={size}
-      quality={80}
+      quality={90}
       priority
       className="object-cover object-center"
     />

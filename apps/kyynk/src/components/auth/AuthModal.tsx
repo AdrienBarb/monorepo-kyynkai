@@ -33,9 +33,6 @@ const AuthModal: React.FC<AuthModalProps> = ({
   girlfriendName,
   avatarImageId,
 }) => {
-  console.log('🚀 ~ AuthModal ~ context:', context);
-  console.log('🚀 ~ AuthModal ~ girlfriendName:', girlfriendName);
-  console.log('🚀 ~ AuthModal ~ avatarImageId:', avatarImageId);
   const [isLogin, setIsLogin] = useState(false);
 
   const t = useTranslations();

@@ -100,14 +100,10 @@ const ConversationInput = () => {
     },
   ) as { data: MediaProposal[] };
 
-  console.log('🚀 ~ ConversationInput ~ mediaProposals:', mediaProposals);
   const { addMessageToCache, refetch: refetchMessages } = useFetchMessages();
   const { sendEventOnce } = useClientPostHogEvent();
 
-  const { aiGirlfriend, refetch: refetchAiGirlfriend } =
-    useFetchCurrentAiGirlfriend();
-
-  console.log('🚀 ~ ConversationInput ~ aiGirlfriend:', aiGirlfriend);
+  const { aiGirlfriend } = useFetchCurrentAiGirlfriend();
 
   const { mutate: sendAiMessage, isPending: isAiPending } = usePost(
     '/api/messages/ai',
@@ -138,7 +134,7 @@ const ConversationInput = () => {
         sendEventOnce({
           eventName: trackingEvent.signup_message_wall_shown,
         });
-        openModal('auth');
+        openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
       }
     },
   });
@@ -162,7 +158,7 @@ const ConversationInput = () => {
           sendEventOnce({
             eventName: trackingEvent.signup_picture_wall_shown,
           });
-          openModal('auth');
+          openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
         }
       },
     });
