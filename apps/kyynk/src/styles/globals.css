@@ -6,11 +6,11 @@ body {
   margin: 0;
   font-family: var(--font-karla);
   font-size: 16px;
-  @apply bg-background text-background;
+  @apply bg-background text-primary;
 }
 
 .main {
-  @apply bg-background text-background;
+  @apply bg-background text-primary;
 }
 
 

@@ -17,8 +17,8 @@ const AiGirlfriendCard = ({ user }: Props) => {
 
   const currentImageUrl = imgixLoader({
     src: allImages[currentImageIndex] || '',
-    width: 400,
-    quality: 80,
+    width: 400 * 2,
+    quality: 90,
   });
 
   useEffect(() => {
