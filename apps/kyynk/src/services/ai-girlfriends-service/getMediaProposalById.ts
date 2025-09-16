@@ -14,7 +14,6 @@ export async function getMediaProposalById({
         slug,
         isActive: true,
       },
-      isActive: true,
     },
     include: {
       aiGirlfriend: true,

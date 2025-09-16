@@ -72,15 +72,6 @@ export const POST = async (req: NextRequest) => {
           },
         });
 
-        await tx.user.update({
-          where: {
-            id: userId!,
-          },
-          data: {
-            creditBalance: { decrement: proposal.creditCost },
-          },
-        });
-
         return aiMessage;
       });
 

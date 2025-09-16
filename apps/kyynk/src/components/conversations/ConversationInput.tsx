@@ -98,6 +98,8 @@ const ConversationInput = () => {
       enabled: !!slug,
     },
   ) as { data: MediaProposal[] };
+
+  console.log('🚀 ~ ConversationInput ~ mediaProposals:', mediaProposals);
   const { addMessageToCache, refetch: refetchMessages } = useFetchMessages();
   const { sendEventOnce } = useClientPostHogEvent();
   const { mutate: sendAiMessage, isPending: isAiPending } = usePost(
@@ -136,10 +138,7 @@ const ConversationInput = () => {
 
   const { mutate: sendPictureRequest, isPending: isPictureRequestPending } =
     usePost('/api/ask-picture', {
-      onSuccess: (response: {
-        userMessage: MessageType;
-        aiMessage: MessageType;
-      }) => {
+      onSuccess: () => {
         sendEventOnce({
           eventName: trackingEvent.media_requested,
         });
@@ -235,37 +234,40 @@ const ConversationInput = () => {
             <div className="h-14 rounded-b-xl flex items-center">
               <div className="absolute left-3 right-3 bottom-3 flex items-center justify-between w-[calc(100%-24px)]">
                 <div className="flex items-center gap-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        aria-label="Get a picture"
-                        variant="secondary"
-                        size="sm"
-                        disabled={
-                          isAiPending || isPending || isPictureRequestPending
-                        }
-                        className="flex items-center gap-2 px-3 py-2 h-9"
-                      >
-                        <Camera className="w-4 h-4" />
-                        <span className="text-sm">Get a picture</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" side="top">
-                      {mediaProposals.map((proposal) => (
-                        <DropdownMenuItem
-                          key={proposal.id}
-                          onClick={() => handlePictureRequest(proposal)}
+                  {mediaProposals.length > 0 && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          aria-label="Get a picture"
+                          variant="secondary"
+                          size="sm"
+                          disabled={
+                            isAiPending || isPending || isPictureRequestPending
+                          }
+                          className="flex items-center gap-2 px-3 py-2 h-9"
                         >
-                          <div className="flex flex-col">
-                            <span className="font-medium">
-                              {proposal.title}
-                            </span>
-                          </div>
-                        </DropdownMenuItem>
-                      ))}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                          <Camera className="w-4 h-4" />
+                          <span className="text-sm">Get a picture</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start" side="top">
+                        {mediaProposals.map((proposal) => (
+                          <DropdownMenuItem
+                            key={proposal.id}
+                            onClick={() => handlePictureRequest(proposal)}
+                          >
+                            <div className="flex flex-col">
+                              <span className="font-medium">
+                                {proposal.title}
+                              </span>
+                            </div>
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
+
                 <Button
                   aria-label="Send message"
                   variant="default"
