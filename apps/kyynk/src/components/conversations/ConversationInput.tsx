@@ -24,6 +24,7 @@ import { useGlobalModalStore } from '@/stores/GlobalModalStore';
 import { errorMessages } from '@/lib/constants/errorMessage';
 import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 import { trackingEvent } from '@/constants/trackingEvent';
+import { useFetchCurrentAiGirlfriend } from '@/hooks/ai-girlfriends/useFetchCurrentAiGirlfriend';
 import { MediaProposal } from '@/types/media-proposals';
 
 interface UseAutoResizeTextareaProps {
@@ -99,9 +100,11 @@ const ConversationInput = () => {
     },
   ) as { data: MediaProposal[] };
 
-  console.log('🚀 ~ ConversationInput ~ mediaProposals:', mediaProposals);
   const { addMessageToCache, refetch: refetchMessages } = useFetchMessages();
   const { sendEventOnce } = useClientPostHogEvent();
+
+  const { aiGirlfriend } = useFetchCurrentAiGirlfriend();
+
   const { mutate: sendAiMessage, isPending: isAiPending } = usePost(
     '/api/messages/ai',
     {
@@ -131,7 +134,7 @@ const ConversationInput = () => {
         sendEventOnce({
           eventName: trackingEvent.signup_message_wall_shown,
         });
-        openModal('auth');
+        openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
       }
     },
   });
@@ -155,7 +158,7 @@ const ConversationInput = () => {
           sendEventOnce({
             eventName: trackingEvent.signup_picture_wall_shown,
           });
-          openModal('auth');
+          openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
         }
       },
     });

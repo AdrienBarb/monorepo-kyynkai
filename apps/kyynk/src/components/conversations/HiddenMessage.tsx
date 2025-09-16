@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { Button } from '../ui/Button';
 import { motion } from 'framer-motion';
 import { useGlobalModalStore } from '@/stores/GlobalModalStore';
+import { useFetchCurrentAiGirlfriend } from '@/hooks/ai-girlfriends/useFetchCurrentAiGirlfriend';
 
 interface HiddenMessageProps {
   messageLength?: number;
@@ -9,6 +10,7 @@ interface HiddenMessageProps {
 
 const HiddenMessage: FC<HiddenMessageProps> = () => {
   const { openModal } = useGlobalModalStore();
+  const { aiGirlfriend } = useFetchCurrentAiGirlfriend();
 
   return (
     <div className="flex flex-col items-start gap-2 w-full">
@@ -18,11 +20,17 @@ const HiddenMessage: FC<HiddenMessageProps> = () => {
         </p>
 
         <Button
-          onClick={() => openModal('auth')}
+          onClick={() =>
+            openModal('auth', {
+              context: 'message',
+              girlfriendName: aiGirlfriend?.pseudo,
+              avatarImageId: aiGirlfriend?.profileImageId,
+            })
+          }
           variant="default"
           className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center justify-center text-sm font-medium w-min text-custom-black"
         >
-          🔓 Unlock
+          🔓 Read her reply
         </Button>
 
         <div className="absolute bottom-2 right-3 flex gap-1">

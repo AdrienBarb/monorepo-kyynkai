@@ -71,7 +71,6 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
       otp: '',
       ageVerification: false,
     },
-    mode: 'onBlur',
   });
 
   const sendOtp = async (email: string) => {
@@ -141,25 +140,6 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
 
   return (
     <div className="space-y-6 px-4 pb-4">
-      <div className="bg-primary rounded-lg p-4 text-white text-center shadow-lg">
-        <div className="flex items-center justify-center mb-2">
-          <span className="text-2xl mr-2">🎉</span>
-          <h3 className="text-lg font-bold">{t('signUpBonusTitle')}</h3>
-        </div>
-        <p className="text-sm mb-2 font-medium">
-          {t('signUpBonusDescription')}
-        </p>
-      </div>
-
-      <GoogleSignInButton
-        isSignUp={true}
-        onError={onError}
-        isLoading={isLoading}
-        setIsLoading={setIsLoading}
-      />
-
-      <Separator />
-
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
@@ -249,6 +229,21 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
           </div>
         </form>
       </Form>
+
+      <div className="flex items-center">
+        <Separator className="flex-1 bg-black/10" />
+        <span className="mx-4 text-xs font-extralight whitespace-nowrap">
+          Or continue with
+        </span>
+        <Separator className="flex-1 bg-black/10" />
+      </div>
+
+      <GoogleSignInButton
+        isSignUp={true}
+        onError={onError}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+      />
     </div>
   );
 };

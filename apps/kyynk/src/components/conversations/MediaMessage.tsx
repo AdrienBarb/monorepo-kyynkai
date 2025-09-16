@@ -16,6 +16,7 @@ import MediaViewerModal from '@/components/modals/MediaViewerModal';
 import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 import { trackingEvent } from '@/constants/trackingEvent';
 import imgixLoader from '@/lib/imgix/loader';
+import { useFetchCurrentAiGirlfriend } from '@/hooks/ai-girlfriends/useFetchCurrentAiGirlfriend';
 
 interface MediaMessageProps {
   message: MessageType;
@@ -29,6 +30,7 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
   const { usePost } = useApi();
   const [showMediaModal, setShowMediaModal] = useState(false);
   const { sendEvent } = useClientPostHogEvent();
+  const { aiGirlfriend } = useFetchCurrentAiGirlfriend();
 
   const { mutate: unlockMedia, isPending: isUnlocking } = usePost(
     '/api/unlock-media',
@@ -42,11 +44,6 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
           refetchUser();
         }
       },
-      onError: (err: any) => {
-        if (err === 'AUTH_REQUIRED') {
-          openModal('auth');
-        }
-      },
     },
   );
 
@@ -55,7 +52,11 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
       sendEvent({
         eventName: trackingEvent.signup_media_unlock_wall_shown,
       });
-      openModal('auth');
+      openModal('auth', {
+        context: 'media',
+        girlfriendName: aiGirlfriend?.pseudo,
+        avatarImageId: aiGirlfriend?.profileImageId,
+      });
       return;
     }
 
@@ -141,7 +142,7 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
                     🔓
                     {loggedUser
                       ? ` Unlock for ${MEDIA_UNLOCK_COST} credits`
-                      : ' Sign up to unlock'}
+                      : ' See her picture'}
                   </Button>
                 </div>
               </div>
