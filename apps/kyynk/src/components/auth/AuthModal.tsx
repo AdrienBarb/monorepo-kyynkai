@@ -65,7 +65,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md p-0">
+      <DialogContent className="sm:max-w-md p-0 h-full w-full max-h-screen sm:h-auto sm:w-auto sm:max-h-[90vh] overflow-y-auto">
         {isLogin ? (
           <DialogHeader className="p-4">
             <DialogTitle className="text-center">{t('signIn')}</DialogTitle>
