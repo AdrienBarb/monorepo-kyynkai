@@ -8,27 +8,13 @@ import { MessageSender } from '@prisma/client';
 import { auth } from '@/lib/better-auth/auth';
 import { headers } from 'next/headers';
 import { getCurrentUser } from '@/services/users/getCurrentUser';
-import { MESSAGE_COST } from '@/constants/creditPackages';
-import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import { getOrCreateGuest } from '@/services/guests/getOrCreateGuest';
-import { generatePicture } from '@/services/ai-girlfriends-service/generateMedia';
+import { getMediaProposalById } from '@/services/ai-girlfriends-service/getMediaProposalById';
 
 const askPictureSchema = z.object({
   slug: z.string(),
-  pictureType: z.enum(['ass', 'pussy', 'tits']),
+  proposalId: z.string(),
 });
-
-const pictureMessages = {
-  ass: 'Send me a picture of your ass',
-  pussy: 'Send me a picture of your pussy',
-  tits: 'Send me a picture of your tits',
-} as const;
-
-const pictureResponses = {
-  ass: 'Here you go baby... my ass just for you 😏',
-  pussy: 'Look what I have for you... my wet pussy 💦',
-  tits: 'Just for you sweetheart... my tits 😘',
-} as const;
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -39,22 +25,24 @@ export const POST = async (req: NextRequest) => {
     const body = await req.json();
     const payload = askPictureSchema.parse(body);
 
-    const aiGirlfriend = await getAiGirlfriendBySlug({ slug: payload.slug });
-    if (!aiGirlfriend) {
+    const proposal = await getMediaProposalById({
+      proposalId: payload.proposalId,
+      slug: payload.slug,
+    });
+
+    if (!proposal) {
       return NextResponse.json(
         { error: errorMessages.NOT_FOUND },
         { status: 404 },
       );
     }
 
-    const messageContent = pictureMessages[payload.pictureType];
-
     if (userId) {
       const loggedUser = await getCurrentUser({
         userId: userId!,
       });
 
-      if (MESSAGE_COST > loggedUser?.creditBalance!) {
+      if (proposal.creditCost > loggedUser?.creditBalance!) {
         return NextResponse.json(
           { error: errorMessages.INSUFFICIENT_CREDITS },
           { status: 400 },
@@ -64,41 +52,27 @@ export const POST = async (req: NextRequest) => {
       const result = await prisma.$transaction(async (tx) => {
         const conversation = await findOrCreateConversation({
           userId: userId!,
-          aiGirlfriendId: aiGirlfriend.id,
+          aiGirlfriendId: proposal.aiGirlfriendId,
           tx,
         });
 
-        const userMessage = await tx.message.create({
+        const media = await tx.media.create({
           data: {
-            content: messageContent,
-            conversationId: conversation.id,
-            sender: MessageSender.USER,
+            type: proposal.mediaType as 'IMAGE' | 'VIDEO',
+            mediaKey: proposal.mediaKey,
           },
-        });
-
-        const pictureId = await generatePicture({
-          pictureType: payload.pictureType,
         });
 
         const aiMessage = await tx.message.create({
           data: {
-            content: pictureResponses[payload.pictureType],
+            content: proposal.message,
             conversationId: conversation.id,
             sender: MessageSender.AI,
-            mediaId: pictureId,
+            mediaId: media.id,
           },
         });
 
-        await tx.user.update({
-          where: {
-            id: userId!,
-          },
-          data: {
-            creditBalance: { decrement: MESSAGE_COST },
-          },
-        });
-
-        return { userMessage, aiMessage };
+        return aiMessage;
       });
 
       return NextResponse.json(result, { status: 201 });
@@ -108,14 +82,14 @@ export const POST = async (req: NextRequest) => {
 
     const result = await prisma.$transaction(async (tx) => {
       let conversation = await tx.conversation.findFirst({
-        where: { guestId: guest.id, aiGirlfriendId: aiGirlfriend.id },
+        where: { guestId: guest.id, aiGirlfriendId: proposal.aiGirlfriendId },
       });
 
       if (!conversation) {
         conversation = await tx.conversation.create({
           data: {
             guestId: guest.id,
-            aiGirlfriendId: aiGirlfriend.id,
+            aiGirlfriendId: proposal.aiGirlfriendId,
           },
         });
       }
@@ -128,28 +102,23 @@ export const POST = async (req: NextRequest) => {
         throw new Error(errorMessages.AUTH_REQUIRED);
       }
 
-      const userMessage = await tx.message.create({
+      const media = await tx.media.create({
         data: {
-          content: messageContent,
-          conversationId: conversation.id,
-          sender: MessageSender.USER,
+          type: proposal.mediaType as 'IMAGE' | 'VIDEO',
+          mediaKey: proposal.mediaKey,
         },
-      });
-
-      const pictureId = await generatePicture({
-        pictureType: payload.pictureType,
       });
 
       const aiMessage = await tx.message.create({
         data: {
-          content: pictureResponses[payload.pictureType],
+          content: proposal.message,
           conversationId: conversation.id,
           sender: MessageSender.AI,
-          mediaId: pictureId,
+          mediaId: media.id,
         },
       });
 
-      return { userMessage, aiMessage };
+      return aiMessage;
     });
 
     return NextResponse.json(result, { status: 201 });

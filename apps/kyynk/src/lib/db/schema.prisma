@@ -104,7 +104,8 @@ model AIGirlfriend {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  conversations Conversation[]
+  conversations  Conversation[]
+  mediaProposals MediaProposal[]
 
   @@index([isActive, slug])
   @@map("ai_girlfriend")
@@ -216,6 +217,22 @@ enum CreditSaleType {
 enum UserRole {
   USER
   ADMIN
+}
+
+model MediaProposal {
+  id             String    @id @default(cuid())
+  aiGirlfriendId String
+  title          String
+  mediaKey       String
+  mediaType      MediaType
+  creditCost     Int       @default(1)
+  message        String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  aiGirlfriend AIGirlfriend @relation(fields: [aiGirlfriendId], references: [id], onDelete: Cascade)
+
+  @@map("media_proposal")
 }
 
 enum MediaType {

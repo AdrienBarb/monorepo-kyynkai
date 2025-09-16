@@ -24,6 +24,7 @@ import { useGlobalModalStore } from '@/stores/GlobalModalStore';
 import { errorMessages } from '@/lib/constants/errorMessage';
 import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 import { trackingEvent } from '@/constants/trackingEvent';
+import { MediaProposal } from '@/types/media-proposals';
 
 interface UseAutoResizeTextareaProps {
   minHeight: number;
@@ -88,7 +89,17 @@ const ConversationInput = () => {
   const { slug } = useParams<{ slug: string }>();
 
   const { refetch: refetchConversations } = useConversations();
-  const { usePost } = useApi();
+  const { usePost, useGet } = useApi();
+
+  const { data: mediaProposals = [] } = useGet(
+    `/api/media-proposals/${slug}`,
+    {},
+    {
+      enabled: !!slug,
+    },
+  ) as { data: MediaProposal[] };
+
+  console.log('🚀 ~ ConversationInput ~ mediaProposals:', mediaProposals);
   const { addMessageToCache, refetch: refetchMessages } = useFetchMessages();
   const { sendEventOnce } = useClientPostHogEvent();
   const { mutate: sendAiMessage, isPending: isAiPending } = usePost(
@@ -127,10 +138,7 @@ const ConversationInput = () => {
 
   const { mutate: sendPictureRequest, isPending: isPictureRequestPending } =
     usePost('/api/ask-picture', {
-      onSuccess: (response: {
-        userMessage: MessageType;
-        aiMessage: MessageType;
-      }) => {
+      onSuccess: () => {
         sendEventOnce({
           eventName: trackingEvent.media_requested,
         });
@@ -180,12 +188,12 @@ const ConversationInput = () => {
     }
   };
 
-  const handlePictureRequest = (pictureType: 'ass' | 'pussy' | 'tits') => {
+  const handlePictureRequest = (proposal: MediaProposal) => {
     if (loggedUser) {
       if (
         !hasEnoughCredits({
           user: loggedUser,
-          requiredCredits: 1,
+          requiredCredits: proposal.creditCost,
         })
       ) {
         sendEventOnce({
@@ -196,7 +204,10 @@ const ConversationInput = () => {
       }
     }
 
-    sendPictureRequest({ pictureType, slug: slug as string });
+    sendPictureRequest({
+      proposalId: proposal.id,
+      slug: slug as string,
+    });
   };
 
   return (
@@ -223,40 +234,40 @@ const ConversationInput = () => {
             <div className="h-14 rounded-b-xl flex items-center">
               <div className="absolute left-3 right-3 bottom-3 flex items-center justify-between w-[calc(100%-24px)]">
                 <div className="flex items-center gap-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        aria-label="Get a picture"
-                        variant="secondary"
-                        size="sm"
-                        disabled={
-                          isAiPending || isPending || isPictureRequestPending
-                        }
-                        className="flex items-center gap-2 px-3 py-2 h-9"
-                      >
-                        <Camera className="w-4 h-4" />
-                        <span className="text-sm">Get a picture</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" side="top">
-                      <DropdownMenuItem
-                        onClick={() => handlePictureRequest('ass')}
-                      >
-                        My ass
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => handlePictureRequest('pussy')}
-                      >
-                        My pussy
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => handlePictureRequest('tits')}
-                      >
-                        My tits
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  {mediaProposals.length > 0 && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          aria-label="Get a picture"
+                          variant="secondary"
+                          size="sm"
+                          disabled={
+                            isAiPending || isPending || isPictureRequestPending
+                          }
+                          className="flex items-center gap-2 px-3 py-2 h-9"
+                        >
+                          <Camera className="w-4 h-4" />
+                          <span className="text-sm">Get a picture</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start" side="top">
+                        {mediaProposals.map((proposal) => (
+                          <DropdownMenuItem
+                            key={proposal.id}
+                            onClick={() => handlePictureRequest(proposal)}
+                          >
+                            <div className="flex flex-col">
+                              <span className="font-medium">
+                                {proposal.title}
+                              </span>
+                            </div>
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
                 </div>
+
                 <Button
                   aria-label="Send message"
                   variant="default"
