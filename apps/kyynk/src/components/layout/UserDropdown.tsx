@@ -53,7 +53,7 @@ export const UserDropdown: React.FC = () => {
         <Avatar size={38} />
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-md"
+        className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-md bg-primary"
         side="bottom"
         align="end"
         sideOffset={4}

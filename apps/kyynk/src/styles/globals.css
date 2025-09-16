@@ -7,19 +7,12 @@ body {
   font-family: var(--font-karla);
   font-size: 16px;
   @apply bg-background text-background;
-
-  @media (prefers-color-scheme: dark) {
-    @apply bg-background text-background;
-  }
 }
 
 .main {
   @apply bg-background text-background;
-
-  @media (prefers-color-scheme: dark) {
-    @apply bg-background text-background;
-  }
 }
+
 
 .ck-editor__top {
   display: none;
@@ -140,14 +133,16 @@ h4 {
   box-sizing: border-box;
 }
 
+
+
+/* Dark mode styles */
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
-  body {
-    @apply text-white bg-black;
-  }
 }
+
+/* Note: Dark mode body styles removed - keeping original light theme colors for consistency */
 
 .cropper-wrap-box {
   @apply bg-black;

@@ -28,7 +28,7 @@ const OpeningMessage: FC<OpeningMessageProps> = ({
       )}
       <div
         className={cn(
-          'p-3 rounded-lg break-words bg-secondary-dark text-custom-black',
+          'p-3 rounded-lg break-words bg-background-light text-primary',
         )}
         role="article"
         aria-label="Opening message from AI"

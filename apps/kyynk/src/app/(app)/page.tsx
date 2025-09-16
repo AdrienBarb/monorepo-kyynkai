@@ -39,7 +39,7 @@ const HomePage = async () => {
           priority
           quality={95}
         />
-        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center rounded-2xl justify-center border border-primary">
           <div className="text-center text-white px-4">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
               Meet Your Perfect AI Companion

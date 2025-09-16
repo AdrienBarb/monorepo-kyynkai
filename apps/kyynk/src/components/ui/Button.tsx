@@ -12,10 +12,10 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-primary hover:bg-primary/90 border border-primary text-secondary',
+          'bg-primary hover:bg-primary/90 border border-background text-background',
         secondary: 'border border-black bg-secondary hover:bg-secondary/90',
         destructive: 'bg-destructive hover:bg-destructive/90 text-secondary',
-        ghost: 'bg-transparent hover:bg-custom-black/10',
+        ghost: 'bg-transparent hover:bg-background/10',
         link: 'underline-offset-4 hover:underline',
       },
       size: {

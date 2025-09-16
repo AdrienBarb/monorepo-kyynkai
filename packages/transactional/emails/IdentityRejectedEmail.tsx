@@ -38,7 +38,7 @@ const IdentityRejectedEmail = ({ link }: IdentityRejectedEmailProps) => {
               <Section className="mt-4">
                 <Button
                   href={link}
-                  className="bg-primary text-secondary-dark px-4 py-2 rounded-sm text-center text-lg font-semibold"
+                  className="bg-primary text-background px-4 py-2 rounded-sm text-center text-lg font-semibold"
                 >
                   Connect to the App
                 </Button>

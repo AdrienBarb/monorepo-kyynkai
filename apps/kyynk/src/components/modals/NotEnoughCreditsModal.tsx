@@ -47,7 +47,7 @@ const NotEnoughCreditsModal = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="z-[1000] max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-custom-black font-rubik text-center">
+          <DialogTitle className="text-background font-rubik text-center">
             Buy more credits
           </DialogTitle>
         </DialogHeader>
@@ -57,7 +57,7 @@ const NotEnoughCreditsModal = ({
             size={180}
           />
         </div>
-        <h3 className="text-base text-custom-black mt-4 text-center">
+        <h3 className="text-base text-background mt-4 text-center">
           Hey babe! It looks like you&apos;re running low on credits. Let&apos;s
           top up so we can keep having fun together ❤️
         </h3>
@@ -66,13 +66,13 @@ const NotEnoughCreditsModal = ({
             <div className="bg-primary/20 p-4 rounded-lg border border-primary text-center w-full">
               <div className="text-2xl mb-4">🔥</div>
               <div className="flex items-center justify-center mb-2">
-                <span className="font-bold text-custom-black font-rubik">
+                <span className="font-bold text-background font-rubik">
                   FIRST-TIME BUYER SPECIAL!
                 </span>
               </div>
-              <p className="text-sm text-custom-black/90 mb-3 font-karla">
+              <p className="text-sm text-background/90 mb-3 font-karla">
                 Get{' '}
-                <span className="font-bold text-custom-black text-lg">
+                <span className="font-bold text-background text-lg">
                   80% OFF
                 </span>{' '}
                 your first credit purchase!
@@ -92,7 +92,7 @@ const NotEnoughCreditsModal = ({
             className={cn(
               'w-full',
               showDiscount
-                ? 'bg-primary hover:bg-primary/90 text-custom-black font-bold font-karla'
+                ? 'bg-primary hover:bg-primary/90 text-background font-bold font-karla'
                 : 'font-karla',
             )}
           >

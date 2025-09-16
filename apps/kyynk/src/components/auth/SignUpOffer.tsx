@@ -54,11 +54,11 @@ const SignUpOffer: React.FC<SignUpOfferProps> = ({
         <Avatar imageId={avatarImageId} size={160} />
       </div>
 
-      <h3 className="text-xl font-semibold text-custom-black mt-4 text-center">
+      <h3 className="text-xl font-semibold text-background mt-4 text-center">
         {title}
       </h3>
 
-      <p className="mt-2 text-sm text-custom-black/90 text-center">{cta}</p>
+      <p className="mt-2 text-sm text-background/90 text-center">{cta}</p>
     </div>
   );
 };

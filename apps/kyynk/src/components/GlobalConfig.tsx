@@ -1,8 +1,6 @@
 'use client';
 
 import React, { FC, ReactNode, useEffect, useState } from 'react';
-import Maintenance from './Maintenance';
-import { useUserStore } from '@/stores/UserStore';
 import { useQueryState } from 'nuqs';
 import { useUser } from '@/hooks/users/useUser';
 import {
@@ -43,10 +41,6 @@ const GlobalConfig: FC<Props> = ({ children }) => {
       }
     }
   }, [user]);
-
-  if (!shouldAllowAccess) {
-    return <Maintenance />;
-  }
 
   return <>{children}</>;
 };

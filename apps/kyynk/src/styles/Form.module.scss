@@ -223,7 +223,7 @@
   font-size: 26px;
   font-weight: 200;
   margin-bottom: 2rem;
-  color: $custom-black;
+  color: $background;
 }
 
 .packageSizeWrapper {
@@ -233,7 +233,7 @@
   flex-direction: column;
   justify-content: center;
   gap: 0.6rem;
-  color: $custom-black;
+  color: $background;
 }
 
 .formSectionTitle {
@@ -241,12 +241,12 @@
   font-weight: 700;
   font-size: 20px;
   margin-bottom: 0.6rem;
-  color: $custom-black;
+  color: $background;
 }
 
 .addressContainer {
   width: 100%;
-  border: 1px solid $light-grey;
+
   border-radius: 6px;
   padding: 0.4rem;
   position: relative;
@@ -274,7 +274,7 @@
 }
 
 .text {
-  color: $custom-black;
+  color: $background;
 }
 
 .helperText {

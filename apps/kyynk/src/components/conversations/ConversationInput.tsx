@@ -216,14 +216,14 @@ const ConversationInput = () => {
   return (
     <>
       <div className={cn('max-w-xl w-full mx-auto')}>
-        <div className="relative border border-custom-black/20 rounded-xl">
+        <div className="relative border border-primary rounded-xl">
           <div className="relative flex flex-col">
             <div className="overflow-y-auto" style={{ maxHeight: '400px' }}>
               <Textarea
                 value={value}
                 placeholder={t('typeYourMessage')}
                 className={cn(
-                  'w-full rounded-xl rounded-b-none px-4 py-3 border-none placeholder:text-black/70 resize-none focus-visible:ring-0 focus-visible:ring-offset-0 text-base',
+                  'w-full rounded-xl rounded-b-none px-4 py-3 border-none placeholder:primary/70 resize-none focus-visible:ring-0 focus-visible:ring-offset-0 text-base text-primary',
                 )}
                 ref={textareaRef}
                 onKeyDown={handleKeyDown}
@@ -242,7 +242,6 @@ const ConversationInput = () => {
                       <DropdownMenuTrigger asChild>
                         <Button
                           aria-label="Get a picture"
-                          variant="secondary"
                           size="sm"
                           disabled={
                             isAiPending || isPending || isPictureRequestPending
@@ -253,7 +252,11 @@ const ConversationInput = () => {
                           <span className="text-sm">Get a picture</span>
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start" side="top">
+                      <DropdownMenuContent
+                        align="start"
+                        side="top"
+                        className="bg-primary"
+                      >
                         {mediaProposals.map((proposal) => (
                           <DropdownMenuItem
                             key={proposal.id}
@@ -286,7 +289,7 @@ const ConversationInput = () => {
                   }
                   onClick={handleSendMessage}
                 >
-                  <ArrowRight className={cn('w-4 h-4 text-secondary')} />
+                  <ArrowRight className={cn('w-4 h-4 text-background')} />
                 </Button>
               </div>
             </div>

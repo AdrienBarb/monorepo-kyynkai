@@ -38,7 +38,7 @@ const IdentityVerifiedEmail = ({ link }: IdentityVerifiedEmailProps) => {
               <Section className="mt-4">
                 <Button
                   href={link}
-                  className="bg-primary text-secondary-dark px-4 py-2 rounded-sm text-center text-lg font-semibold"
+                  className="bg-primary text-background px-4 py-2 rounded-sm text-center text-lg font-semibold"
                 >
                   Get Started
                 </Button>
@@ -50,7 +50,7 @@ const IdentityVerifiedEmail = ({ link }: IdentityVerifiedEmailProps) => {
               <Section className="mt-4">
                 <Button
                   href="https://t.me/+ApoqYZr0s0E2ZjI0"
-                  className="bg-primary text-secondary-dark px-4 py-2 rounded-sm text-center text-lg font-semibold"
+                  className="bg-primary text-background px-4 py-2 rounded-sm text-center text-lg font-semibold"
                 >
                   Join us on Telegram
                 </Button>

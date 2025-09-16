@@ -86,23 +86,23 @@ export function AppSidebar() {
           <Link
             href="/privacy-policy"
             onClick={closeSidebarOnMobile}
-            className="text-xs"
+            className="text-xs text-primary"
           >
             {t('privacyPolicy')}
           </Link>
-          <span>•</span>
+          <span className="text-primary">•</span>
           <Link
             href="/terms"
             onClick={closeSidebarOnMobile}
-            className="text-xs"
+            className="text-xs text-primary"
           >
             {t('termsConditions')}
           </Link>
-          <span>•</span>
+          <span className="text-primary">•</span>
           <Link
             href="/contact"
             onClick={closeSidebarOnMobile}
-            className="text-xs"
+            className="text-xs text-primary"
           >
             {t('contactUs')}
           </Link>

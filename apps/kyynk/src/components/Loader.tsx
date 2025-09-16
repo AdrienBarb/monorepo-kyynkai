@@ -1,8 +1,7 @@
-"use client";
+'use client';
 
-import styles from "@/styles/Loader.module.scss";
-import { CircularProgress } from "@mui/material";
-import { CSSProperties, FC } from "react";
+import { CircularProgress } from '@mui/material';
+import { CSSProperties, FC } from 'react';
 
 interface LoaderProps {
   style?: CSSProperties;
@@ -12,8 +11,14 @@ interface LoaderProps {
 
 const Loader: FC<LoaderProps> = ({ style, containerStyle, size = 32 }) => {
   return (
-    <div className={styles.container} style={containerStyle}>
-      <CircularProgress sx={{ color: "#1C131E", ...style }} size={size} />
+    <div
+      className="w-full flex items-center justify-center relative"
+      style={containerStyle}
+    >
+      <CircularProgress
+        sx={{ color: 'rgb(28, 19, 30)', ...style }}
+        size={size}
+      />
     </div>
   );
 };

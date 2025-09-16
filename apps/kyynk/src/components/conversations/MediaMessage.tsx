@@ -101,8 +101,8 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
           className={cn(
             'p-3 rounded-lg break-words',
             isUserMessage
-              ? 'bg-primary text-custom-black'
-              : 'bg-secondary-dark text-custom-black',
+              ? 'bg-primary text-background'
+              : 'bg-background-light text-primary',
           )}
         >
           {message.content}
@@ -137,7 +137,7 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
                     variant="default"
                     disabled={isUnlocking}
                     isLoading={isUnlocking}
-                    className="text-xs text-custom-black"
+                    className="text-xs text-background"
                   >
                     🔓
                     {loggedUser

@@ -10,8 +10,14 @@ interface Props {
 const ConversationHeader: FC<Props> = ({ aiGirlfriend }) => {
   return (
     <div className="flex items-center gap-2 h-20 px-2">
-      <Avatar imageId={aiGirlfriend.profileImageId} size={60} />
-      <Text className="text-lg font-bold">{aiGirlfriend.pseudo}</Text>
+      <Avatar
+        imageId={aiGirlfriend.profileImageId}
+        size={60}
+        className="border-primary"
+      />
+      <Text className="text-lg font-bold text-primary">
+        {aiGirlfriend.pseudo}
+      </Text>
     </div>
   );
 };

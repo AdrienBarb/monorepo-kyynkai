@@ -38,7 +38,7 @@ const ShareModal: FC<ShareModalProps> = ({
         <div className="bg-primary w-10 h-10 flex items-center justify-center rounded-full">
           <IconComponent sx={{ color: '#FFF0EB' }} />
         </div>
-        <p className="font-karla font-light text-xs text-custom-black">
+        <p className="font-karla font-light text-xs text-background">
           {platformName}
         </p>
       </div>
@@ -58,7 +58,7 @@ const ShareModal: FC<ShareModalProps> = ({
             <div className="bg-primary w-10 h-10 flex items-center justify-center rounded-full">
               <LinkIcon sx={{ color: '#FFF0EB' }} />
             </div>
-            <p className="font-karla font-light text-xs text-custom-black">
+            <p className="font-karla font-light text-xs text-background">
               Link
             </p>
           </div>

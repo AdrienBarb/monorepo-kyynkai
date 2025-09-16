@@ -34,7 +34,7 @@ const AuthAlert: React.FC<AuthAlertProps> = ({
           <div className="mt-2 text-right">
             <button
               onClick={onChangeEmail}
-              className="text-custom-black underline"
+              className="text-background underline"
             >
               {t('changeEmail')}
             </button>
