@@ -40,12 +40,12 @@ export const CountdownTimer: FC<CountdownTimerProps> = ({
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <span className="text-sm text-background/70 font-karla">
+      <span className="text-sm text-primary/70 font-karla">
         Offer expires in:
       </span>
       <span
         className={`text-lg font-bold font-rubik ${
-          isUrgent ? 'text-background animate-pulse' : 'text-background/90'
+          isUrgent ? 'text-primary animate-pulse' : 'text-primary/90'
         }`}
       >
         {formatTime(timeLeft)}

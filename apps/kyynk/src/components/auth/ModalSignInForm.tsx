@@ -176,11 +176,11 @@ const ModalSignInForm: React.FC<ModalSignInFormProps> = ({
       </Form>
 
       <div className="flex items-center">
-        <Separator className="flex-1 bg-black/10" />
+        <Separator className="flex-1 bg-primary/20" />
         <span className="mx-4 text-xs font-extralight whitespace-nowrap">
           Or continue with
         </span>
-        <Separator className="flex-1 bg-black/10" />
+        <Separator className="flex-1 bg-primary/20" />
       </div>
 
       <GoogleSignInButton

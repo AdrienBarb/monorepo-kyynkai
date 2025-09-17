@@ -94,7 +94,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
             />
           )}
 
-          <Separator className="my-0 bg-black/10" />
+          <Separator className="my-0 bg-primary/20" />
 
           <div className="flex justify-center p-4">
             {isLogin ? (
@@ -102,7 +102,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
                 {t('dontHaveAccount')}{' '}
                 <span
                   onClick={toggleMode}
-                  className="cursor-pointer text-primary"
+                  className="cursor-pointer text-primary font-semibold"
                 >
                   {t('signUp')}
                 </span>
@@ -112,7 +112,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
                 {t('alreadyHaveAccount')}{' '}
                 <span
                   onClick={toggleMode}
-                  className="cursor-pointer text-primary"
+                  className="cursor-pointer text-primary font-semibold"
                 >
                   {t('signIn')}
                 </span>

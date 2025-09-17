@@ -46,7 +46,7 @@ const SignUpOffer: React.FC<SignUpOfferProps> = ({
   return (
     <div
       className={cn(
-        'w-full flex flex-col items-center justify-center relative p-6 pb-4',
+        'w-full flex flex-col items-center justify-center relative p-6 pb-4 text-primary',
         className,
       )}
     >
@@ -54,11 +54,11 @@ const SignUpOffer: React.FC<SignUpOfferProps> = ({
         <Avatar imageId={avatarImageId} size={160} />
       </div>
 
-      <h3 className="text-xl font-semibold text-background mt-4 text-center">
+      <h3 className="text-xl font-semibold text-primary mt-4 text-center">
         {title}
       </h3>
 
-      <p className="mt-2 text-sm text-background/90 text-center">{cta}</p>
+      <p className="mt-2 text-sm text-primary/90 text-center">{cta}</p>
     </div>
   );
 };

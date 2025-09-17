@@ -28,7 +28,7 @@ const MediaViewerModal: FC<MediaViewerModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background-light border border-primary/20 backdrop-blur-sm"
       onClick={handleBackdropClick}
     >
       <div className="relative max-w-4xl max-h-[90vh] w-full mx-4">
