@@ -131,9 +131,6 @@ const ConversationInput = () => {
     },
     onError: (err: any) => {
       if (err === errorMessages.AUTH_REQUIRED) {
-        sendEventOnce({
-          eventName: trackingEvent.signup_message_wall_shown,
-        });
         openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
       }
     },
@@ -155,9 +152,6 @@ const ConversationInput = () => {
       },
       onError: (err: any) => {
         if (err === errorMessages.AUTH_REQUIRED) {
-          sendEventOnce({
-            eventName: trackingEvent.signup_picture_wall_shown,
-          });
           openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
         }
       },
@@ -200,7 +194,7 @@ const ConversationInput = () => {
         })
       ) {
         sendEventOnce({
-          eventName: trackingEvent.credit_message_unlock_wall_shown,
+          eventName: trackingEvent.credit_wall_shown,
         });
         openModal('notEnoughCredits');
         return;

@@ -5,6 +5,8 @@ import Avatar from '../ui/Avatar';
 import Text from '../ui/Text';
 import MediaViewerModal from '../modals/MediaViewerModal';
 import { AiGirlfriendType } from '@/types/ai-girlfriends';
+import { trackingEvent } from '@/constants/trackingEvent';
+import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 
 interface Props {
   aiGirlfriend: AiGirlfriendType;
@@ -12,9 +14,13 @@ interface Props {
 
 const ConversationHeader: FC<Props> = ({ aiGirlfriend }) => {
   const [isStoriesModalOpen, setIsStoriesModalOpen] = useState(false);
+  const { sendEventOnce } = useClientPostHogEvent();
 
   const handleAvatarClick = () => {
     if (aiGirlfriend.stories && aiGirlfriend.stories.length > 0) {
+      sendEventOnce({
+        eventName: trackingEvent.stories_modal_open,
+      });
       setIsStoriesModalOpen(true);
     }
   };

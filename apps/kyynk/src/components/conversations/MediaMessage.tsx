@@ -49,9 +49,6 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
 
   const handleUnlockMedia = () => {
     if (!loggedUser) {
-      sendEvent({
-        eventName: trackingEvent.signup_media_unlock_wall_shown,
-      });
       openModal('auth', {
         context: 'media',
         girlfriendName: aiGirlfriend?.pseudo,
@@ -67,7 +64,7 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
       })
     ) {
       sendEvent({
-        eventName: trackingEvent.credit_media_unlock_wall_shown,
+        eventName: trackingEvent.credit_wall_shown,
       });
       openModal('notEnoughCredits');
       return;

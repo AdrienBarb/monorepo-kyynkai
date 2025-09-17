@@ -15,6 +15,8 @@ import { CountdownTimer } from '../ui/CountdownTimer';
 import Avatar from '../ui/Avatar';
 import { useState } from 'react';
 import { cn } from '@/utils/tailwind/cn';
+import { trackingEvent } from '@/constants/trackingEvent';
+import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 
 const NotEnoughCreditsModal = ({
   open,
@@ -30,8 +32,16 @@ const NotEnoughCreditsModal = ({
   const isFirstTimeBuyer = firstTimeBuyerData?.isFirstTimeBuyer;
   const showDiscount = isFirstTimeBuyer && !offerExpired;
   const discount = showDiscount ? 80 : undefined;
+  const { sendEventOnce } = useClientPostHogEvent();
 
   const handleBuyMoreCredits = () => {
+    sendEventOnce({
+      eventName: trackingEvent.credit_topup_clicked,
+      properties: {
+        discount: discount ?? 0,
+      },
+    });
+
     window.location.href = getPaymentPageLink(
       user?.id!,
       window.location.href,
