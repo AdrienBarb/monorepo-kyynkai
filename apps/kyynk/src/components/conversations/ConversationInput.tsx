@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { ArrowRight, Camera } from 'lucide-react';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Textarea } from '@/components/ui/TextArea';
@@ -9,6 +10,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import { useTranslations } from 'next-intl';
@@ -216,7 +218,7 @@ const ConversationInput = () => {
   return (
     <>
       <div className={cn('max-w-xl w-full mx-auto')}>
-        <div className="relative border border-primary rounded-xl">
+        <div className="relative border border-primary rounded-xl bg-background-light">
           <div className="relative flex flex-col">
             <div className="overflow-y-auto" style={{ maxHeight: '400px' }}>
               <Textarea
@@ -252,22 +254,22 @@ const ConversationInput = () => {
                           <span className="text-sm">Get a picture</span>
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="start"
-                        side="top"
-                        className="bg-primary"
-                      >
-                        {mediaProposals.map((proposal) => (
-                          <DropdownMenuItem
-                            key={proposal.id}
-                            onClick={() => handlePictureRequest(proposal)}
-                          >
-                            <div className="flex flex-col">
-                              <span className="font-medium">
-                                {proposal.title}
-                              </span>
-                            </div>
-                          </DropdownMenuItem>
+                      <DropdownMenuContent align="start" side="top">
+                        {mediaProposals.map((proposal, index) => (
+                          <React.Fragment key={proposal.id}>
+                            <DropdownMenuItem
+                              onClick={() => handlePictureRequest(proposal)}
+                            >
+                              <div className="flex flex-col">
+                                <span className="font-medium">
+                                  {proposal.title}
+                                </span>
+                              </div>
+                            </DropdownMenuItem>
+                            {index < mediaProposals.length - 1 && (
+                              <DropdownMenuSeparator className="bg-primary/20" />
+                            )}
+                          </React.Fragment>
                         ))}
                       </DropdownMenuContent>
                     </DropdownMenu>

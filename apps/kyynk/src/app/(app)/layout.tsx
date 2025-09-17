@@ -18,7 +18,7 @@ const AppLayout: FC<Props> = async ({ children }) => {
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar />
       <div className="w-full">
-        <header className="fixed right-0 left-0 top-0 z-10 p-4 flex justify-between align-center bg-background border-b border-primary h-[68px]">
+        <header className="fixed right-0 left-0 top-0 z-10 p-4 flex justify-between align-center bg-background border-b border-primary/20 h-[68px]">
           <SidebarTrigger />
           <div className="flex items-center gap-2">
             <LanguageSwitcher />

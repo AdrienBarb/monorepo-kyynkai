@@ -66,16 +66,12 @@ const LanguageSwitcher: FC = () => {
           <DropdownMenuItem
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
-            className={`flex items-center gap-2 cursor-pointer ${
-              currentLocale === language.code
-                ? 'bg-secondary text-background font-medium'
-                : ''
-            }`}
+            className={`flex items-center gap-2 cursor-pointer`}
           >
             <span>{language.flag}</span>
             <span>{language.label}</span>
             {currentLocale === language.code && (
-              <span className="ml-auto text-xs">✓</span>
+              <span className="ml-auto text-xs text-primary">✓</span>
             )}
           </DropdownMenuItem>
         ))}
