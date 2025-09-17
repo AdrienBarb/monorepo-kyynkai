@@ -17,7 +17,10 @@ export const GET = async (
       );
     }
 
-    const aiGirlfriend = await getAiGirlfriendBySlug({ slug });
+    const aiGirlfriend = await getAiGirlfriendBySlug({
+      slug,
+      selectFields: { stories: true },
+    });
 
     if (!aiGirlfriend) {
       return NextResponse.json(

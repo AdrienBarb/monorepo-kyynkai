@@ -4,6 +4,13 @@ import { join } from 'path';
 
 const prisma = new PrismaClient();
 
+interface SeedMediaProposal {
+  title: string;
+  mediaKey: string;
+  mediaType: 'IMAGE' | 'VIDEO';
+  message: string;
+}
+
 interface SeedAIGirlfriend {
   id: string;
   pseudo: string;
@@ -26,6 +33,7 @@ interface SeedAIGirlfriend {
   genTopP: number;
   genMaxTokens: number;
   visualStylePrompt: string;
+  mediaProposals?: SeedMediaProposal[];
 }
 
 async function main() {
@@ -66,6 +74,28 @@ async function main() {
       console.log(
         `Created AI Girlfriend: ${aiGirlfriend.pseudo} (${aiGirlfriend.slug})`,
       );
+
+      if (
+        aiGirlfriendData.mediaProposals &&
+        aiGirlfriendData.mediaProposals.length > 0
+      ) {
+        for (const mediaProposal of aiGirlfriendData.mediaProposals) {
+          await prisma.mediaProposal.create({
+            data: {
+              aiGirlfriendId: aiGirlfriend.id,
+              title: mediaProposal.title,
+              mediaKey: mediaProposal.mediaKey,
+              mediaType: mediaProposal.mediaType,
+              message: mediaProposal.message,
+              creditCost: 1,
+            },
+          });
+        }
+
+        console.log(
+          `Created ${aiGirlfriendData.mediaProposals.length} media proposals for ${aiGirlfriend.pseudo}`,
+        );
+      }
     }
 
     console.log('Database seeding completed successfully!');

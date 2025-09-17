@@ -49,9 +49,6 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
 
   const handleUnlockMedia = () => {
     if (!loggedUser) {
-      sendEvent({
-        eventName: trackingEvent.signup_media_unlock_wall_shown,
-      });
       openModal('auth', {
         context: 'media',
         girlfriendName: aiGirlfriend?.pseudo,
@@ -67,7 +64,7 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
       })
     ) {
       sendEvent({
-        eventName: trackingEvent.credit_media_unlock_wall_shown,
+        eventName: trackingEvent.credit_wall_shown,
       });
       openModal('notEnoughCredits');
       return;
@@ -85,14 +82,6 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
   };
 
   const isLocked = !message.media?.unlockUsers.includes(loggedUser?.id!);
-
-  const mediaUrl = message.media?.mediaKey
-    ? imgixLoader({
-        src: message.media.mediaKey,
-        width: 400,
-        quality: 80,
-      })
-    : '';
 
   return (
     <>
@@ -118,7 +107,11 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
           >
             {message.media?.mediaKey && (
               <Image
-                src={mediaUrl}
+                src={imgixLoader({
+                  src: message.media.mediaKey,
+                  width: 400,
+                  quality: 80,
+                })}
                 alt="Media content"
                 width={192}
                 height={128}
@@ -160,7 +153,7 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
       <MediaViewerModal
         isOpen={showMediaModal}
         onClose={() => setShowMediaModal(false)}
-        mediaUrl={mediaUrl}
+        mediaKey={message.media?.mediaKey!}
         caption={message.content}
       />
     </>

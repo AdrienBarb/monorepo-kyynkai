@@ -1,4 +1,4 @@
-import { AIGirlfriend } from '@prisma/client';
+import { AIGirlfriend, Story } from '@prisma/client';
 
 export type AiGirlfriendType = Omit<
   Pick<
@@ -16,4 +16,5 @@ export type AiGirlfriendType = Omit<
   'chatOpeningLine'
 > & {
   chatOpeningLine?: Record<string, string> | null;
+  stories?: Story[];
 };

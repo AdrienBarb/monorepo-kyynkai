@@ -106,6 +106,7 @@ model AIGirlfriend {
 
   conversations  Conversation[]
   mediaProposals MediaProposal[]
+  stories        Story[]
 
   @@index([isActive, slug])
   @@map("ai_girlfriend")
@@ -233,6 +234,19 @@ model MediaProposal {
   aiGirlfriend AIGirlfriend @relation(fields: [aiGirlfriendId], references: [id], onDelete: Cascade)
 
   @@map("media_proposal")
+}
+
+model Story {
+  id             String   @id @default(cuid())
+  aiGirlfriendId String
+  mediaKey       String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  aiGirlfriend AIGirlfriend @relation(fields: [aiGirlfriendId], references: [id], onDelete: Cascade)
+
+  @@index([aiGirlfriendId])
+  @@map("story")
 }
 
 enum MediaType {
