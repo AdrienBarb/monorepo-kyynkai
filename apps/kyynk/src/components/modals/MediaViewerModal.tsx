@@ -1,55 +1,42 @@
 'use client';
 
 import { FC } from 'react';
-import { X } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { cn } from '@/utils/tailwind/cn';
+import Image from 'next/image';
+import { Dialog, DialogContent } from '@/components/ui/Dialog';
+import imgixLoader from '@/lib/imgix/loader';
 
 interface MediaViewerModalProps {
   isOpen: boolean;
   onClose: () => void;
-  mediaUrl: string;
+  mediaKey: string;
   caption?: string;
 }
 
 const MediaViewerModal: FC<MediaViewerModalProps> = ({
   isOpen,
   onClose,
-  mediaUrl,
+  mediaKey,
   caption,
 }) => {
-  if (!isOpen) return null;
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
-      onClick={handleBackdropClick}
-    >
-      <div className="relative max-w-4xl max-h-[90vh] w-full mx-4">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="absolute top-4 right-4 z-10 bg-black/50 border-white/20 text-white hover:bg-black/70"
-          onClick={onClose}
-        >
-          <X className="w-4 h-4" />
-        </Button>
-
-        <div className="bg-black rounded-lg overflow-hidden">
-          <img
-            src={mediaUrl}
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl max-h-[90vh] w-full bg-black border-none p-0 [&>button]:text-white [&>button]:bg-black/50 [&>button]:hover:bg-black/70 [&>button]:border-background">
+        <div className="relative w-full h-full">
+          <Image
+            src={imgixLoader({
+              src: mediaKey,
+              width: 400 * 3,
+              quality: 80,
+            })}
             alt={caption || 'Media content'}
-            className="w-full h-auto max-h-[80vh] object-contain"
+            width={800}
+            height={600}
+            className="w-full h-auto max-h-[80vh] object-contain rounded-lg"
+            unoptimized
           />
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

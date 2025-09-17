@@ -86,14 +86,6 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
 
   const isLocked = !message.media?.unlockUsers.includes(loggedUser?.id!);
 
-  const mediaUrl = message.media?.mediaKey
-    ? imgixLoader({
-        src: message.media.mediaKey,
-        width: 400,
-        quality: 80,
-      })
-    : '';
-
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -118,7 +110,11 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
           >
             {message.media?.mediaKey && (
               <Image
-                src={mediaUrl}
+                src={imgixLoader({
+                  src: message.media.mediaKey,
+                  width: 400,
+                  quality: 80,
+                })}
                 alt="Media content"
                 width={192}
                 height={128}
@@ -160,7 +156,7 @@ const MediaMessage: FC<MediaMessageProps> = ({ message, isUserMessage }) => {
       <MediaViewerModal
         isOpen={showMediaModal}
         onClose={() => setShowMediaModal(false)}
-        mediaUrl={mediaUrl}
+        mediaKey={message.media?.mediaKey!}
         caption={message.content}
       />
     </>

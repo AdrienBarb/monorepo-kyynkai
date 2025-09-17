@@ -8,8 +8,10 @@ export const useFetchCurrentAiGirlfriend = () => {
   const { data: aiGirlfriend, refetch } = useGet(
     `/api/ai-girlfriends/${slug}`,
     { slug },
-    { enabled: !!slug },
+    { enabled: !!slug, staleTime: 1000 * 60 * 5 },
   );
+
+  console.log('🚀 ~ useFetchCurrentAiGirlfriend ~ aiGirlfriend:', aiGirlfriend);
 
   return { aiGirlfriend, refetch };
 };
