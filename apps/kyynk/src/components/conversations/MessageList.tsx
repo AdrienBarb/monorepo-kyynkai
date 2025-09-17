@@ -25,7 +25,7 @@ const MessageList: FC<MessageListProps> = ({
 
   return (
     <div
-      className="flex flex-col gap-4 px-4 py-4 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
+      className="flex flex-col gap-4 py-4 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
       ref={scrollRef}
       style={{ height: 'calc(100dvh - 5rem - 9rem - 68px)' }}
       role="log"

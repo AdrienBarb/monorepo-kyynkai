@@ -40,6 +40,7 @@ const UserPage = async ({ params }: PageProps) => {
 
   const aiGirlfriend = (await getAiGirlfriendBySlug({
     slug,
+    selectFields: { stories: true },
   })) as AiGirlfriendType;
 
   if (!aiGirlfriend) {

@@ -11,7 +11,5 @@ export const useFetchCurrentAiGirlfriend = () => {
     { enabled: !!slug, staleTime: 1000 * 60 * 5 },
   );
 
-  console.log('🚀 ~ useFetchCurrentAiGirlfriend ~ aiGirlfriend:', aiGirlfriend);
-
   return { aiGirlfriend, refetch };
 };
