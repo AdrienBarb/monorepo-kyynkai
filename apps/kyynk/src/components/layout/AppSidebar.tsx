@@ -1,6 +1,7 @@
 'use client';
 
 import { UsersRound } from 'lucide-react';
+import { FaTelegram, FaTiktok, FaInstagram, FaXTwitter } from 'react-icons/fa6';
 import {
   Sidebar,
   SidebarContent,
@@ -82,6 +83,40 @@ export function AppSidebar() {
         )}
       </SidebarContent>
       <SidebarFooter className="flex-shrink-0">
+        <div className="flex items-center justify-center gap-4 px-2 mb-2">
+          <Link
+            href="https://t.me/kyynkai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:text-primary/80 transition-colors"
+          >
+            <FaTelegram size={20} />
+          </Link>
+          <Link
+            href="https://www.tiktok.com/@kyynk.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:text-primary/80 transition-colors"
+          >
+            <FaTiktok size={20} />
+          </Link>
+          <Link
+            href="https://www.instagram.com/kyynk.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:text-primary/80 transition-colors"
+          >
+            <FaInstagram size={20} />
+          </Link>
+          <Link
+            href="https://x.com/kyynk_"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:text-primary/80 transition-colors"
+          >
+            <FaXTwitter size={20} />
+          </Link>
+        </div>
         <div className="flex items-center flex-wrap justify-center gap-1 px-2 text-xs">
           <Link
             href="/privacy-policy"

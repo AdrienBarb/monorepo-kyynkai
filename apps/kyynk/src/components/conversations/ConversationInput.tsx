@@ -212,7 +212,7 @@ const ConversationInput = () => {
   return (
     <>
       <div className={cn('max-w-xl w-full mx-auto')}>
-        <div className="relative border border-primary rounded-xl bg-background-light">
+        <div className="relative border border-primary/20 rounded-xl bg-background-light">
           <div className="relative flex flex-col">
             <div className="overflow-y-auto" style={{ maxHeight: '400px' }}>
               <Textarea

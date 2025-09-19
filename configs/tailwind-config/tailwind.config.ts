@@ -12,8 +12,8 @@ const config: Omit<Config, 'content'> = {
         primary: '#fff0eb',
         secondary: '#cecaff',
         thirdary: '#565a66',
-        background: '#1c131e',
-        'background-light': '#3A283E',
+        background: '#000000',
+        'background-light': '#292929',
         destructive: 'red',
       },
       screens: {

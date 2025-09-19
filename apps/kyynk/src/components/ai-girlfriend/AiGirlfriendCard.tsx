@@ -54,7 +54,7 @@ const AiGirlfriendCard = ({ user }: Props) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md border border-primary">
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md border border-primary/20">
           <Image
             src={currentImageUrl}
             alt={user.pseudo}
