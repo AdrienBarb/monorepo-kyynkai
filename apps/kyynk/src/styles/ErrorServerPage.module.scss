@@ -1,11 +1,11 @@
-@import "library.scss";
+@import 'library.scss';
 
 .reportButton {
   background-color: $primary;
   border: inherit;
   padding: 0.2rem 0.6rem;
   min-height: inherit;
-  color: $custom-black;
+  color: $background;
   min-height: 34px;
   border-radius: 6px;
   cursor: pointer;

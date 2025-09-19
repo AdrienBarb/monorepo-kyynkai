@@ -53,7 +53,7 @@ const LanguageSwitcher: FC = () => {
         <Button
           variant="ghost"
           size="sm"
-          className="flex items-center gap-2 text-custom-black hover:bg-secondary"
+          className="flex items-center gap-2 text-primary hover:text-background hover:bg-primary"
         >
           <span className="hidden sm:inline">
             {currentLanguage.flag} {currentLanguage.label}
@@ -66,16 +66,12 @@ const LanguageSwitcher: FC = () => {
           <DropdownMenuItem
             key={language.code}
             onClick={() => handleLanguageChange(language.code)}
-            className={`flex items-center gap-2 cursor-pointer ${
-              currentLocale === language.code
-                ? 'bg-secondary text-custom-black font-medium'
-                : ''
-            }`}
+            className={`flex items-center gap-2 cursor-pointer`}
           >
             <span>{language.flag}</span>
             <span>{language.label}</span>
             {currentLocale === language.code && (
-              <span className="ml-auto text-xs">✓</span>
+              <span className="ml-auto text-xs text-primary">✓</span>
             )}
           </DropdownMenuItem>
         ))}

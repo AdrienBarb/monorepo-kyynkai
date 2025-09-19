@@ -45,7 +45,9 @@ const ConversationHeader: FC<Props> = ({ aiGirlfriend }) => {
           <Avatar imageId={aiGirlfriend.profileImageId} size={60} />
         )}
 
-        <Text className="text-lg font-bold">{aiGirlfriend.pseudo}</Text>
+        <Text className="text-lg font-bold text-primary">
+          {aiGirlfriend.pseudo}
+        </Text>
       </div>
 
       <MediaViewerModal

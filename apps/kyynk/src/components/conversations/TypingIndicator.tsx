@@ -10,7 +10,7 @@ const TypingIndicator: FC = () => {
     <div className={cn('max-w-[80%] flex flex-col self-start items-start')}>
       <div
         className={cn(
-          'p-3 rounded-lg break-words bg-secondary-dark text-custom-black',
+          'p-3 rounded-lg break-words bg-background text-background',
           'flex items-center',
         )}
         role="status"
@@ -20,7 +20,7 @@ const TypingIndicator: FC = () => {
           {typingDots.map((delay, index) => (
             <div
               key={index}
-              className="h-1 w-1 bg-custom-black/60 rounded-full animate-bounce"
+              className="h-1 w-1 bg-background/60 rounded-full animate-bounce"
               style={{ animationDelay: `${delay}ms` }}
             />
           ))}

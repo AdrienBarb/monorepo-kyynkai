@@ -11,14 +11,14 @@ export default function TermsPage() {
   return (
     <PaddingContainer>
       <div className="max-w-4xl mx-auto py-8">
-        <h1 className="text-2xl font-bold">Terms & Conditions</h1>
+        <h1 className="text-2xl font-bold text-primary">Terms & Conditions</h1>
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="prose prose-lg max-w-none">
-            <div className="text-sm text-muted-foreground mb-6">
+          <div className="prose prose-lg max-w-none text-primary">
+            <div className="text-sm text-primary mb-6">
               <strong>Effective Date:</strong> 12/08/2025
             </div>
 
-            <p className="text-lg mb-6">
+            <p className="text-lg mb-6 text-primary">
               These Terms and Conditions (&quot;Terms&quot;) govern the use of
               the services provided by <strong>Ally Corporation</strong>, a
               Société par Actions Simplifiée (SAS) registered with the Paris
@@ -29,7 +29,7 @@ export default function TermsPage() {
               &quot;us&quot;).
             </p>
 
-            <p className="text-lg mb-8">
+            <p className="text-lg mb-8 text-primary">
               By accessing or using our platform (&quot;Platform&quot;), you
               (&quot;User&quot;, &quot;you&quot;) agree to be bound by these
               Terms. If you do not agree, you must not use the Platform.
@@ -37,10 +37,10 @@ export default function TermsPage() {
 
             <hr className="my-8" />
 
-            <h2 className="text-2xl font-bold mt-8 mb-4">
+            <h2 className="text-2xl font-bold mt-8 mb-4 text-primary">
               1. Services Provided
             </h2>
-            <p className="mb-6">
+            <p className="mb-6 text-primary">
               The Platform provides users with access to interactive digital
               content, including AI-based chat companions, images, and videos.
               Access to these services requires the purchase and use of{' '}
@@ -49,10 +49,10 @@ export default function TermsPage() {
 
             <hr className="my-8" />
 
-            <h2 className="text-2xl font-bold mt-8 mb-4">
+            <h2 className="text-2xl font-bold mt-8 mb-4 text-primary">
               2. Credit System & Pricing
             </h2>
-            <ul className="mb-4">
+            <ul className="mb-4 text-primary">
               <li>
                 Users may purchase credits in predefined <strong>packs</strong>:
               </li>
@@ -62,66 +62,96 @@ export default function TermsPage() {
               <table className="w-full border-collapse border border-gray-300">
                 <thead>
                   <tr className="bg-gray-50">
-                    <th className="border border-gray-300 px-4 py-2 text-left">
+                    <th className="border border-gray-300 px-4 py-2 text-left text-primary">
                       Package
                     </th>
-                    <th className="border border-gray-300 px-4 py-2 text-left">
+                    <th className="border border-gray-300 px-4 py-2 text-left text-primary">
                       Price (EUR)
                     </th>
-                    <th className="border border-gray-300 px-4 py-2 text-left">
+                    <th className="border border-gray-300 px-4 py-2 text-left text-primary">
                       Credits
                     </th>
-                    <th className="border border-gray-300 px-4 py-2 text-left">
+                    <th className="border border-gray-300 px-4 py-2 text-left text-primary">
                       Bonus Credits
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
                       Starter
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">€9.99</td>
-                    <td className="border border-gray-300 px-4 py-2">100</td>
-                    <td className="border border-gray-300 px-4 py-2">0</td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      €9.99
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      100
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      0
+                    </td>
                   </tr>
                   <tr className="bg-gray-50">
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
                       Popular
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">€19.99</td>
-                    <td className="border border-gray-300 px-4 py-2">250</td>
-                    <td className="border border-gray-300 px-4 py-2">50</td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      €19.99
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      250
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      50
+                    </td>
                   </tr>
                   <tr>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
                       Premium
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">€39.99</td>
-                    <td className="border border-gray-300 px-4 py-2">600</td>
-                    <td className="border border-gray-300 px-4 py-2">150</td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      €39.99
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      600
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      150
+                    </td>
                   </tr>
                   <tr className="bg-gray-50">
-                    <td className="border border-gray-300 px-4 py-2">VIP</td>
-                    <td className="border border-gray-300 px-4 py-2">€79.99</td>
-                    <td className="border border-gray-300 px-4 py-2">1400</td>
-                    <td className="border border-gray-300 px-4 py-2">400</td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      VIP
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      €79.99
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      1400
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      400
+                    </td>
                   </tr>
                   <tr>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
                       Ultimate
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
                       €149.99
                     </td>
-                    <td className="border border-gray-300 px-4 py-2">3200</td>
-                    <td className="border border-gray-300 px-4 py-2">1200</td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      3200
+                    </td>
+                    <td className="border border-gray-300 px-4 py-2 text-primary">
+                      1200
+                    </td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
-            <ul className="mb-6 space-y-2">
+            <ul className="mb-6 space-y-2 text-primary">
               <li>
                 • All prices include applicable taxes, unless stated otherwise.
               </li>
@@ -138,10 +168,10 @@ export default function TermsPage() {
 
             <hr className="my-8" />
 
-            <h2 className="text-2xl font-bold mt-8 mb-4">
+            <h2 className="text-2xl font-bold mt-8 mb-4 text-primary">
               3. Refund & Return Policy
             </h2>
-            <ul className="mb-6 space-y-2">
+            <ul className="mb-6 space-y-2 text-primary">
               <li>
                 • <strong>All sales of credits are final.</strong>
               </li>
@@ -160,10 +190,10 @@ export default function TermsPage() {
 
             <hr className="my-8" />
 
-            <h2 className="text-2xl font-bold mt-8 mb-4">
+            <h2 className="text-2xl font-bold mt-8 mb-4 text-primary">
               4. Eligibility & Age Restriction
             </h2>
-            <ul className="mb-6 space-y-2">
+            <ul className="mb-6 space-y-2 text-primary">
               <li>
                 • The Platform is strictly limited to users{' '}
                 <strong>18 years of age or older</strong>.
@@ -180,17 +210,17 @@ export default function TermsPage() {
 
             <hr className="my-8" />
 
-            <h2 className="text-2xl font-bold mt-8 mb-4">
+            <h2 className="text-2xl font-bold mt-8 mb-4 text-primary">
               5. User Obligations & Prohibited Conduct
             </h2>
-            <p className="mb-4">Users must:</p>
-            <ul className="mb-4 space-y-2">
+            <p className="mb-4 text-primary">Users must:</p>
+            <ul className="mb-4 space-y-2 text-primary">
               <li>• Use the Platform only for lawful purposes.</li>
               <li>• Respect other users, our staff, and our AI companions.</li>
             </ul>
 
-            <p className="mb-4">Users must not:</p>
-            <ul className="mb-6 space-y-2">
+            <p className="mb-4 text-primary">Users must not:</p>
+            <ul className="mb-6 space-y-2 text-primary">
               <li>
                 • Engage in harassment, hate speech, abuse, or any harmful
                 behavior.
@@ -204,7 +234,7 @@ export default function TermsPage() {
               <li>• Attempt to hack, disrupt, or misuse the Platform.</li>
             </ul>
 
-            <p className="mb-6">
+            <p className="mb-6 text-primary">
               Violation of these rules may result in{' '}
               <strong>account suspension or permanent ban</strong> without
               refund.
@@ -212,10 +242,10 @@ export default function TermsPage() {
 
             <hr className="my-8" />
 
-            <h2 className="text-2xl font-bold mt-8 mb-4">
+            <h2 className="text-2xl font-bold mt-8 mb-4 text-primary">
               6. Consent & Compliance
             </h2>
-            <ul className="mb-6 space-y-2">
+            <ul className="mb-6 space-y-2 text-primary">
               <li>
                 • All interactions on the Platform are based on{' '}
                 <strong>consent and fictional adult roleplay</strong>.
@@ -233,15 +263,15 @@ export default function TermsPage() {
 
             <hr className="my-8" />
 
-            <h2 className="text-2xl font-bold mt-8 mb-4">
+            <h2 className="text-2xl font-bold mt-8 mb-4 text-primary">
               7. Privacy & Data Protection
             </h2>
-            <p className="mb-4">
+            <p className="mb-4 text-primary">
               We are committed to protecting your personal data in compliance
               with the{' '}
               <strong>General Data Protection Regulation (GDPR)</strong>.
             </p>
-            <ul className="mb-6 space-y-2">
+            <ul className="mb-6 space-y-2 text-primary">
               <li>
                 • Personal data is collected, stored, and processed as described
                 in our separate{' '}
@@ -258,10 +288,10 @@ export default function TermsPage() {
 
             <hr className="my-8" />
 
-            <h2 className="text-2xl font-bold mt-8 mb-4">
+            <h2 className="text-2xl font-bold mt-8 mb-4 text-primary">
               8. Intellectual Property
             </h2>
-            <ul className="mb-6 space-y-2">
+            <ul className="mb-6 space-y-2 text-primary">
               <li>
                 • All Platform content (including AI models, software, branding,
                 images, and media) is the exclusive property of Ally Corporation
@@ -275,10 +305,10 @@ export default function TermsPage() {
 
             <hr className="my-8" />
 
-            <h2 className="text-2xl font-bold mt-8 mb-4">
+            <h2 className="text-2xl font-bold mt-8 mb-4 text-primary">
               9. Limitation of Liability
             </h2>
-            <ul className="mb-6 space-y-2">
+            <ul className="mb-6 space-y-2 text-primary">
               <li>• The Platform is provided on an &quot;as is&quot; basis.</li>
               <li>
                 • Ally Corporation is not liable for damages resulting from user
@@ -293,13 +323,13 @@ export default function TermsPage() {
 
             <hr className="my-8" />
 
-            <h2 className="text-2xl font-bold mt-8 mb-4">
+            <h2 className="text-2xl font-bold mt-8 mb-4 text-primary">
               10. Governing Law & Jurisdiction
             </h2>
-            <p className="mb-4">
+            <p className="mb-4 text-primary">
               These Terms are governed by <strong>French law</strong>.
             </p>
-            <p className="mb-6">
+            <p className="mb-6 text-primary">
               Any dispute shall be submitted to the{' '}
               <strong>
                 exclusive jurisdiction of the courts of Paris, France
@@ -309,11 +339,13 @@ export default function TermsPage() {
 
             <hr className="my-8" />
 
-            <h2 className="text-2xl font-bold mt-8 mb-4">11. Contact</h2>
-            <p className="mb-4">
+            <h2 className="text-2xl font-bold mt-8 mb-4 text-primary">
+              11. Contact
+            </h2>
+            <p className="mb-4 text-primary">
               For any questions or support requests, please contact:
             </p>
-            <p className="mb-6">
+            <p className="mb-6 text-primary">
               📧{' '}
               <a
                 href="mailto:help@kyynk.com"

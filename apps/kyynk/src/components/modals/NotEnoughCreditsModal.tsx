@@ -102,9 +102,7 @@ const NotEnoughCreditsModal = ({
               onClick={handleBuyMoreCredits}
               className={cn(
                 'w-full',
-                showDiscount
-                  ? 'bg-primary hover:bg-primary/90 text-custom-black font-bold font-karla'
-                  : 'font-karla',
+                showDiscount ? 'font-bold font-karla' : 'font-karla',
               )}
             >
               {showDiscount ? 'Claim 80% OFF Now!' : 'Buy more credits'}

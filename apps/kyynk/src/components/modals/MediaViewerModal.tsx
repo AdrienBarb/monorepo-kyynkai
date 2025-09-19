@@ -80,7 +80,7 @@ const MediaViewerModal: FC<MediaViewerModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] w-full bg-black border-none p-0 [&>button]:text-white [&>button]:bg-black/50 [&>button]:hover:bg-black/70 [&>button]:border-background">
+      <DialogContent className="max-w-4xl max-h-[90vh] w-full bg-background-light border border-primary/20 p-0 [&>button]:text-white [&>button]:bg-black/50 [&>button]:hover:bg-black/70 [&>button]:border-background">
         {stories && stories.length > 0
           ? renderStoriesCarousel()
           : mediaKey

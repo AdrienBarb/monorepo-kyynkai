@@ -24,14 +24,13 @@ export default function ContactPage() {
   return (
     <PaddingContainer>
       <div className="max-w-4xl mx-auto py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Contact Us</h1>
+        <h1 className="text-3xl font-bold text-primary mb-8">Contact Us</h1>
       </div>
 
       <div className="max-w-4xl mx-auto space-y-8">
-        {/* Introduction */}
         <Card>
           <CardContent className="pt-6">
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <p className="text-lg text-primary leading-relaxed">
               We&apos;re here to help you. If you have any questions about our
               services, your account, or our policies, please feel free to reach
               out to us.
@@ -39,10 +38,9 @@ export default function ContactPage() {
           </CardContent>
         </Card>
 
-        {/* Customer Support */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-primary">
               <Mail className="h-5 w-5" />
               Customer Support
             </CardTitle>
@@ -50,7 +48,7 @@ export default function ContactPage() {
           <CardContent className="space-y-4">
             <div className="flex items-center gap-3">
               <Mail className="h-5 w-5 text-blue-600" />
-              <div>
+              <div className="text-primary">
                 <span className="font-medium">Email:</span>{' '}
                 <a
                   href="mailto:help@kyynk.com"
@@ -62,7 +60,7 @@ export default function ContactPage() {
             </div>
             <div className="flex items-center gap-3">
               <Clock className="h-5 w-5 text-green-600" />
-              <div>
+              <div className="text-primary">
                 <span className="font-medium">Response Time:</span> We aim to
                 reply within{' '}
                 <Badge variant="secondary" className="font-semibold">
@@ -74,20 +72,23 @@ export default function ContactPage() {
           </CardContent>
         </Card>
 
-        {/* Business Information */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-primary">
               <Building className="h-5 w-5" />
               Business Information
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="font-semibold text-lg">Ally Corporation (SAS)</div>
-            <div className="space-y-2 text-sm">
+            <div className="font-semibold text-lg text-primary">
+              Ally Corporation (SAS)
+            </div>
+            <div className="space-y-2 text-sm text-primary">
               <div>
                 <span className="font-medium">RCS Paris:</span>{' '}
-                <Badge variant="outline">949 248 058</Badge>
+                <Badge variant="outline" className="text-primary">
+                  949 248 058
+                </Badge>
               </div>
               <div>
                 <span className="font-medium">Registered office:</span> 60 rue
@@ -97,10 +98,9 @@ export default function ContactPage() {
           </CardContent>
         </Card>
 
-        {/* Common Requests */}
         <Card>
           <CardHeader>
-            <CardTitle>Common Requests</CardTitle>
+            <CardTitle className="text-primary">Common Requests</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-2">
@@ -109,8 +109,10 @@ export default function ContactPage() {
                   <AlertTriangle className="h-4 w-4 text-blue-600" />
                 </div>
                 <div>
-                  <div className="font-medium">Account Support</div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="font-medium text-primary">
+                    Account Support
+                  </div>
+                  <div className="text-sm text-primary">
                     Trouble signing in, password reset, or verification issues.
                   </div>
                 </div>
@@ -121,8 +123,10 @@ export default function ContactPage() {
                   <CreditCard className="h-4 w-4 text-green-600" />
                 </div>
                 <div>
-                  <div className="font-medium">Payments & Credits</div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="font-medium text-primary">
+                    Payments & Credits
+                  </div>
+                  <div className="text-sm text-primary">
                     Questions about purchasing or using credits.
                   </div>
                 </div>
@@ -133,8 +137,10 @@ export default function ContactPage() {
                   <FileText className="h-4 w-4 text-purple-600" />
                 </div>
                 <div>
-                  <div className="font-medium">Legal & Compliance</div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="font-medium text-primary">
+                    Legal & Compliance
+                  </div>
+                  <div className="text-sm text-primary">
                     Inquiries about our Terms & Conditions or Privacy Policy.
                   </div>
                 </div>
@@ -145,8 +151,10 @@ export default function ContactPage() {
                   <Shield className="h-4 w-4 text-red-600" />
                 </div>
                 <div>
-                  <div className="font-medium">Safety & Reporting</div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="font-medium text-primary">
+                    Safety & Reporting
+                  </div>
+                  <div className="text-sm text-primary">
                     Report abuse, harassment, or policy violations.
                   </div>
                 </div>
@@ -155,15 +163,12 @@ export default function ContactPage() {
           </CardContent>
         </Card>
 
-        {/* Additional Help */}
         <Card>
           <CardHeader>
-            <CardTitle>Additional Help</CardTitle>
+            <CardTitle className="text-primary">Additional Help</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground mb-4">
-              For more details, please see:
-            </p>
+            <p className="text-primary mb-4">For more details, please see:</p>
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/terms"

@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { ArrowRight, Camera } from 'lucide-react';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Textarea } from '@/components/ui/TextArea';
@@ -9,6 +10,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import { useTranslations } from 'next-intl';
@@ -210,14 +212,14 @@ const ConversationInput = () => {
   return (
     <>
       <div className={cn('max-w-xl w-full mx-auto')}>
-        <div className="relative border border-custom-black/20 rounded-xl">
+        <div className="relative border border-primary/20 rounded-xl bg-background-light">
           <div className="relative flex flex-col">
             <div className="overflow-y-auto" style={{ maxHeight: '400px' }}>
               <Textarea
                 value={value}
                 placeholder={t('typeYourMessage')}
                 className={cn(
-                  'w-full rounded-xl rounded-b-none px-4 py-3 border-none placeholder:text-black/70 resize-none focus-visible:ring-0 focus-visible:ring-offset-0 text-base',
+                  'w-full rounded-xl rounded-b-none px-4 py-3 border-none placeholder:primary/70 resize-none focus-visible:ring-0 focus-visible:ring-offset-0 text-base text-primary',
                 )}
                 ref={textareaRef}
                 onKeyDown={handleKeyDown}
@@ -236,7 +238,6 @@ const ConversationInput = () => {
                       <DropdownMenuTrigger asChild>
                         <Button
                           aria-label="Get a picture"
-                          variant="secondary"
                           size="sm"
                           disabled={
                             isAiPending || isPending || isPictureRequestPending
@@ -248,17 +249,21 @@ const ConversationInput = () => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="start" side="top">
-                        {mediaProposals.map((proposal) => (
-                          <DropdownMenuItem
-                            key={proposal.id}
-                            onClick={() => handlePictureRequest(proposal)}
-                          >
-                            <div className="flex flex-col">
-                              <span className="font-medium">
-                                {proposal.title}
-                              </span>
-                            </div>
-                          </DropdownMenuItem>
+                        {mediaProposals.map((proposal, index) => (
+                          <React.Fragment key={proposal.id}>
+                            <DropdownMenuItem
+                              onClick={() => handlePictureRequest(proposal)}
+                            >
+                              <div className="flex flex-col">
+                                <span className="font-medium">
+                                  {proposal.title}
+                                </span>
+                              </div>
+                            </DropdownMenuItem>
+                            {index < mediaProposals.length - 1 && (
+                              <DropdownMenuSeparator className="bg-primary/20" />
+                            )}
+                          </React.Fragment>
                         ))}
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -280,7 +285,7 @@ const ConversationInput = () => {
                   }
                   onClick={handleSendMessage}
                 >
-                  <ArrowRight className={cn('w-4 h-4 text-secondary')} />
+                  <ArrowRight className={cn('w-4 h-4 text-background')} />
                 </Button>
               </div>
             </div>

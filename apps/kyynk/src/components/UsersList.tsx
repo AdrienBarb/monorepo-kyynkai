@@ -26,7 +26,7 @@ const UsersList: FC<Props> = ({ initialAiGirlfriends }) => {
     <div
       className={cn(
         'grid gap-4 mx-auto mt-8',
-        'grid-cols-2 md:grid-cols-3 lg:grid-cols-4 max-w-screen-lg',
+        'grid-cols-2 md:grid-cols-3 lg:grid-cols-4',
       )}
     >
       {users.map((user: AIGirlfriend) => (

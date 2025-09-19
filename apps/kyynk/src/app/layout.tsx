@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import '@/styles/globals.scss';
+import '@/styles/globals.css';
 import '@/styles/tailwind.css';
 import siteMetadata from '@/data/siteMetadata';
 import { NextIntlClientProvider } from 'next-intl';

@@ -19,7 +19,7 @@ const Avatar = React.forwardRef<
   <AvatarPrimitive.Root
     ref={ref}
     className={cn(
-      'relative flex shrink-0 overflow-hidden rounded-full',
+      'relative flex shrink-0 overflow-hidden rounded-full border border-background',
       className,
     )}
     style={{ width: size, height: size }}
@@ -79,7 +79,7 @@ const AvatarFallback = React.forwardRef<
       style={{ width: size, height: size, fontSize: size / 2 }}
       {...props}
     >
-      <UserRound strokeWidth={1} />
+      <UserRound strokeWidth={1} color="#1c131e" />
     </AvatarPrimitive.Fallback>
   );
 });

@@ -208,11 +208,11 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
               {isOtpSent ? t('continue') : t('signUp')}
             </Button>
 
-            <p className="text-xs text-gray-600 text-center mt-2">
+            <p className="text-xs text-primary/50 text-center mt-2">
               By signing up, you agree to our{' '}
               <Link
                 href="/terms"
-                className="text-xs text-gray-600"
+                className="text-xs text-primary/50"
                 target="_blank"
               >
                 Terms of Service
@@ -220,7 +220,7 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
               and{' '}
               <Link
                 href="/privacy-policy"
-                className="text-xs text-gray-600"
+                className="text-xs text-primary/50"
                 target="_blank"
               >
                 Privacy Policy
@@ -231,11 +231,11 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
       </Form>
 
       <div className="flex items-center">
-        <Separator className="flex-1 bg-black/10" />
+        <Separator className="flex-1 bg-primary/20" />
         <span className="mx-4 text-xs font-extralight whitespace-nowrap">
           Or continue with
         </span>
-        <Separator className="flex-1 bg-black/10" />
+        <Separator className="flex-1 bg-primary/20" />
       </div>
 
       <GoogleSignInButton

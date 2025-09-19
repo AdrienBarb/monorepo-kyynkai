@@ -37,7 +37,7 @@ export const UserDropdown: React.FC = () => {
     return (
       <div className="flex items-center gap-2">
         <Avatar size={32} />
-        <div className="grid flex-1 text-left text-sm leading-tight">
+        <div className="grid flex-1 text-left text-sm leading-tight text-primary">
           <span className="text-sm truncate">{user?.email}</span>
           <span className="text-xs truncate">
             {user?.creditBalance} credits
@@ -53,7 +53,7 @@ export const UserDropdown: React.FC = () => {
         <Avatar size={38} />
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-md"
+        className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-md "
         side="bottom"
         align="end"
         sideOffset={4}
@@ -71,13 +71,14 @@ export const UserDropdown: React.FC = () => {
                 window.location.href,
               );
             }}
+            className="text-primary"
           >
             <Coins />
             {t('navUserBuyCredits')}
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>
+        <DropdownMenuItem onClick={logout} className="text-primary">
           <LogOut />
           {t('navUserLogout')}
         </DropdownMenuItem>

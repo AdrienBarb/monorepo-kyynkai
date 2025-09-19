@@ -17,8 +17,8 @@ const AiGirlfriendCard = ({ user }: Props) => {
 
   const currentImageUrl = imgixLoader({
     src: allImages[currentImageIndex] || '',
-    width: 400,
-    quality: 80,
+    width: 400 * 2,
+    quality: 90,
   });
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const AiGirlfriendCard = ({ user }: Props) => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md">
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md border border-primary/20">
           <Image
             src={currentImageUrl}
             alt={user.pseudo}

@@ -11,41 +11,39 @@ export default function PrivacyPolicyPage() {
   return (
     <PaddingContainer>
       <div className="max-w-4xl mx-auto py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          Privacy Policy
-        </h1>
+        <h1 className="text-3xl font-bold text-primary mb-8">Privacy Policy</h1>
 
         <div className="prose prose-lg max-w-none">
-          <div className="bg-gray-50 p-6 rounded-lg mb-8">
-            <p className="text-sm text-gray-600 mb-2">
+          <div className="p-6 rounded-lg mb-8">
+            <p className="text-sm text-primary mb-2">
               <strong>Effective Date:</strong> 12/08/2025
             </p>
-            <p className="text-sm text-gray-600 mb-2">
+            <p className="text-sm text-primary mb-2">
               <strong>Company:</strong> Ally Corporation (SAS)
             </p>
-            <p className="text-sm text-gray-600 mb-2">
+            <p className="text-sm text-primary mb-2">
               <strong>RCS Paris:</strong> 949 248 058
             </p>
-            <p className="text-sm text-gray-600 mb-2">
+            <p className="text-sm text-primary mb-2">
               <strong>Registered office:</strong> 60 rue François Ier, 75008
               Paris, France
             </p>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-primary">
               <strong>Contact:</strong> help@kyynk.com
             </p>
           </div>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-primary mb-4">
               1. Introduction
             </h2>
-            <p className="text-gray-700 mb-4">
+            <p className="text-primary mb-4">
               This Privacy Policy explains how <strong>Ally Corporation</strong>{' '}
               (&quot;Company&quot;, &quot;we&quot;, &quot;our&quot;,
               &quot;us&quot;) collects, uses, and protects your personal data
               when you use our platform (&quot;Platform&quot;).
             </p>
-            <p className="text-gray-700">
+            <p className="text-primary">
               We are committed to protecting your privacy and complying with the{' '}
               <strong>
                 General Data Protection Regulation (EU) 2016/679 (GDPR)
@@ -55,13 +53,13 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-primary mb-4">
               2. Data We Collect
             </h2>
-            <p className="text-gray-700 mb-4">
+            <p className="text-primary mb-4">
               We may collect and process the following types of personal data:
             </p>
-            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+            <ul className="list-disc pl-6 text-primary space-y-2">
               <li>
                 <strong>Account Information:</strong> email, username, password,
                 age verification details.
@@ -87,13 +85,13 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-primary mb-4">
               3. How We Use Your Data
             </h2>
-            <p className="text-gray-700 mb-4">
+            <p className="text-primary mb-4">
               We use your personal data for the following purposes:
             </p>
-            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+            <ul className="list-disc pl-6 text-primary space-y-2">
               <li>
                 To provide and operate the Platform (chat, credits, media
                 access).
@@ -111,13 +109,13 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-primary mb-4">
               4. Legal Basis for Processing
             </h2>
-            <p className="text-gray-700 mb-4">
+            <p className="text-primary mb-4">
               We process your personal data under the following legal grounds:
             </p>
-            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+            <ul className="list-disc pl-6 text-primary space-y-2">
               <li>
                 <strong>Performance of Contract:</strong> to deliver services
                 you purchase.
@@ -138,14 +136,14 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-primary mb-4">
               5. Sharing of Data
             </h2>
-            <p className="text-gray-700 mb-4">
+            <p className="text-primary mb-4">
               We do not sell your personal data.
             </p>
-            <p className="text-gray-700 mb-4">We may share data with:</p>
-            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+            <p className="text-primary mb-4">We may share data with:</p>
+            <ul className="list-disc pl-6 text-primary space-y-2">
               <li>
                 <strong>Payment providers</strong> (e.g., Stripe, CommerceGate)
                 to process transactions.
@@ -162,24 +160,24 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-primary mb-4">
               6. International Transfers
             </h2>
-            <p className="text-gray-700 mb-4">
+            <p className="text-primary mb-4">
               Your data may be stored or processed outside the European Economic
               Area (EEA).
             </p>
-            <p className="text-gray-700">
+            <p className="text-primary">
               In such cases, we ensure adequate safeguards (Standard Contractual
               Clauses or equivalent).
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-primary mb-4">
               7. Data Retention
             </h2>
-            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+            <ul className="list-disc pl-6 text-primary space-y-2">
               <li>Account data: retained as long as your account is active.</li>
               <li>
                 Transaction records: kept for up to <strong>10 years</strong>{' '}
@@ -196,13 +194,13 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-primary mb-4">
               8. Your Rights (GDPR)
             </h2>
-            <p className="text-gray-700 mb-4">
+            <p className="text-primary mb-4">
               As a user, you have the following rights:
             </p>
-            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+            <ul className="list-disc pl-6 text-primary space-y-2">
               <li>
                 <strong>Access:</strong> obtain a copy of your personal data.
               </li>
@@ -230,84 +228,84 @@ export default function PrivacyPolicyPage() {
                 (for optional processing).
               </li>
             </ul>
-            <p className="text-gray-700 mt-4">
+            <p className="text-primary mt-4">
               You can exercise these rights by contacting us at{' '}
               <strong>help@kyynk.com</strong>.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-primary mb-4">
               9. Security Measures
             </h2>
-            <p className="text-gray-700 mb-4">
+            <p className="text-primary mb-4">
               We use industry-standard security measures, including:
             </p>
-            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+            <ul className="list-disc pl-6 text-primary space-y-2">
               <li>Encrypted connections (SSL/TLS).</li>
               <li>Secure password hashing.</li>
               <li>Restricted access to sensitive data.</li>
               <li>Regular monitoring for security breaches.</li>
             </ul>
-            <p className="text-gray-700">
+            <p className="text-primary">
               However, no system is 100% secure. Users are responsible for
               keeping login credentials confidential.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-primary mb-4">
               10. Cookies & Tracking
             </h2>
-            <p className="text-gray-700 mb-4">
+            <p className="text-primary mb-4">
               The Platform uses cookies and similar technologies to:
             </p>
-            <ul className="list-disc pl-6 text-gray-700 space-y-2">
+            <ul className="list-disc pl-6 text-primary space-y-2">
               <li>Maintain sessions and login functionality.</li>
               <li>Track credit usage and service performance.</li>
               <li>Analyze usage patterns to improve services.</li>
             </ul>
-            <p className="text-gray-700">
+            <p className="text-primary">
               Users may manage cookie preferences via browser settings.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-primary mb-4">
               11. Age Restriction
             </h2>
-            <p className="text-gray-700 mb-4">
+            <p className="text-primary mb-4">
               The Platform is strictly for users{' '}
               <strong>18 years and older</strong>.
             </p>
-            <p className="text-gray-700">
+            <p className="text-primary">
               We may request age/identity verification before granting access.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-primary mb-4">
               12. Changes to this Policy
             </h2>
-            <p className="text-gray-700 mb-4">
+            <p className="text-primary mb-4">
               We may update this Privacy Policy from time to time.
             </p>
-            <p className="text-gray-700">
+            <p className="text-primary">
               We will notify users of significant changes via the Platform or
               email.
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+            <h2 className="text-2xl font-semibold text-primary mb-4">
               13. Contact Us
             </h2>
-            <p className="text-gray-700 mb-4">
+            <p className="text-primary mb-4">
               If you have questions or requests regarding this Privacy Policy,
               please contact us at:
             </p>
-            <div className="bg-blue-50 p-6 rounded-lg">
-              <p className="text-gray-700 mb-2">
+            <div className="p-6 rounded-lg border border-primary">
+              <p className="text-primary mb-2">
                 📧{' '}
                 <a
                   href="mailto:help@kyynk.com"
@@ -316,7 +314,7 @@ export default function PrivacyPolicyPage() {
                   help@kyynk.com
                 </a>
               </p>
-              <p className="text-gray-700">
+              <p className="text-primary">
                 📍 Ally Corporation, 60 rue François Ier, 75008 Paris, France
               </p>
             </div>

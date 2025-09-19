@@ -38,8 +38,8 @@ const MessageItem: FC<MessageItemProps> = ({ message }) => {
           className={cn(
             'p-3 rounded-lg break-words',
             isUserMessage
-              ? 'bg-primary text-custom-black'
-              : 'bg-secondary-dark text-custom-black',
+              ? 'bg-secondary text-primary'
+              : 'bg-background-light text-primary',
           )}
           role="article"
           aria-label={`Message from ${isUserMessage ? 'you' : 'AI'}`}
