@@ -1,6 +1,6 @@
 'use client';
 
-import { UsersRound } from 'lucide-react';
+import { UsersRound, Wand } from 'lucide-react';
 import { FaTelegram, FaTiktok, FaInstagram, FaXTwitter } from 'react-icons/fa6';
 import {
   Sidebar,
@@ -18,18 +18,31 @@ import { appRouter } from '@/constants/appRouter';
 import { useConversations } from '@/hooks/conversations/useConversations';
 import { useCloseSideBarOnMobile } from '@/hooks/others/useCloseSideBarOnMobile';
 import { useTranslations } from 'next-intl';
+import { trackingEvent } from '@/constants/trackingEvent';
+import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 
 export function AppSidebar() {
   const { conversations } = useConversations();
   const { closeSidebarOnMobile } = useCloseSideBarOnMobile();
   const t = useTranslations();
-
+  const { sendEventOnce } = useClientPostHogEvent();
   const platforms = [
     {
       title: 'models',
       url: appRouter.home,
       icon: UsersRound,
       isVisible: true,
+    },
+    {
+      title: 'createYourOwn',
+      url: appRouter.createYourOwn,
+      icon: Wand,
+      isVisible: true,
+      onClick: () => {
+        sendEventOnce({
+          eventName: trackingEvent.create_your_own_page_clicked,
+        });
+      },
     },
   ];
 
@@ -49,7 +62,13 @@ export function AppSidebar() {
                   item.isVisible && (
                     <SidebarMenuItem key={item.title}>
                       <SidebarMenuButton asChild>
-                        <Link href={item.url} onClick={closeSidebarOnMobile}>
+                        <Link
+                          href={item.url}
+                          onClick={() => {
+                            closeSidebarOnMobile();
+                            item?.onClick?.();
+                          }}
+                        >
                           <item.icon />
                           <span>{t('sideBar' + capitalize(item.title))}</span>
                         </Link>

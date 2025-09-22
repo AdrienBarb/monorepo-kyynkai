@@ -52,21 +52,42 @@ const AppFAQ: FC<Props> = async ({}) => {
     ],
   };
 
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: data.rows.map((item) => ({
+      '@type': 'Question',
+      name: item.title,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.content,
+      },
+    })),
+  };
+
   return (
-    <section className="max-w-4xl mx-auto py-16 mt-16">
-      <LandingHeader title={t('faqTitle')} />
-      <div className="flex flex-col gap-4">
-        {data.rows.map((item, index) => (
-          <div
-            key={index}
-            className="bg-background-light border border-primary/20 rounded-md p-4"
-          >
-            <h2 className="text-lg font-medium">{item.title}</h2>
-            <h3 className="text-sm font-thin">{item.content}</h3>
-          </div>
-        ))}
-      </div>
-    </section>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqJsonLd),
+        }}
+      />
+      <section className="max-w-4xl mx-auto py-16 mt-16">
+        <LandingHeader title={t('faqTitle')} />
+        <div className="flex flex-col gap-4">
+          {data.rows.map((item, index) => (
+            <div
+              key={index}
+              className="bg-background-light border border-primary/20 rounded-md p-4"
+            >
+              <h2 className="text-lg font-medium">{item.title}</h2>
+              <h3 className="text-sm font-thin">{item.content}</h3>
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
   );
 };
 
