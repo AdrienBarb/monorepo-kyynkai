@@ -16,13 +16,13 @@ const MessageItem: FC<MessageItemProps> = ({ message }) => {
 
   const isMediaMessage = message.mediaId;
 
-  if (!isLoggedIn() && !isUserMessage && !isMediaMessage) {
-    return (
-      <div className="max-w-[80%] self-start items-start">
-        <HiddenMessage />
-      </div>
-    );
-  }
+  // if (!isLoggedIn() && !isUserMessage && !isMediaMessage) {
+  //   return (
+  //     <div className="max-w-[80%] self-start items-start">
+  //       <HiddenMessage />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div

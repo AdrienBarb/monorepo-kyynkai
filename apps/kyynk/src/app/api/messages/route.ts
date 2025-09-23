@@ -13,6 +13,10 @@ import { MESSAGE_COST } from '@/constants/creditPackages';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import { getOrCreateGuest } from '@/services/guests/getOrCreateGuest';
 import { getGuestFromCookie } from '@/services/guests/getGuestFromCookie';
+import {
+  checkGuestMessageLimit,
+  incrementGuestMessageCount,
+} from '@/services/guests/checkGuestMessageLimit';
 import { sendPostHogEvent } from '@/utils/tracking/sendPostHogEvent';
 
 const conversationSchema = z.object({
@@ -91,6 +95,14 @@ export const POST = async (req: NextRequest) => {
     // Guest
     const guest = await getOrCreateGuest();
 
+    const canSendMessage = await checkGuestMessageLimit(guest.id);
+    if (!canSendMessage) {
+      return NextResponse.json(
+        { error: errorMessages.AUTH_REQUIRED },
+        { status: 422 },
+      );
+    }
+
     const result = await prisma.$transaction(async (tx) => {
       let conversation = await tx.conversation.findFirst({
         where: { guestId: guest.id, aiGirlfriendId: aiGirlfriend.id },
@@ -110,14 +122,6 @@ export const POST = async (req: NextRequest) => {
         });
       }
 
-      const updated = await tx.conversation.updateMany({
-        where: { id: conversation.id, freeGuestUsed: false },
-        data: { freeGuestUsed: true },
-      });
-      if (updated.count === 0) {
-        throw new Error(errorMessages.AUTH_REQUIRED);
-      }
-
       const message = await tx.message.create({
         data: {
           content: payload.message,
@@ -126,21 +130,13 @@ export const POST = async (req: NextRequest) => {
         },
       });
 
+      await incrementGuestMessageCount(guest.id);
+
       return message;
     });
 
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
-    if (
-      error instanceof Error &&
-      error.message === errorMessages.AUTH_REQUIRED
-    ) {
-      return NextResponse.json(
-        { error: errorMessages.AUTH_REQUIRED },
-        { status: 422 },
-      );
-    }
-
     return errorHandler(error);
   }
 };
