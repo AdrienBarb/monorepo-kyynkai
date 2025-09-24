@@ -9,10 +9,6 @@ import { auth } from '@/lib/better-auth/auth';
 import { headers } from 'next/headers';
 import { getCurrentUser } from '@/services/users/getCurrentUser';
 import { getOrCreateGuest } from '@/services/guests/getOrCreateGuest';
-import {
-  checkGuestMessageLimit,
-  incrementGuestMessageCount,
-} from '@/services/guests/checkGuestMessageLimit';
 import { getMediaProposalById } from '@/services/ai-girlfriends-service/getMediaProposalById';
 
 const askPictureSchema = z.object({
@@ -84,14 +80,6 @@ export const POST = async (req: NextRequest) => {
 
     const guest = await getOrCreateGuest();
 
-    const canSendMessage = await checkGuestMessageLimit(guest.id);
-    if (!canSendMessage) {
-      return NextResponse.json(
-        { error: errorMessages.AUTH_REQUIRED },
-        { status: 422 },
-      );
-    }
-
     const result = await prisma.$transaction(async (tx) => {
       let conversation = await tx.conversation.findFirst({
         where: { guestId: guest.id, aiGirlfriendId: proposal.aiGirlfriendId },
@@ -104,6 +92,14 @@ export const POST = async (req: NextRequest) => {
             aiGirlfriendId: proposal.aiGirlfriendId,
           },
         });
+      }
+
+      const updated = await tx.conversation.updateMany({
+        where: { id: conversation.id, freeGuestUsed: false },
+        data: { freeGuestUsed: true },
+      });
+      if (updated.count === 0) {
+        throw new Error(errorMessages.AUTH_REQUIRED);
       }
 
       const media = await tx.media.create({
@@ -122,13 +118,21 @@ export const POST = async (req: NextRequest) => {
         },
       });
 
-      await incrementGuestMessageCount(guest.id);
-
       return aiMessage;
     });
 
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message === errorMessages.AUTH_REQUIRED
+    ) {
+      return NextResponse.json(
+        { error: errorMessages.AUTH_REQUIRED },
+        { status: 422 },
+      );
+    }
+
     return errorHandler(error);
   }
 };

@@ -77,6 +77,16 @@ export const POST = async (req: NextRequest) => {
         where: { guestId: guest.id, aiGirlfriendId: aiGirlfriend.id },
         select: { id: true },
       });
+
+      const aiRepliesCount = await prisma.message.count({
+        where: { conversationId: conversation?.id!, sender: MessageSender.AI },
+      });
+      if (aiRepliesCount > 0) {
+        return NextResponse.json(
+          { error: errorMessages.NOT_AUTHORIZED },
+          { status: 400 },
+        );
+      }
     }
 
     if (!conversation) {
@@ -128,8 +138,8 @@ export const POST = async (req: NextRequest) => {
 
       const data = llmResponse.data;
       const generatedText = Array.isArray(data)
-        ? (data[0]?.generated_text ?? '')
-        : (data.generated_text ?? '');
+        ? data[0]?.generated_text ?? ''
+        : data.generated_text ?? '';
 
       if (generatedText.trim()) {
         assistantText = generatedText;

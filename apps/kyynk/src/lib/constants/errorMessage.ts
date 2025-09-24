@@ -17,5 +17,4 @@ export const errorMessages = {
   MISSING_BANK_ACCOUNT_INFORMATION: 'missingBankAccountInformation',
   NOT_FOUND: 'notFound',
   AUTH_REQUIRED: 'authRequired',
-  GUEST_MESSAGE_LIMIT_EXCEEDED: 'guestMessageLimitExceeded',
 };
