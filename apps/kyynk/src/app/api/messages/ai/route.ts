@@ -16,6 +16,7 @@ import {
 import axios from 'axios';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import { getGuestFromCookie } from '@/services/guests/getGuestFromCookie';
+import { getRotatingFallbackResponse } from '@/constants/fallbackResponses';
 
 const conversationSchema = z.object({
   slug: z.string(),
@@ -112,8 +113,11 @@ export const POST = async (req: NextRequest) => {
     const HF_ENDPOINT = process.env.HF_ENDPOINT!;
     const HF_TOKEN = process.env.HF_TOKEN!;
 
-    let assistantText =
-      'Sorry sweetheart, I am not feeling well today. Come back later.';
+    const aiRepliesCount = await prisma.message.count({
+      where: { conversationId: conversation.id, sender: MessageSender.AI },
+    });
+
+    let assistantText: string = getRotatingFallbackResponse(aiRepliesCount);
 
     try {
       const llmResponse = await axios.post(
@@ -138,8 +142,8 @@ export const POST = async (req: NextRequest) => {
 
       const data = llmResponse.data;
       const generatedText = Array.isArray(data)
-        ? data[0]?.generated_text ?? ''
-        : data.generated_text ?? '';
+        ? (data[0]?.generated_text ?? '')
+        : (data.generated_text ?? '');
 
       if (generatedText.trim()) {
         assistantText = generatedText;

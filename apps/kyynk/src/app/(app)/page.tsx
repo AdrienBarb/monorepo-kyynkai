@@ -31,19 +31,11 @@ const HomePage = async () => {
 
   return (
     <PaddingContainer>
-      <div className="relative w-full h-64 md:h-80 lg:h-96 rounded-2xl overflow-hidden mb-8">
-        <Image
-          src="/images/banner-2.jpg"
-          alt="Kyynk AI Girlfriend Banner"
-          fill
-          className="object-cover"
-          priority
-          quality={95}
-        />
-        <div className="absolute inset-0 flex items-center rounded-2xl justify-center border border-primary/20">
-          <div className="text-center text-primary px-4 max-w-md">
+      <div className="relative w-full h-64 md:h-80 lg:h-80 rounded-2xl overflow-hidden mb-8">
+        <div className="absolute inset-0 flex items-center rounded-2xl justify-center">
+          <div className="text-center text-primary px-4 max-w-lg">
             <h1 className="text-2xl md:text-2xl lg:text-4xl font-bold mb-2">
-              GET YOUR FANTASM DONE WITH OUR MILF AI GIRLFRIENDS
+              GET YOUR FANTASM DONE
             </h1>
             <h2 className="text-sm md:text-lg opacity-80 font-light">
               Get your fantasy fulfilled with lifelike MILF AI girlfriends who
