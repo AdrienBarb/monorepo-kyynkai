@@ -14,7 +14,7 @@ const MessageItem: FC<MessageItemProps> = ({ message }) => {
   const { isLoggedIn } = useUser();
   const isUserMessage = message.sender === MessageSender.USER;
 
-  const isMediaMessage = message.mediaId;
+  const isMediaMessage = message.generatedMediaId;
 
   if (!isLoggedIn() && !isUserMessage && !isMediaMessage) {
     return (

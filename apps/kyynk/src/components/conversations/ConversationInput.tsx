@@ -1,18 +1,11 @@
 'use client';
 
 import React from 'react';
-import { ArrowRight, Camera } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { Textarea } from '@/components/ui/TextArea';
 import { cn } from '@/utils/tailwind/cn';
 import { Button } from '@/components/ui/Button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/DropdownMenu';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import useApi from '@/hooks/requests/useApi';
@@ -25,9 +18,8 @@ import { hasEnoughCredits } from '@/utils/users/hasEnoughCredits';
 import { useGlobalModalStore } from '@/stores/GlobalModalStore';
 import { errorMessages } from '@/lib/constants/errorMessage';
 import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
-import { trackingEvent } from '@/constants/trackingEvent';
 import { useFetchCurrentAiGirlfriend } from '@/hooks/ai-girlfriends/useFetchCurrentAiGirlfriend';
-import { MediaProposal } from '@/types/media-proposals';
+import AskInput from './AskInput';
 
 interface UseAutoResizeTextareaProps {
   minHeight: number;
@@ -92,18 +84,9 @@ const ConversationInput = () => {
   const { slug } = useParams<{ slug: string }>();
 
   const { refetch: refetchConversations } = useConversations();
-  const { usePost, useGet } = useApi();
-
-  const { data: mediaProposals = [] } = useGet(
-    `/api/media-proposals/${slug}`,
-    {},
-    {
-      enabled: !!slug,
-    },
-  ) as { data: MediaProposal[] };
+  const { usePost } = useApi();
 
   const { addMessageToCache, refetch: refetchMessages } = useFetchMessages();
-  const { sendEventOnce } = useClientPostHogEvent();
 
   const { aiGirlfriend } = useFetchCurrentAiGirlfriend();
 
@@ -138,27 +121,6 @@ const ConversationInput = () => {
     },
   });
 
-  const { mutate: sendPictureRequest, isPending: isPictureRequestPending } =
-    usePost('/api/ask-picture', {
-      onSuccess: () => {
-        sendEventOnce({
-          eventName: trackingEvent.media_requested,
-        });
-
-        refetchMessages();
-        refetchConversations();
-
-        if (loggedUser) {
-          refetchUser();
-        }
-      },
-      onError: (err: any) => {
-        if (err === errorMessages.AUTH_REQUIRED) {
-          openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
-        }
-      },
-    });
-
   const handleSendMessage = () => {
     if (!value.trim()) return;
 
@@ -187,26 +149,9 @@ const ConversationInput = () => {
     }
   };
 
-  const handlePictureRequest = (proposal: MediaProposal) => {
-    if (loggedUser) {
-      if (
-        !hasEnoughCredits({
-          user: loggedUser,
-          requiredCredits: proposal.creditCost,
-        })
-      ) {
-        sendEventOnce({
-          eventName: trackingEvent.credit_wall_shown,
-        });
-        openModal('notEnoughCredits');
-        return;
-      }
-    }
-
-    sendPictureRequest({
-      proposalId: proposal.id,
-      slug: slug as string,
-    });
+  const handleAskInputSuccess = () => {
+    refetchMessages();
+    refetchConversations();
   };
 
   return (
@@ -231,58 +176,20 @@ const ConversationInput = () => {
             </div>
 
             <div className="h-14 rounded-b-xl flex items-center">
-              <div className="absolute left-3 right-3 bottom-3 flex items-center justify-between w-[calc(100%-24px)]">
-                <div className="flex items-center gap-2">
-                  {mediaProposals.length > 0 && (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          aria-label="Get a picture"
-                          size="sm"
-                          disabled={
-                            isAiPending || isPending || isPictureRequestPending
-                          }
-                          className="flex items-center gap-2 px-3 py-2 h-9"
-                        >
-                          <Camera className="w-4 h-4" />
-                          <span className="text-sm">Get a picture</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="start" side="top">
-                        {mediaProposals.map((proposal, index) => (
-                          <React.Fragment key={proposal.id}>
-                            <DropdownMenuItem
-                              onClick={() => handlePictureRequest(proposal)}
-                            >
-                              <div className="flex flex-col">
-                                <span className="font-medium">
-                                  {proposal.title}
-                                </span>
-                              </div>
-                            </DropdownMenuItem>
-                            {index < mediaProposals.length - 1 && (
-                              <DropdownMenuSeparator className="bg-primary/20" />
-                            )}
-                          </React.Fragment>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  )}
-                </div>
+              <div className="absolute left-3 right-3 bottom-3 flex items-center justify-end gap-2 w-[calc(100%-24px)]">
+                {aiGirlfriend?.version === 'v2' && (
+                  <AskInput
+                    disabled={isAiPending || isPending}
+                    onSuccess={handleAskInputSuccess}
+                  />
+                )}
 
                 <Button
                   aria-label="Send message"
                   variant="default"
                   size="icon"
-                  disabled={
-                    !value.trim() ||
-                    isAiPending ||
-                    isPending ||
-                    isPictureRequestPending
-                  }
-                  isLoading={
-                    isPending || isAiPending || isPictureRequestPending
-                  }
+                  disabled={!value.trim() || isAiPending || isPending}
+                  isLoading={isPending || isAiPending}
                   onClick={handleSendMessage}
                 >
                   <ArrowRight className={cn('w-4 h-4 text-background')} />

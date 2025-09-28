@@ -8,7 +8,7 @@ export const uploadToS3 = async ({
   fileType,
 }: {
   file: Buffer;
-  folder: 'medias' | 'thumbnails' | 'identity';
+  folder: 'medias' | 'thumbnails' | 'identity' | 'generated_medias';
   fileType: string;
 }) => {
   const bucketName = process.env.S3_BUCKET;

@@ -30,3 +30,21 @@ export const getRotatingFallbackResponse = (messageCount: number): string => {
   const index = messageCount % sexyFallbackResponses.length;
   return sexyFallbackResponses[index];
 };
+
+export const imageDeliveryResponses = [
+  "Here's your naughty picture, baby! 😘 Do you like what you see?",
+  'Just finished this hot shot for you... hope it gets you excited! 🔥',
+  "Mmm, here's that sexy image you wanted... enjoying the view? 😏",
+  'Your special picture is ready, darling! What do you think? 💕',
+  "Here's your exclusive photo, babe... does it turn you on? 😈",
+  "Fresh out of the camera just for you! Like what I'm showing? 📸",
+  'Your requested image is here... hope it makes you hard! 🥵',
+  "Here's that naughty pic you asked for... satisfied? 😉",
+  'Just created this sexy shot for my favorite person! 💋',
+  'Your custom image is ready, love... does it make you want me more? 🔥',
+];
+
+export const getRandomImageDeliveryResponse = (): string => {
+  const randomIndex = Math.floor(Math.random() * imageDeliveryResponses.length);
+  return imageDeliveryResponses[randomIndex];
+};

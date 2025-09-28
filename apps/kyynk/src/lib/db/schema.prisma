@@ -101,12 +101,14 @@ model AIGirlfriend {
   genTopP           Float    @default(0.9)
   genMaxTokens      Int      @default(220)
   visualStylePrompt String?
+  version           String   @default("v1")
+  triggerWords      String?
+  hfLoraPath        String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  conversations  Conversation[]
-  mediaProposals MediaProposal[]
-  stories        Story[]
+  conversations Conversation[]
+  stories       Story[]
 
   @@index([isActive, slug])
   @@map("ai_girlfriend")
@@ -121,12 +123,13 @@ model Conversation {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  user          User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  aiGirlfriend  AIGirlfriend @relation(fields: [aiGirlfriendId], references: [id], onDelete: Cascade)
-  messages      Message[]
-  Guest         Guest?       @relation(fields: [guestId], references: [id], onDelete: Cascade)
-  guestId       String?
-  freeGuestUsed Boolean      @default(false)
+  user           User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  aiGirlfriend   AIGirlfriend     @relation(fields: [aiGirlfriendId], references: [id], onDelete: Cascade)
+  messages       Message[]
+  Guest          Guest?           @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  guestId        String?
+  freeGuestUsed  Boolean          @default(false)
+  generatedMedia GeneratedMedia[]
 
   @@unique([userId, aiGirlfriendId])
   @@unique([guestId, aiGirlfriendId])
@@ -157,21 +160,23 @@ model Media {
 }
 
 model Message {
-  id             String        @id @default(cuid())
-  conversationId String
-  sender         MessageSender
-  content        String
-  mediaId        String?
-  isRead         Boolean       @default(false)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id               String        @id @default(cuid())
+  conversationId   String
+  sender           MessageSender
+  content          String
+  mediaId          String?
+  generatedMediaId String?
+  isRead           Boolean       @default(false)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  media        Media?       @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+  conversation   Conversation    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  generatedMedia GeneratedMedia? @relation(fields: [generatedMediaId], references: [id], onDelete: SetNull)
+  media          Media?          @relation(fields: [mediaId], references: [id], onDelete: SetNull)
 
   @@index([conversationId])
   @@index([createdAt])
-  @@index([mediaId])
+  @@index([generatedMediaId])
 }
 
 model CreditTransaction {
@@ -213,27 +218,12 @@ enum TransactionStatus {
 enum CreditSaleType {
   CHAT
   MEDIA
+  NUDE
 }
 
 enum UserRole {
   USER
   ADMIN
-}
-
-model MediaProposal {
-  id             String    @id @default(cuid())
-  aiGirlfriendId String
-  title          String
-  mediaKey       String
-  mediaType      MediaType
-  creditCost     Int       @default(1)
-  message        String
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-
-  aiGirlfriend AIGirlfriend @relation(fields: [aiGirlfriendId], references: [id], onDelete: Cascade)
-
-  @@map("media_proposal")
 }
 
 model Story {
@@ -252,4 +242,31 @@ model Story {
 enum MediaType {
   IMAGE
   VIDEO
+}
+
+enum GenerationStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model GeneratedMedia {
+  id             String           @id @default(cuid())
+  type           MediaType
+  status         GenerationStatus @default(PENDING)
+  mediaKey       String?
+  externalId     String?
+  userId         String
+  conversationId String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  messages     Message[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([externalId])
+  @@index([conversationId])
 }

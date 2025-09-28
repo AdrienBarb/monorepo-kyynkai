@@ -39,3 +39,4 @@ export const creditPackages = [
 
 export const MESSAGE_COST = 1;
 export const MEDIA_UNLOCK_COST = 15;
+export const NUDE_COST = 15;

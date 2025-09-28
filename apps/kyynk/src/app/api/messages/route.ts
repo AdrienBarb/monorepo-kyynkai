@@ -184,7 +184,7 @@ export const GET = async (req: NextRequest) => {
           conversationId: conversation.id,
         },
         include: {
-          media: true,
+          generatedMedia: true,
         },
       });
 
@@ -206,7 +206,7 @@ export const GET = async (req: NextRequest) => {
     const messages = await prisma.message.findMany({
       where: { conversationId: conversation.id },
       include: {
-        media: true,
+        generatedMedia: true,
       },
     });
 
