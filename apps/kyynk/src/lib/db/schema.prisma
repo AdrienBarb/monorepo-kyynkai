@@ -154,8 +154,6 @@ model Media {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  messages Message[]
-
   @@index([type])
 }
 
@@ -164,7 +162,6 @@ model Message {
   conversationId   String
   sender           MessageSender
   content          String
-  mediaId          String?
   generatedMediaId String?
   isRead           Boolean       @default(false)
   createdAt        DateTime      @default(now())
@@ -172,7 +169,6 @@ model Message {
 
   conversation   Conversation    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   generatedMedia GeneratedMedia? @relation(fields: [generatedMediaId], references: [id], onDelete: SetNull)
-  media          Media?          @relation(fields: [mediaId], references: [id], onDelete: SetNull)
 
   @@index([conversationId])
   @@index([createdAt])
