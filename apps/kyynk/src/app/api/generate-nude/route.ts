@@ -108,7 +108,7 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
     });
 
     try {
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+      const appUrl = process.env.NEXT_PUBLIC_BASE_URL;
       const falWebhookUrl = `${appUrl}/api/webhooks/fal`;
 
       const falResponse = await fetch(
