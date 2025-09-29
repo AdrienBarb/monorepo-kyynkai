@@ -116,7 +116,7 @@ model AIGirlfriend {
   updatedAt DateTime @updatedAt
 
   conversations Conversation[]
-  stories       Story[]
+  posts         Post[]
 
   @@index([isActive, slug])
   @@map("ai_girlfriend")
@@ -155,12 +155,15 @@ model Guest {
 }
 
 model Media {
-  id          String    @id @default(cuid())
+  id          String          @id @default(cuid())
   type        MediaType
   mediaKey    String
-  unlockUsers String[]  @default([])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  visibility  MediaVisibility @default(PUBLIC)
+  unlockUsers String[]        @default([])
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  posts Post[]
 
   @@index([type])
 }
@@ -207,6 +210,54 @@ model CreditSale {
   createdAt DateTime       @default(now())
 }
 
+model GeneratedMedia {
+  id             String           @id @default(cuid())
+  type           MediaType
+  status         GenerationStatus @default(PENDING)
+  mediaKey       String?
+  externalId     String?
+  userId         String
+  conversationId String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  messages     Message[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([externalId])
+  @@index([conversationId])
+}
+
+model Post {
+  id             String   @id @default(cuid())
+  aiGirlfriendId String
+  content        String
+  mediaId        String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  aiGirlfriend AIGirlfriend @relation(fields: [aiGirlfriendId], references: [id], onDelete: Cascade)
+  media        Media?       @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+
+  @@index([aiGirlfriendId])
+  @@index([createdAt])
+  @@index([mediaId])
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+enum GenerationStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
 enum MessageSender {
   USER
   AI
@@ -230,47 +281,7 @@ enum UserRole {
   ADMIN
 }
 
-model Story {
-  id             String   @id @default(cuid())
-  aiGirlfriendId String
-  mediaKey       String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  aiGirlfriend AIGirlfriend @relation(fields: [aiGirlfriendId], references: [id], onDelete: Cascade)
-
-  @@index([aiGirlfriendId])
-  @@map("story")
-}
-
-enum MediaType {
-  IMAGE
-  VIDEO
-}
-
-enum GenerationStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-}
-
-model GeneratedMedia {
-  id             String           @id @default(cuid())
-  type           MediaType
-  status         GenerationStatus @default(PENDING)
-  mediaKey       String?
-  externalId     String?
-  userId         String
-  conversationId String?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-
-  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  messages     Message[]
-
-  @@index([userId])
-  @@index([status])
-  @@index([externalId])
-  @@index([conversationId])
+enum MediaVisibility {
+  PUBLIC
+  PRIVATE
 }

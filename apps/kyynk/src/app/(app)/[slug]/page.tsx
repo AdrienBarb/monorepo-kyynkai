@@ -11,6 +11,7 @@ import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGi
 import CharacterPageView from '@/components/tracking/CharacterPageView';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
 import PostsList from '@/components/posts/PostsList';
+import { getPosts } from '@/services/ai-girlfriends-service/getPosts';
 
 export type PageProps = {
   params: Promise<{ slug: string }>;
@@ -42,12 +43,13 @@ const UserPage = async ({ params }: PageProps) => {
 
   const aiGirlfriend = (await getAiGirlfriendBySlug({
     slug,
-    selectFields: { stories: true },
   })) as AiGirlfriendType;
 
   if (!aiGirlfriend) {
     redirect('/404');
   }
+
+  const posts = await getPosts({ slug });
 
   return (
     <div className="flex flex-col" style={{ height: 'calc(100dvh - 68px)' }}>
@@ -69,7 +71,7 @@ const UserPage = async ({ params }: PageProps) => {
           />
         </TabsContent>
         <TabsContent value="posts" className="flex-1 overflow-auto">
-          <PostsList />
+          <PostsList posts={posts} />
         </TabsContent>
       </Tabs>
       <CharacterPageView />
