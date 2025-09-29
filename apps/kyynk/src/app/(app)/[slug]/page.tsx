@@ -44,7 +44,6 @@ const UserPage = async ({ params }: PageProps) => {
     slug,
     selectFields: { stories: true },
   })) as AiGirlfriendType;
-  console.log('🚀 ~ UserPage ~ aiGirlfriend:', aiGirlfriend);
 
   if (!aiGirlfriend) {
     redirect('/404');
