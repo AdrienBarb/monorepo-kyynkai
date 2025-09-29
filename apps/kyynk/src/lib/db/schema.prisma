@@ -104,8 +104,16 @@ model AIGirlfriend {
   version           String   @default("v1")
   triggerWords      String?
   hfLoraPath        String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+
+  bodyBuild String? // slim | fit | curvy | athletic | petite | tall | average
+  bustSize  String? // small | medium | full
+  hipSize   String? // narrow | average | wide
+  hairColor String? // blonde | brown | black | red | auburn | chestnut | raven | platinum | ginger | copper | silver
+  hairStyle String? // straight | wavy | curly | bob | pixie | braided | layered
+  skinTone  String? // fair | light | medium | tan | olive | deep | caramel
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   conversations Conversation[]
   stories       Story[]

@@ -7,6 +7,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import { useTranslations } from 'next-intl';
@@ -19,7 +20,7 @@ import { errorMessages } from '@/lib/constants/errorMessage';
 import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 import { trackingEvent } from '@/constants/trackingEvent';
 import { useFetchCurrentAiGirlfriend } from '@/hooks/ai-girlfriends/useFetchCurrentAiGirlfriend';
-import { NUDE_COST } from '@/constants/creditPackages';
+import { NUDE_ACTIONS, NudeActionType } from '@/constants/nudeActions';
 
 interface AskInputProps {
   disabled?: boolean;
@@ -57,16 +58,19 @@ const AskInput: React.FC<AskInputProps> = ({ disabled = false, onSuccess }) => {
     },
   );
 
-  const handleNudeRequest = () => {
+  const handleNudeRequest = (actionType: NudeActionType) => {
     if (!loggedUser) {
       openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
       return;
     }
 
+    const action = NUDE_ACTIONS.find((a) => a.id === actionType);
+    if (!action) return;
+
     if (
       !hasEnoughCredits({
         user: loggedUser,
-        requiredCredits: NUDE_COST,
+        requiredCredits: action.credits,
       })
     ) {
       sendEventOnce({
@@ -78,6 +82,7 @@ const AskInput: React.FC<AskInputProps> = ({ disabled = false, onSuccess }) => {
 
     generateNude({
       slug: slug as string,
+      actionType,
     });
   };
 
@@ -94,12 +99,25 @@ const AskInput: React.FC<AskInputProps> = ({ disabled = false, onSuccess }) => {
           <span className="text-sm">Ask</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" side="top">
-        <DropdownMenuItem onClick={handleNudeRequest}>
-          <div className="flex flex-col">
-            <span className="font-medium">Nude ({NUDE_COST} credits)</span>
-          </div>
-        </DropdownMenuItem>
+      <DropdownMenuContent align="start" side="top" className="w-80">
+        {NUDE_ACTIONS.map((action, index) => (
+          <React.Fragment key={action.id}>
+            <DropdownMenuItem
+              onClick={() => handleNudeRequest(action.id)}
+              className="flex flex-col items-start p-3 cursor-pointer"
+            >
+              <div className="flex justify-between w-full items-center">
+                <span className="font-medium text-sm">{action.label}</span>
+                <span className="text-xs text-muted-foreground">
+                  {action.credits} credits
+                </span>
+              </div>
+            </DropdownMenuItem>
+            {index < NUDE_ACTIONS.length - 1 && (
+              <DropdownMenuSeparator className="bg-primary/20" />
+            )}
+          </React.Fragment>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

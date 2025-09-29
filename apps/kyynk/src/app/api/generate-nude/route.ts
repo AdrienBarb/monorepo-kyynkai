@@ -5,7 +5,6 @@ import { errorMessages } from '@/lib/constants/errorMessage';
 import { errorHandler } from '@/utils/errors/errorHandler';
 import { strictlyAuth } from '@/hoc/strictlyAuth';
 import { getCurrentUser } from '@/services/users/getCurrentUser';
-import { NUDE_COST } from '@/constants/creditPackages';
 import { prisma } from '@/lib/db/client';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import {
@@ -16,9 +15,12 @@ import {
 } from '@prisma/client';
 import { findOrCreateConversation } from '@/utils/conversations/findOrCreateConversation';
 import { getRandomImageDeliveryResponse } from '@/constants/fallbackResponses';
+import { NudeActionType, getNudeActionById } from '@/constants/nudeActions';
+import { buildBodyDescription } from '@/utils/ai/parseBodyDetails';
 
 const generateNudeSchema = z.object({
   slug: z.string(),
+  actionType: z.nativeEnum(NudeActionType),
 });
 
 export const POST = strictlyAuth(async (req: NextRequest) => {
@@ -46,11 +48,19 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
       );
     }
 
+    const action = getNudeActionById(payload.actionType);
+    if (!action) {
+      return NextResponse.json(
+        { error: errorMessages.NOT_FOUND },
+        { status: 404 },
+      );
+    }
+
     const loggedUser = await getCurrentUser({
       userId: userId!,
     });
 
-    if (NUDE_COST > loggedUser?.creditBalance!) {
+    if (action.credits > loggedUser?.creditBalance!) {
       return NextResponse.json(
         { error: errorMessages.INSUFFICIENT_CREDITS },
         { status: 400 },
@@ -92,7 +102,7 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
           id: userId!,
         },
         data: {
-          creditBalance: { decrement: NUDE_COST },
+          creditBalance: { decrement: action.credits },
         },
       });
 
@@ -100,7 +110,7 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
         data: {
           userId: userId!,
           type: CreditSaleType.NUDE,
-          amount: NUDE_COST,
+          amount: action.credits,
         },
       });
 
@@ -110,6 +120,15 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
     try {
       const appUrl = process.env.NEXT_PUBLIC_BASE_URL;
       const falWebhookUrl = `${appUrl}/api/webhooks/fal`;
+
+      const bodyDescription = buildBodyDescription({
+        bodyBuild: aiGirlfriend.bodyBuild,
+        bustSize: aiGirlfriend.bustSize,
+        hipSize: aiGirlfriend.hipSize,
+        hairColor: aiGirlfriend.hairColor,
+        hairStyle: aiGirlfriend.hairStyle,
+        skinTone: aiGirlfriend.skinTone,
+      });
 
       const falResponse = await fetch(
         `https://queue.fal.run/fal-ai/lora?fal_webhook=${falWebhookUrl}`,
@@ -122,7 +141,7 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
           body: JSON.stringify({
             model_name:
               'https://huggingface.co/adrienfndr/cyberrealistic-pony/resolve/60ea6d7e5b3ca88168feaea651060415f478114f/cyberrealisticPony_v130.safetensors',
-            prompt: `${aiGirlfriend.triggerWords}, a brunette girl, on a bed, legs open, showing her pussy, big natural breasts, natural skin texture, crisp detailed eyes, soft cinematic lighting, shallow depth of field, 50mm look`,
+            prompt: `${aiGirlfriend.triggerWords}, ${bodyDescription}, ${action.prompt}`,
             negative_prompt:
               '(worst quality:1.2), (low quality:1.2), (normal quality:1.2), lowres, bad anatomy, bad hands, (bad finger:1.2), signature, watermarks, ugly, blurry face, imperfect eyes, skewed eyes, unnatural face, unnatural body, error, extra limb, missing limbs',
             prompt_weighting: true,

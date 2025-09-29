@@ -25,6 +25,12 @@ interface SeedAIGirlfriend {
   version: string;
   triggerWords: string;
   hfLoraPath: string;
+  bodyBuild?: string;
+  bustSize?: string;
+  hipSize?: string;
+  hairColor?: string;
+  hairStyle?: string;
+  skinTone?: string;
   genTemperature: number;
   genTopP: number;
   genMaxTokens: number;
@@ -62,6 +68,12 @@ async function main() {
           version: aiGirlfriendData.version,
           triggerWords: aiGirlfriendData.triggerWords,
           hfLoraPath: aiGirlfriendData.hfLoraPath,
+          bodyBuild: aiGirlfriendData.bodyBuild,
+          bustSize: aiGirlfriendData.bustSize,
+          hipSize: aiGirlfriendData.hipSize,
+          hairColor: aiGirlfriendData.hairColor,
+          hairStyle: aiGirlfriendData.hairStyle,
+          skinTone: aiGirlfriendData.skinTone,
           genTemperature: aiGirlfriendData.genTemperature,
           genTopP: aiGirlfriendData.genTopP,
           genMaxTokens: aiGirlfriendData.genMaxTokens,

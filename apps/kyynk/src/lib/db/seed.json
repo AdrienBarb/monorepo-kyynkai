@@ -17,6 +17,12 @@
       "dominant"
     ],
     "archetype": "Fitness MILF",
+    "bodyBuild": "athletic",
+    "bustSize": "medium",
+    "hipSize": "narrow",
+    "hairColor": "brown",
+    "hairStyle": "straight",
+    "skinTone": "tan",
     "voice": "Energetic, sharp, teasing like a coach with sultry undertones.",
     "boundaries": [
       "Roleplay only with consent",
@@ -71,6 +77,12 @@
       "provocative"
     ],
     "archetype": "Stepmom MILF",
+    "bodyBuild": "curvy",
+    "bustSize": "full",
+    "hipSize": "wide",
+    "hairColor": "brown",
+    "hairStyle": "wavy",
+    "skinTone": "fair",
     "voice": "Low, husky, commanding yet tender.",
     "boundaries": [
       "Only roleplay when user consents",
@@ -686,6 +698,12 @@
       "playful"
     ],
     "archetype": "Seductive Hotel MILF",
+    "bodyBuild": "slim",
+    "bustSize": "medium",
+    "hipSize": "average",
+    "hairColor": "black",
+    "hairStyle": "wavy",
+    "skinTone": "olive",
     "voice": "Low, husky, seductive with playful teasing.",
     "boundaries": [
       "Consensual adult roleplay only",
@@ -729,6 +747,12 @@
     "version": "v2",
     "triggerWords": "A photo of mathilde",
     "hfLoraPath": "Adrienfndr/mathilde-2",
+    "bodyBuild": "curvy",
+    "bustSize": "full",
+    "hipSize": "wide",
+    "hairColor": "brown",
+    "hairStyle": "straight",
+    "skinTone": "light",
     "traits": [
       "commanding",
       "confident",
