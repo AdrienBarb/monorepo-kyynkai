@@ -1,5 +1,5 @@
 import { errorMessages } from '@/lib/constants/errorMessage';
-import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
+import { getPosts } from '@/services/ai-girlfriends-service/getPosts';
 import { errorHandler } from '@/utils/errors/errorHandler';
 import { NextResponse } from 'next/server';
 
@@ -17,18 +17,9 @@ export const GET = async (
       );
     }
 
-    const aiGirlfriend = await getAiGirlfriendBySlug({
-      slug,
-    });
+    const posts = await getPosts({ slug });
 
-    if (!aiGirlfriend) {
-      return NextResponse.json(
-        { error: errorMessages.MISSING_FIELDS },
-        { status: 404 },
-      );
-    }
-
-    return NextResponse.json(aiGirlfriend, { status: 200 });
+    return NextResponse.json(posts, { status: 200 });
   } catch (error) {
     return errorHandler(error);
   }

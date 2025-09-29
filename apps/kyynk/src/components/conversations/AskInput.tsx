@@ -28,7 +28,6 @@ interface AskInputProps {
 }
 
 const AskInput: React.FC<AskInputProps> = ({ disabled = false, onSuccess }) => {
-  const t = useTranslations();
   const { user: loggedUser, refetch: refetchUser } = useUser();
   const { openModal } = useGlobalModalStore();
   const { slug } = useParams<{ slug: string }>();

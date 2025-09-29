@@ -17,13 +17,15 @@ const ProfileConversationInput = ({
   const ref = useChatScroll(messages);
 
   return (
-    <div className="px-2">
-      <MessageList
-        messages={messages}
-        scrollRef={ref}
-        chatOpeningLine={chatOpeningLine}
-        profileVideoId={profileVideoId}
-      />
+    <div className="flex flex-col h-full px-2">
+      <div className="flex-1 min-h-0">
+        <MessageList
+          messages={messages}
+          scrollRef={ref}
+          chatOpeningLine={chatOpeningLine}
+          profileVideoId={profileVideoId}
+        />
+      </div>
       <div className="sticky bottom-0 h-36">
         <ConversationInput />
       </div>
