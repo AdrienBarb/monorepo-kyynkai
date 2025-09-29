@@ -35,6 +35,7 @@ interface SeedAIGirlfriend {
   genTopP: number;
   genMaxTokens: number;
   visualStylePrompt: string;
+  profileVideoId?: string;
 }
 
 async function main() {
@@ -52,6 +53,7 @@ async function main() {
           pseudo: aiGirlfriendData.pseudo,
           slug: aiGirlfriendData.slug,
           profileImageId: aiGirlfriendData.profileImageId,
+          profileVideoId: aiGirlfriendData.profileVideoId,
           archetype: aiGirlfriendData.archetype,
           traits: aiGirlfriendData.traits,
           hook: aiGirlfriendData.hook,

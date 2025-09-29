@@ -9,6 +9,8 @@ import ConversationHeader from '@/components/conversations/ConversationHeader';
 import { getLocale } from 'next-intl/server';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import CharacterPageView from '@/components/tracking/CharacterPageView';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
+import PostsList from '@/components/posts/PostsList';
 
 export type PageProps = {
   params: Promise<{ slug: string }>;
@@ -42,18 +44,35 @@ const UserPage = async ({ params }: PageProps) => {
     slug,
     selectFields: { stories: true },
   })) as AiGirlfriendType;
+  console.log('🚀 ~ UserPage ~ aiGirlfriend:', aiGirlfriend);
 
   if (!aiGirlfriend) {
     redirect('/404');
   }
 
   return (
-    <div style={{ height: 'calc(100dvh - 68px)' }}>
-      <ConversationHeader aiGirlfriend={aiGirlfriend} />
-      <ProfileConversationInput
-        chatOpeningLine={aiGirlfriend.chatOpeningLine?.[locale || 'en'] ?? ''}
-        profileVideoId={aiGirlfriend.profileVideoId}
-      />
+    <div className="flex flex-col" style={{ height: 'calc(100dvh - 68px)' }}>
+      {/* <ConversationHeader aiGirlfriend={aiGirlfriend} /> */}
+      <Tabs defaultValue="chat" className="flex flex-col flex-1 min-h-0">
+        <TabsList className="flex-shrink-0 border-b border-primary/20">
+          <TabsTrigger value="chat">Chat</TabsTrigger>
+          <TabsTrigger value="posts">Posts</TabsTrigger>
+        </TabsList>
+        <TabsContent
+          value="chat"
+          className="flex-1 flex flex-col min-h-0 overflow-scroll"
+        >
+          <ProfileConversationInput
+            chatOpeningLine={
+              aiGirlfriend.chatOpeningLine?.[locale || 'en'] ?? ''
+            }
+            profileVideoId={aiGirlfriend.profileVideoId}
+          />
+        </TabsContent>
+        <TabsContent value="posts" className="flex-1 overflow-auto">
+          <PostsList />
+        </TabsContent>
+      </Tabs>
       <CharacterPageView />
     </div>
   );
