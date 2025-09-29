@@ -11,7 +11,6 @@ import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGi
 import CharacterPageView from '@/components/tracking/CharacterPageView';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
 import PostsList from '@/components/posts/PostsList';
-import { getPosts } from '@/services/ai-girlfriends-service/getPosts';
 
 export type PageProps = {
   params: Promise<{ slug: string }>;
@@ -49,13 +48,11 @@ const UserPage = async ({ params }: PageProps) => {
     redirect('/404');
   }
 
-  const posts = await getPosts({ slug });
-
   return (
     <div className="flex flex-col" style={{ height: 'calc(100dvh - 68px)' }}>
       {/* <ConversationHeader aiGirlfriend={aiGirlfriend} /> */}
       <Tabs defaultValue="chat" className="flex flex-col flex-1 min-h-0">
-        <TabsList className="flex-shrink-0 border-b border-primary/20">
+        <TabsList className="sticky top-0 z-10 flex-shrink-0 border-b border-primary/20 bg-background">
           <TabsTrigger value="chat">Chat</TabsTrigger>
           <TabsTrigger value="posts">Posts</TabsTrigger>
         </TabsList>
@@ -70,8 +67,8 @@ const UserPage = async ({ params }: PageProps) => {
             profileVideoId={aiGirlfriend.profileVideoId}
           />
         </TabsContent>
-        <TabsContent value="posts" className="flex-1 overflow-auto">
-          <PostsList posts={posts} />
+        <TabsContent value="posts" className="overflow-y-auto">
+          <PostsList />
         </TabsContent>
       </Tabs>
       <CharacterPageView />

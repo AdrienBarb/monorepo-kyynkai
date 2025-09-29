@@ -20,6 +20,8 @@ export const getPosts = async ({ slug }: { slug: string }) => {
                 id: true,
                 type: true,
                 mediaKey: true,
+                visibility: true,
+                unlockUsers: true,
                 createdAt: true,
               },
             },
