@@ -119,7 +119,7 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
     });
 
     try {
-      const appUrl = 'https://432c32e5277a.ngrok-free.app';
+      const appUrl = process.env.NEXT_PUBLIC_BASE_URL;
       const falWebhookUrl = `${appUrl}/api/webhooks/fal`;
 
       const bodyDescription = buildBodyDescription({
