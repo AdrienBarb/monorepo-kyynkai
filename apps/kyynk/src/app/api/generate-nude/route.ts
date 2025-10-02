@@ -17,6 +17,7 @@ import { findOrCreateConversation } from '@/utils/conversations/findOrCreateConv
 import { getRandomImageDeliveryResponse } from '@/constants/fallbackResponses';
 import { NudeActionType, getNudeActionById } from '@/constants/nudeActions';
 import { buildBodyDescription } from '@/utils/ai/parseBodyDetails';
+import { generateSignedUrl } from '@/utils/s3/generateSignedUrl';
 
 const generateNudeSchema = z.object({
   slug: z.string(),
@@ -118,7 +119,7 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
     });
 
     try {
-      const appUrl = process.env.NEXT_PUBLIC_BASE_URL;
+      const appUrl = 'https://432c32e5277a.ngrok-free.app';
       const falWebhookUrl = `${appUrl}/api/webhooks/fal`;
 
       const bodyDescription = buildBodyDescription({
@@ -128,6 +129,12 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
         hairColor: aiGirlfriend.hairColor,
         hairStyle: aiGirlfriend.hairStyle,
         skinTone: aiGirlfriend.skinTone,
+      });
+
+      const faceIdImageUrl = await generateSignedUrl({
+        bucketName: 'kyynk-faceid-prod',
+        key: aiGirlfriend.faceIdKey!,
+        expiresIn: 3600,
       });
 
       const falResponse = await fetch(
@@ -141,21 +148,25 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
           body: JSON.stringify({
             model_name:
               'https://huggingface.co/adrienfndr/cyberrealistic-pony/resolve/60ea6d7e5b3ca88168feaea651060415f478114f/cyberrealisticPony_v130.safetensors',
-            prompt: `${aiGirlfriend.triggerWords}, ${bodyDescription}, ${action.prompt}`,
+            prompt: `${bodyDescription}, ${action.prompt}`,
             negative_prompt:
               '(worst quality:1.2), (low quality:1.2), (normal quality:1.2), lowres, bad anatomy, bad hands, (bad finger:1.2), signature, watermarks, ugly, blurry face, imperfect eyes, skewed eyes, unnatural face, unnatural body, error, extra limb, missing limbs',
             prompt_weighting: true,
-            loras: [
+            ip_adapter: [
               {
-                path: aiGirlfriend.hfLoraPath,
-                scale: 0.5,
+                ip_adapter_image_url: faceIdImageUrl,
+                path: 'h94/IP-Adapter',
+                model_subfolder: 'sdxl_models',
+                weight_name: 'ip-adapter-plus-face_sdxl_vit-h.safetensors',
+                scale: 0.85,
               },
             ],
             embeddings: [],
             controlnets: [],
             image_size: 'portrait_4_3',
-            num_inference_steps: 30,
-            guidance_scale: 3.4,
+            num_inference_steps: 38,
+            guidance_scale: 5.8,
+            clip_skip: 1,
             sampler: 'DPM++ 2M SDE',
             scheduler: 'DPM++ 2M SDE Karras',
             prediction_type: 'epsilon',
@@ -167,10 +178,11 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
             tile_height: 1024,
             tile_stride_width: 512,
             tile_stride_height: 512,
+            image_encoder_path: 'h94/IP-Adapter',
+            image_encoder_subfolder: 'models/image_encoder',
           }),
         },
       );
-      console.log('🚀 ~ falResponse:', falResponse);
 
       if (!falResponse.ok) {
         await prisma.generatedMedia.update({

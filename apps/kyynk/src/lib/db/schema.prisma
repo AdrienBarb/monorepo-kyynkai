@@ -81,7 +81,6 @@ model AIGirlfriend {
   pseudo            String   @unique
   slug              String   @unique
   profileImageId    String
-  secondaryImageIds String[] @default([])
   profileVideoId    String?
   age               Int      @default(40)
   isActive          Boolean  @default(true)
@@ -102,8 +101,7 @@ model AIGirlfriend {
   genMaxTokens      Int      @default(220)
   visualStylePrompt String?
   version           String   @default("v1")
-  triggerWords      String?
-  hfLoraPath        String?
+  faceIdKey         String?
 
   bodyBuild String? // slim | fit | curvy | athletic | petite | tall | average
   bustSize  String? // small | medium | full

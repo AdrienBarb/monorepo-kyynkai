@@ -23,8 +23,6 @@ interface SeedAIGirlfriend {
   aftercare: boolean;
   consentChecks: string[];
   version: string;
-  triggerWords: string;
-  hfLoraPath: string;
   bodyBuild?: string;
   bustSize?: string;
   hipSize?: string;
@@ -33,6 +31,7 @@ interface SeedAIGirlfriend {
   skinTone?: string;
   genTemperature: number;
   genTopP: number;
+  faceIdKey: string;
   genMaxTokens: number;
   visualStylePrompt: string;
   profileVideoId?: string;
@@ -68,8 +67,6 @@ async function main() {
           aftercare: aiGirlfriendData.aftercare,
           consentChecks: aiGirlfriendData.consentChecks,
           version: aiGirlfriendData.version,
-          triggerWords: aiGirlfriendData.triggerWords,
-          hfLoraPath: aiGirlfriendData.hfLoraPath,
           bodyBuild: aiGirlfriendData.bodyBuild,
           bustSize: aiGirlfriendData.bustSize,
           hipSize: aiGirlfriendData.hipSize,
@@ -77,6 +74,7 @@ async function main() {
           hairStyle: aiGirlfriendData.hairStyle,
           skinTone: aiGirlfriendData.skinTone,
           genTemperature: aiGirlfriendData.genTemperature,
+          faceIdKey: aiGirlfriendData.faceIdKey,
           genTopP: aiGirlfriendData.genTopP,
           genMaxTokens: aiGirlfriendData.genMaxTokens,
           visualStylePrompt: aiGirlfriendData.visualStylePrompt,

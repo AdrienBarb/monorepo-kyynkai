@@ -25,8 +25,6 @@ export const getAiGirlfriendBySlug = async ({
         chatOpeningLine: true,
         profileVideoId: true,
         version: true,
-        triggerWords: true,
-        hfLoraPath: true,
         bodyBuild: true,
         bustSize: true,
         hipSize: true,
@@ -35,6 +33,7 @@ export const getAiGirlfriendBySlug = async ({
         skinTone: true,
         createdAt: true,
         updatedAt: true,
+        faceIdKey: true,
         ...selectFields,
       },
     });

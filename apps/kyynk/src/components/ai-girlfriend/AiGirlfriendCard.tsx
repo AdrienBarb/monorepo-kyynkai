@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import imgixLoader from '@/lib/imgix/loader';
 import { AIGirlfriend } from '@prisma/client';
@@ -9,51 +9,15 @@ interface Props {
 }
 
 const AiGirlfriendCard = ({ user }: Props) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isHovering, setIsHovering] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  const allImages = [user.profileImageId, ...(user.secondaryImageIds || [])];
-
   const currentImageUrl = imgixLoader({
-    src: allImages[currentImageIndex] || '',
+    src: user.profileImageId || '',
     width: 400 * 2,
     quality: 90,
   });
 
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, []);
-
-  const handleMouseEnter = () => {
-    if (allImages.length > 1) {
-      setIsHovering(true);
-      intervalRef.current = setInterval(() => {
-        setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
-      }, 1000);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovering(false);
-    setCurrentImageIndex(0);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  };
-
   return (
     <Link href={`/${user.slug}`} prefetch={true}>
-      <div
-        className="flex flex-col"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      >
+      <div className="flex flex-col">
         <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md border border-primary/20">
           <Image
             src={currentImageUrl}
