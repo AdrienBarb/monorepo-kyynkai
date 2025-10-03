@@ -22,6 +22,7 @@ import PostHogIdentify from '@/components/tracking/PostHogIdentify';
 import { GoogleTagManager } from '@next/third-parties/google';
 import ModalWrapper from '@/components/layout/ModalWrapper';
 import AutoMergeWrapper from '@/components/auth/AutoMergeWrapper';
+import Script from 'next/script';
 
 config.autoAddCss = false;
 
@@ -103,6 +104,21 @@ const RootLayout: FC<Props> = async ({ children }) => {
           />
           <GoogleTagManager gtmId="GTM-KHBKVG2G" />
           <body>
+            <Script
+              id="trackdesk-script"
+              src="//cdn.trackdesk.com/tracking.js"
+              strategy="beforeInteractive"
+            />
+            <Script
+              id="trackdesk-init"
+              strategy="beforeInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  (function(t,d,k){(t[k]=t[k]||[]).push(d);t[d]=t[d]||t[k].f||function(){(t[d].q=t[d].q||[]).push(arguments)}})(window,"trackdesk","TrackdeskObject");
+                  trackdesk("kyynk", "click");
+                `,
+              }}
+            />
             <NuqsAdapter>
               <Toaster position="bottom-center" />
               <GlobalConfig>
