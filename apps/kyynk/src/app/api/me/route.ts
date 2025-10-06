@@ -46,6 +46,7 @@ export const PUT = strictlyAuth(
         where: { id: userId },
         data: {
           ...(body.utmTracking && { utmTracking: body.utmTracking }),
+          ...(body.trackdeskCid && { trackdeskCid: body.trackdeskCid }),
         },
       });
 

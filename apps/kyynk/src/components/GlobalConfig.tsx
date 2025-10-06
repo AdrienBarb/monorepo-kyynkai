@@ -7,6 +7,10 @@ import {
   cleanUTMFromLocalStorage,
   getUTMFromLocalStorage,
 } from '@/utils/tracking/getUTMFromLocalStorage';
+import {
+  cleanTrackdeskCidFromCookie,
+  getTrackdeskCidFromCookie,
+} from '@/utils/tracking/getTrackdeskCidFromCookie';
 import useApi from '@/hooks/requests/useApi';
 
 interface Props {
@@ -22,6 +26,7 @@ const GlobalConfig: FC<Props> = ({ children }) => {
   const { mutate: updateUser } = usePut('/api/me', {
     onSuccess: () => {
       cleanUTMFromLocalStorage();
+      cleanTrackdeskCidFromCookie();
     },
   });
 
@@ -30,17 +35,28 @@ const GlobalConfig: FC<Props> = ({ children }) => {
       setShouldRefetch(null);
       refetch();
     }
-  }, [shouldRefetch, refetch]);
+  }, [shouldRefetch, refetch, setShouldRefetch]);
 
   useEffect(() => {
     if (user) {
       const utmValues = getUTMFromLocalStorage();
+      const trackdeskCid = getTrackdeskCidFromCookie();
+
+      const updateData: any = {};
 
       if (utmValues) {
-        updateUser({ utmTracking: utmValues });
+        updateData.utmTracking = utmValues;
+      }
+
+      if (trackdeskCid) {
+        updateData.trackdeskCid = trackdeskCid;
+      }
+
+      if (Object.keys(updateData).length > 0) {
+        updateUser(updateData);
       }
     }
-  }, [user]);
+  }, [user, updateUser]);
 
   return <>{children}</>;
 };
