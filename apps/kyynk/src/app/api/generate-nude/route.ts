@@ -148,9 +148,9 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
           body: JSON.stringify({
             model_name:
               'https://huggingface.co/adrienfndr/cyberrealistic-pony/resolve/60ea6d7e5b3ca88168feaea651060415f478114f/cyberrealisticPony_v130.safetensors',
-            prompt: `${bodyDescription}, ${action.prompt}`,
+            prompt: `CyberRealistic_Positive_PONY, score_9, score_8_up, score_7_up, ${bodyDescription}, ${action.prompt}`,
             negative_prompt:
-              '(worst quality:1.2), (low quality:1.2), (normal quality:1.2), lowres, bad anatomy, bad hands, (bad finger:1.2), signature, watermarks, ugly, blurry face, imperfect eyes, skewed eyes, unnatural face, unnatural body, error, extra limb, missing limbs',
+              'CyberRealistic_Negative_PONY, easynegative, teeth, score_5, score_4, 3d, doll, angular face, (worst quality:1.2), (low quality:1.2), (normal quality:1.2), lowres, bad anatomy, bad hands, (bad finger:1.2), signature, watermarks, ugly, blurry face, imperfect eyes, skewed eyes, unnatural face, unnatural body, error, extra limb, missing limbs',
             prompt_weighting: true,
             ip_adapter: [
               {
@@ -158,14 +158,15 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
                 path: 'h94/IP-Adapter',
                 model_subfolder: 'sdxl_models',
                 weight_name: 'ip-adapter-plus-face_sdxl_vit-h.safetensors',
-                scale: 0.85,
+                scale: 0.32,
               },
             ],
             embeddings: [],
             controlnets: [],
             image_size: 'portrait_4_3',
-            num_inference_steps: 30,
-            guidance_scale: 3.4,
+            num_inference_steps: 32,
+            guidance_scale: 4.6,
+            clip_skip: 2,
             sampler: 'DPM++ 2M SDE',
             scheduler: 'DPM++ 2M SDE Karras',
             prediction_type: 'epsilon',
