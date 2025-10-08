@@ -1,5 +1,6 @@
 export const appRouter = {
   home: '/',
+  posts: '/posts',
   createYourOwn: '/create-your-own',
   login: '/login',
   register: '/register',

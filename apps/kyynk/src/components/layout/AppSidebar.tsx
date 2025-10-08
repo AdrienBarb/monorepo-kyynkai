@@ -1,6 +1,6 @@
 'use client';
 
-import { UsersRound, Wand } from 'lucide-react';
+import { UsersRound, Wand, ImageIcon } from 'lucide-react';
 import { FaTelegram, FaTiktok, FaInstagram, FaXTwitter } from 'react-icons/fa6';
 import {
   Sidebar,
@@ -34,10 +34,16 @@ export function AppSidebar() {
       isVisible: true,
     },
     {
+      title: 'posts',
+      url: appRouter.posts,
+      icon: ImageIcon,
+      isVisible: true,
+    },
+    {
       title: 'createYourOwn',
       url: appRouter.createYourOwn,
       icon: Wand,
-      isVisible: true,
+      isVisible: false,
       onClick: () => {
         sendEventOnce({
           eventName: trackingEvent.create_your_own_page_clicked,
