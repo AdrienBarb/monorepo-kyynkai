@@ -124,18 +124,6 @@ const ConversationInput = () => {
   const handleSendMessage = () => {
     if (!value.trim()) return;
 
-    if (loggedUser) {
-      if (
-        !hasEnoughCredits({
-          user: loggedUser,
-          requiredCredits: 1,
-        })
-      ) {
-        openModal('notEnoughCredits');
-        return;
-      }
-    }
-
     sendMessage({ message: value, slug: slug as string });
 
     adjustHeight(true);

@@ -16,7 +16,7 @@ model User {
   emailVerified Boolean
   utmTracking   Json?
   trackdeskCid  Json?
-  creditBalance Int     @default(20)
+  creditBalance Int     @default(0)
   originGuestId String?
 
   createdAt         DateTime

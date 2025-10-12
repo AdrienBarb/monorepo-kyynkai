@@ -14,7 +14,7 @@ interface SignUpOfferProps {
 
 const copy = (v: SignUpOfferVariant, name: string) => {
   const you = name || 'I';
-  const cta = 'Create your account to see it + get 20 credits.';
+  const cta = 'Create your account to see it';
 
   switch (v) {
     case 'message':
@@ -30,7 +30,7 @@ const copy = (v: SignUpOfferVariant, name: string) => {
     default:
       return {
         title: `Let’s get a little closer 🔥`,
-        cta: 'Create your account to chat with her + get 20 credits.',
+        cta: 'Create your account to chat with her',
       };
   }
 };

@@ -39,17 +39,6 @@ export const POST = async (req: NextRequest) => {
 
     // User
     if (userId) {
-      const loggedUser = await getCurrentUser({
-        userId: userId!,
-      });
-
-      if (MESSAGE_COST > loggedUser?.creditBalance!) {
-        return NextResponse.json(
-          { error: errorMessages.INSUFFICIENT_CREDITS },
-          { status: 400 },
-        );
-      }
-
       const result = await prisma.$transaction(async (tx) => {
         const conversation = await findOrCreateConversation({
           userId: userId!,
@@ -62,23 +51,6 @@ export const POST = async (req: NextRequest) => {
             content: payload.message,
             conversationId: conversation.id,
             sender: MessageSender.USER,
-          },
-        });
-
-        await tx.user.update({
-          where: {
-            id: userId!,
-          },
-          data: {
-            creditBalance: { decrement: MESSAGE_COST },
-          },
-        });
-
-        await tx.creditSale.create({
-          data: {
-            userId: userId!,
-            type: CreditSaleType.CHAT,
-            amount: MESSAGE_COST,
           },
         });
 
