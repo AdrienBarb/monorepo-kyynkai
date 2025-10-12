@@ -3,14 +3,13 @@ import { Metadata } from 'next';
 import { genPageMetadata } from '@/app/seo';
 import { redirect } from 'next/navigation';
 import imgixLoader from '@/lib/imgix/loader';
-import ProfileConversationInput from '@/components/conversations/ProfileConversationInput';
-import { AiGirlfriendType } from '@/types/ai-girlfriends';
-import ConversationHeader from '@/components/conversations/ConversationHeader';
-import { getLocale } from 'next-intl/server';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import CharacterPageView from '@/components/tracking/CharacterPageView';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/Tabs';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Button } from '@/components/ui/Button';
 import PostsList from '@/components/posts/PostsList';
+import Title from '@/components/ui/Title';
 
 export type PageProps = {
   params: Promise<{ slug: string }>;
@@ -36,44 +35,68 @@ export async function generateMetadata({
   });
 }
 
-const UserPage = async ({ params }: PageProps) => {
+const ProfilePage = async ({ params }: PageProps) => {
   const { slug } = await params;
-  const locale = await getLocale();
 
-  const aiGirlfriend = (await getAiGirlfriendBySlug({
+  const aiGirlfriend = await getAiGirlfriendBySlug({
     slug,
-  })) as AiGirlfriendType;
+  });
 
   if (!aiGirlfriend) {
     redirect('/404');
   }
 
+  const profileImageUrl = imgixLoader({
+    src: aiGirlfriend.profileImageId || '',
+    width: 600,
+    quality: 90,
+  });
+
   return (
-    <div className="flex flex-col" style={{ height: 'calc(100dvh - 68px)' }}>
-      {/* <ConversationHeader aiGirlfriend={aiGirlfriend} /> */}
-      <Tabs defaultValue="chat" className="flex flex-col flex-1 min-h-0">
-        <TabsList className="sticky top-0 z-10 flex-shrink-0 border-b border-primary/20 bg-background">
-          <TabsTrigger value="chat">Chat</TabsTrigger>
-          <TabsTrigger value="posts">Posts</TabsTrigger>
-        </TabsList>
-        <TabsContent
-          value="chat"
-          className="flex-1 flex flex-col min-h-0 overflow-scroll"
-        >
-          <ProfileConversationInput
-            chatOpeningLine={
-              aiGirlfriend.chatOpeningLine?.[locale || 'en'] ?? ''
-            }
-            profileVideoId={aiGirlfriend.profileVideoId}
-          />
-        </TabsContent>
-        <TabsContent value="posts" className="overflow-y-auto">
-          <PostsList />
-        </TabsContent>
-      </Tabs>
+    <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col items-center justify-center p-6 mb-8">
+        <div className="flex flex-col items-center max-w-md w-full">
+          <div className="relative aspect-[3/4] w-full max-w-48 overflow-hidden rounded-lg border border-primary/20 shadow-lg mb-2">
+            <Image
+              src={profileImageUrl}
+              alt={aiGirlfriend.pseudo}
+              fill
+              className="object-cover transition-all duration-500 ease-in-out"
+            />
+          </div>
+
+          <div className="text-center mb-4">
+            <Title
+              Tag="h1"
+              className="text-xl font-bold font-karla text-primary mb-2"
+            >
+              {`${aiGirlfriend.pseudo}, ${aiGirlfriend.age}`}
+            </Title>
+            <p className="text-sm font-semibold font-karla text-muted-foreground">
+              {aiGirlfriend.archetype}
+            </p>
+            {aiGirlfriend.hook && (
+              <p className="text-xs text-muted-foreground max-w-xs mx-auto">
+                {aiGirlfriend.hook}
+              </p>
+            )}
+          </div>
+
+          <Link href={`/${slug}/chat`} className="w-full">
+            <Button className="w-full py-3 text-lg font-semibold">
+              Start Chat
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      <div className="pb-6">
+        <PostsList />
+      </div>
+
       <CharacterPageView />
     </div>
   );
 };
 
-export default UserPage;
+export default ProfilePage;

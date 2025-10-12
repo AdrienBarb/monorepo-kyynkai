@@ -27,7 +27,7 @@ const MessageList: FC<MessageListProps> = ({
     <div
       className="flex flex-col gap-4 py-4 w-full overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent"
       ref={scrollRef}
-      style={{ height: 'calc(100dvh - 5rem - 9rem - 68px)' }}
+      style={{ height: 'calc(100dvh - 9rem - 68px)' }}
       role="log"
       aria-label="Chat messages"
       aria-live="polite"

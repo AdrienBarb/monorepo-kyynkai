@@ -31,6 +31,7 @@ export const getAiGirlfriendBySlug = async ({
         hairColor: true,
         hairStyle: true,
         skinTone: true,
+        age: true,
         createdAt: true,
         updatedAt: true,
         faceIdKey: true,

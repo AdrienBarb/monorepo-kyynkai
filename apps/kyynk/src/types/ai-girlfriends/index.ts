@@ -12,6 +12,7 @@ export type AiGirlfriendType = Omit<
     | 'hook'
     | 'chatOpeningLine'
     | 'profileVideoId'
+    | 'age'
   >,
   'chatOpeningLine'
 > & {
