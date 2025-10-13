@@ -14,7 +14,12 @@ export async function playFantasyChoice({
 }) {
   const choice = await prisma.fantasyChoice.findUnique({
     where: { id: choiceId },
-    include: {
+    select: {
+      id: true,
+      label: true,
+      mediaUrl: true, // Explicitly include mediaUrl
+      nextStepId: true,
+      cost: true,
       step: {
         include: {
           fantasy: {
@@ -69,7 +74,15 @@ export async function playFantasyChoice({
     nextStep = await prisma.fantasyStep.findUnique({
       where: { id: choice.nextStepId },
       include: {
-        choices: true,
+        choices: {
+          select: {
+            id: true,
+            label: true,
+            mediaUrl: true,
+            nextStepId: true,
+            cost: true,
+          },
+        },
       },
     });
   }

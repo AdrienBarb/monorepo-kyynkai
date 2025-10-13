@@ -8,6 +8,9 @@ import { usePlayFantasy } from '@/hooks/fantasies/usePlayFantasy';
 import { useUser } from '@/hooks/users/useUser';
 import Image from 'next/image';
 import imgixLoader from '@/lib/imgix/loader';
+import { useGlobalModalStore } from '@/stores/GlobalModalStore';
+import { useFetchCurrentAiGirlfriend } from '@/hooks/ai-girlfriends/useFetchCurrentAiGirlfriend';
+import { hasEnoughCredits } from '@/utils/users/hasEnoughCredits';
 
 interface FantasyPlayerProps {
   fantasy: Fantasy;
@@ -16,13 +19,29 @@ interface FantasyPlayerProps {
 
 const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
   const [currentStep, setCurrentStep] = useState<FantasyStep>(fantasy.steps[0]);
+  const [currentMediaUrl, setCurrentMediaUrl] = useState<string>(
+    fantasy.mediaUrl,
+  );
+
   const [isEnded, setIsEnded] = useState(false);
   const { mutate: playChoice, isPending } = usePlayFantasy(slug);
   const { user, refetch: refetchUser } = useUser();
+  const { openModal } = useGlobalModalStore();
+  const { aiGirlfriend } = useFetchCurrentAiGirlfriend();
 
   const handleChoiceClick = (choice: FantasyChoice) => {
-    if (choice.cost && user && user.creditBalance < choice.cost) {
-      alert('Insufficient credits');
+    if (!user) {
+      openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
+      return;
+    }
+
+    if (
+      !hasEnoughCredits({
+        user: user,
+        requiredCredits: choice.cost ?? 0,
+      })
+    ) {
+      openModal('notEnoughCredits');
       return;
     }
 
@@ -33,6 +52,12 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
       },
       {
         onSuccess: (data) => {
+          if (choice.mediaUrl) {
+            setCurrentMediaUrl(choice.mediaUrl);
+          } else {
+            console.warn('Choice mediaUrl is null, keeping current media');
+          }
+
           if (data.nextStep) {
             setCurrentStep(data.nextStep);
           } else {
@@ -53,6 +78,7 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
 
   const resetFantasy = () => {
     setCurrentStep(fantasy.steps[0]);
+    setCurrentMediaUrl(fantasy.mediaUrl);
     setIsEnded(false);
   };
 
@@ -76,27 +102,25 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
     <div className="h-screen flex flex-col p-4 gap-4 max-w-md mx-auto">
       <div className="flex-shrink-0">
         <div className="text-center">
-          <p className="text-2xl text-primary font-medium leading-relaxed">
+          <p className="text-xl text-primary font-medium leading-relaxed">
             {currentStep.text}
           </p>
         </div>
       </div>
 
       <Card className="p-0">
-        {currentStep.mediaUrl && (
-          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg">
-            <Image
-              src={imgixLoader({
-                src: currentStep.mediaUrl,
-                width: 600,
-                quality: 90,
-              })}
-              alt="Fantasy scene"
-              fill
-              className="object-cover"
-            />
-          </div>
-        )}
+        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg">
+          <Image
+            src={imgixLoader({
+              src: currentMediaUrl,
+              width: 600,
+              quality: 90,
+            })}
+            alt="Fantasy scene"
+            fill
+            className="object-cover"
+          />
+        </div>
       </Card>
 
       <div className="flex gap-2 w-full">

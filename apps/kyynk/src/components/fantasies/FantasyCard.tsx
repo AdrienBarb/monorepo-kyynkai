@@ -5,6 +5,8 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Fantasy } from '@/types/fantasies';
 import Link from 'next/link';
+import Image from 'next/image';
+import imgixLoader from '@/lib/imgix/loader';
 
 interface FantasyCardProps {
   fantasy: Fantasy;
@@ -13,8 +15,23 @@ interface FantasyCardProps {
 
 const FantasyCard: React.FC<FantasyCardProps> = ({ fantasy, slug }) => {
   return (
-    <Card className="p-4 hover:shadow-lg transition-shadow">
-      <div className="space-y-3">
+    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+      {/* Cover Image */}
+      <div className="relative aspect-[4/3] w-full">
+        <Image
+          src={imgixLoader({
+            src: fantasy.mediaUrl,
+            width: 400,
+            quality: 85,
+          })}
+          alt={fantasy.title}
+          fill
+          className="object-cover"
+        />
+      </div>
+
+      {/* Content */}
+      <div className="p-4 space-y-3">
         <h3 className="text-lg font-semibold font-karla text-primary">
           {fantasy.title}
         </h3>

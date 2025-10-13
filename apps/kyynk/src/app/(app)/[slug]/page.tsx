@@ -47,7 +47,6 @@ const ProfilePage = async ({ params }: PageProps) => {
     redirect('/404');
   }
 
-  // Get the first fantasy for the Play Mode button
   const firstFantasy = await getFirstFantasyBySlug({ slug });
 
   const profileImageUrl = imgixLoader({
@@ -91,17 +90,19 @@ const ProfilePage = async ({ params }: PageProps) => {
               <Button className="w-full text-lg font-semibold">Chat</Button>
             </Link>
 
-            <Link
-              href={`/${slug}/fantasy/${firstFantasy?.id}`}
-              className="w-full"
-            >
-              <Button
-                variant="secondary"
-                className="w-full text-lg font-semibold"
+            {firstFantasy && (
+              <Link
+                href={`/${slug}/fantasy/${firstFantasy?.id}`}
+                className="w-full"
               >
-                Play
-              </Button>
-            </Link>
+                <Button
+                  variant="secondary"
+                  className="w-full text-lg font-semibold"
+                >
+                  Play
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

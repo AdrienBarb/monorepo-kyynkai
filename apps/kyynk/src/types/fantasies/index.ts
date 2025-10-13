@@ -6,6 +6,7 @@ export interface Fantasy {
   aiGirlfriend: AIGirlfriend;
   title: string;
   description: string;
+  mediaUrl: string;
   steps: FantasyStep[];
 }
 
@@ -13,13 +14,13 @@ export interface FantasyStep {
   id: string;
   order: number;
   text: string;
-  mediaUrl?: string;
   choices: FantasyChoice[];
 }
 
 export interface FantasyChoice {
   id: string;
   label: string;
+  mediaUrl: string;
   nextStepId?: string;
   cost?: number;
 }
