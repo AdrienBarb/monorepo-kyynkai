@@ -9,11 +9,8 @@ import { auth } from '@/lib/better-auth/auth';
 import { headers } from 'next/headers';
 import { getRecentHistory } from '@/utils/llm/getRecentHistory';
 import { systemFromCard } from '@/utils/llm/systemFromCard';
-import {
-  buildQwenPromptTGI,
-  ChatHistory,
-} from '@/utils/llm/buildQwenPromptTGI';
-import axios from 'axios';
+import { ChatHistory } from '@/utils/llm/buildQwenPromptTGI';
+import Together from 'together-ai';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import { getGuestFromCookie } from '@/services/guests/getGuestFromCookie';
 import { getRotatingFallbackResponse } from '@/constants/fallbackResponses';
@@ -104,14 +101,22 @@ export const POST = async (req: NextRequest) => {
 
     const system = systemFromCard(aiGirlfriend);
 
-    const inputs = buildQwenPromptTGI(system, history);
+    const messages = [
+      {
+        role: 'system' as const,
+        content: system,
+      },
+      ...history.map((msg) => ({
+        role: msg.role as 'user' | 'assistant',
+        content: msg.content,
+      })),
+    ];
 
     const genTemperature = aiGirlfriend.genTemperature ?? 0.9;
     const genTopP = aiGirlfriend.genTopP ?? 0.9;
     const genMaxTokens = aiGirlfriend.genMaxTokens ?? 220;
 
-    const HF_ENDPOINT = process.env.HF_ENDPOINT!;
-    const HF_TOKEN = process.env.HF_TOKEN!;
+    const TOGETHER_API_KEY = process.env.TOGETHER_API_KEY!;
 
     const aiRepliesCount = await prisma.message.count({
       where: { conversationId: conversation.id, sender: MessageSender.AI },
@@ -120,30 +125,20 @@ export const POST = async (req: NextRequest) => {
     let assistantText: string = getRotatingFallbackResponse(aiRepliesCount);
 
     try {
-      const llmResponse = await axios.post(
-        `${HF_ENDPOINT}/generate`,
-        {
-          inputs,
-          parameters: {
-            temperature: genTemperature,
-            top_p: genTopP,
-            max_new_tokens: genMaxTokens,
-            return_full_text: false,
-            stop: ['<|im_end|>', '<|im_start|>'],
-          },
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${HF_TOKEN}`,
-            'Content-Type': 'application/json',
-          },
-        },
-      );
+      const together = new Together({
+        apiKey: TOGETHER_API_KEY,
+      });
 
-      const data = llmResponse.data;
-      const generatedText = Array.isArray(data)
-        ? (data[0]?.generated_text ?? '')
-        : (data.generated_text ?? '');
+      const response = await together.chat.completions.create({
+        messages,
+        model: 'Qwen/Qwen2.5-7B-Instruct-Turbo',
+        temperature: genTemperature,
+        top_p: genTopP,
+        max_tokens: genMaxTokens,
+        stop: ['<|im_end|>', '<|im_start|>'],
+      });
+
+      const generatedText = response.choices[0]?.message?.content ?? '';
 
       if (generatedText.trim()) {
         assistantText = generatedText;
