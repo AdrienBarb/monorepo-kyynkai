@@ -116,6 +116,7 @@ model AIGirlfriend {
 
   conversations Conversation[]
   posts         Post[]
+  fantasies     Fantasy[]
 
   @@index([isActive, slug])
   @@map("ai_girlfriend")
@@ -283,4 +284,47 @@ enum UserRole {
 enum MediaVisibility {
   PUBLIC
   PRIVATE
+}
+
+model Fantasy {
+  id             String   @id @default(cuid())
+  aiGirlfriendId String
+  title          String
+  description    String
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  steps        FantasyStep[]
+  aiGirlfriend AIGirlfriend  @relation(fields: [aiGirlfriendId], references: [id], onDelete: Cascade)
+
+  @@index([aiGirlfriendId])
+  @@index([isActive])
+}
+
+model FantasyStep {
+  id        String  @id @default(cuid())
+  fantasyId String
+  order     Int
+  text      String
+  mediaUrl  String?
+  mediaCost Int?
+
+  choices FantasyChoice[]
+  fantasy Fantasy         @relation(fields: [fantasyId], references: [id], onDelete: Cascade)
+
+  @@index([fantasyId])
+  @@index([order])
+}
+
+model FantasyChoice {
+  id         String  @id @default(cuid())
+  stepId     String
+  label      String
+  nextStepId String?
+  cost       Int?
+
+  step FantasyStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@index([stepId])
 }

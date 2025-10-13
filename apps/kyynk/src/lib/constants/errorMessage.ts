@@ -17,4 +17,8 @@ export const errorMessages = {
   MISSING_BANK_ACCOUNT_INFORMATION: 'missingBankAccountInformation',
   NOT_FOUND: 'notFound',
   AUTH_REQUIRED: 'authRequired',
+  UNAUTHORIZED: 'unauthorized',
+  FANTASY_NOT_FOUND: 'fantasyNotFound',
+  CHOICE_NOT_FOUND: 'choiceNotFound',
+  INVALID_FANTASY: 'invalidFantasy',
 };

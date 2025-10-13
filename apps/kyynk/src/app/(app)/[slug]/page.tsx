@@ -82,11 +82,22 @@ const ProfilePage = async ({ params }: PageProps) => {
             )}
           </div>
 
-          <Link href={`/${slug}/chat`} className="w-full">
-            <Button className="w-full py-3 text-lg font-semibold">
-              Start Chat
-            </Button>
-          </Link>
+          <div className="w-full space-y-3">
+            <Link href={`/${slug}/chat`} className="w-full">
+              <Button className="w-full py-3 text-lg font-semibold">
+                Start Chat
+              </Button>
+            </Link>
+
+            <Link href={`/${slug}/fantasy`} className="w-full">
+              <Button
+                variant="secondary"
+                className="w-full py-3 text-lg font-semibold"
+              >
+                Play Mode
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
