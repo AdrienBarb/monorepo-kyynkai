@@ -1,7 +1,5 @@
 import React, { FC, ReactNode } from 'react';
-import styles from '@/styles/PageHeader.module.scss';
 import clsx from 'clsx';
-import { useTranslations } from 'next-intl';
 import Text from '@/components/ui/Text';
 import Title from './ui/Title';
 
@@ -18,18 +16,19 @@ const PageHeader: FC<PageHeaderProps> = ({
   tag = 'h1',
   children,
 }) => {
-  const t = useTranslations();
 
   return (
-    <div className={styles.container}>
-      <div className={styles.top}>
-        <div className={clsx(styles.left, children && styles.withChildren)}>
-          <Title Tag={tag}>{t(title)}</Title>
-          {description && <Text>{t(description)}</Text>}
+    <div className="w-full">
+      <div className="flex items-center justify-between md:flex-row flex-col md:items-center items-start">
+        <div
+          className={clsx(children && 'max-w-full md:max-w-[60%] mb-4 md:mb-0')}
+        >
+          <Title Tag={tag}>{title}</Title>
+          {description && <Text>{description}</Text>}
         </div>
         {children}
       </div>
-      <span className={styles.divider}></span>
+      <span className="w-full h-px block my-4 mb-8 bg-border"></span>
     </div>
   );
 };

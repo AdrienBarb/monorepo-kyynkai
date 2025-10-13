@@ -4,6 +4,7 @@ import { genPageMetadata } from '@/app/seo';
 import { redirect } from 'next/navigation';
 import imgixLoader from '@/lib/imgix/loader';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
+import { getFirstFantasyBySlug } from '@/services/fantasies/getFirstFantasyBySlug';
 import CharacterPageView from '@/components/tracking/CharacterPageView';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -46,6 +47,8 @@ const ProfilePage = async ({ params }: PageProps) => {
     redirect('/404');
   }
 
+  const firstFantasy = await getFirstFantasyBySlug({ slug });
+
   const profileImageUrl = imgixLoader({
     src: aiGirlfriend.profileImageId || '',
     width: 600,
@@ -82,11 +85,25 @@ const ProfilePage = async ({ params }: PageProps) => {
             )}
           </div>
 
-          <Link href={`/${slug}/chat`} className="w-full">
-            <Button className="w-full py-3 text-lg font-semibold">
-              Start Chat
-            </Button>
-          </Link>
+          <div className="w-full flex gap-2 items-center justify-center">
+            <Link href={`/${slug}/chat`} className="w-full">
+              <Button className="w-full text-lg font-semibold">Chat</Button>
+            </Link>
+
+            {firstFantasy && (
+              <Link
+                href={`/${slug}/fantasy/${firstFantasy?.id}`}
+                className="w-full"
+              >
+                <Button
+                  variant="secondary"
+                  className="w-full text-lg font-semibold"
+                >
+                  Play
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 
