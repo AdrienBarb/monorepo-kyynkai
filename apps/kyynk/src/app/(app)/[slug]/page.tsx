@@ -7,8 +7,7 @@ import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGi
 import { getFirstFantasyBySlug } from '@/services/fantasies/getFirstFantasyBySlug';
 import CharacterPageView from '@/components/tracking/CharacterPageView';
 import Image from 'next/image';
-import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
+import ProfileButtons from '@/components/ProfileButtons';
 import PostsList from '@/components/posts/PostsList';
 import Title from '@/components/ui/Title';
 
@@ -85,25 +84,7 @@ const ProfilePage = async ({ params }: PageProps) => {
             )}
           </div>
 
-          <div className="w-full flex gap-2 items-center justify-center">
-            <Link href={`/${slug}/chat`} className="w-full">
-              <Button className="w-full text-lg font-semibold">Chat</Button>
-            </Link>
-
-            {firstFantasy && (
-              <Link
-                href={`/${slug}/fantasy/${firstFantasy?.id}`}
-                className="w-full"
-              >
-                <Button
-                  variant="secondary"
-                  className="w-full text-lg font-semibold"
-                >
-                  Play
-                </Button>
-              </Link>
-            )}
-          </div>
+          <ProfileButtons slug={slug} firstFantasyId={firstFantasy?.id} />
         </div>
       </div>
 

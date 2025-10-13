@@ -7,4 +7,9 @@ export const trackingEvent = {
   stories_modal_open: 'stories_modal_open',
   create_your_own_page_clicked: 'create_your_own_page_clicked',
   signup_for_create_your_own_clicked: 'signup_for_create_your_own_clicked',
+  profile_chat_button_clicked: 'profile_chat_button_clicked',
+  profile_play_button_clicked: 'profile_play_button_clicked',
+  fantasy_choice_clicked: 'fantasy_choice_clicked',
+  fantasy_completed: 'fantasy_completed',
+  fantasy_reset: 'fantasy_reset',
 };
