@@ -18,7 +18,6 @@ export async function getFantasiesBySlug({ slug }: { slug: string }) {
               order: true,
               text: true,
               mediaUrl: true,
-              mediaCost: true,
               choices: {
                 select: {
                   id: true,

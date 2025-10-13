@@ -1,6 +1,5 @@
 import React, { FC, ReactNode } from 'react';
 import clsx from 'clsx';
-import { useTranslations } from 'next-intl';
 import Text from '@/components/ui/Text';
 import Title from './ui/Title';
 
@@ -17,7 +16,6 @@ const PageHeader: FC<PageHeaderProps> = ({
   tag = 'h1',
   children,
 }) => {
-  const t = useTranslations();
 
   return (
     <div className="w-full">
@@ -25,8 +23,8 @@ const PageHeader: FC<PageHeaderProps> = ({
         <div
           className={clsx(children && 'max-w-full md:max-w-[60%] mb-4 md:mb-0')}
         >
-          <Title Tag={tag}>{t(title)}</Title>
-          {description && <Text>{t(description)}</Text>}
+          <Title Tag={tag}>{title}</Title>
+          {description && <Text>{description}</Text>}
         </div>
         {children}
       </div>

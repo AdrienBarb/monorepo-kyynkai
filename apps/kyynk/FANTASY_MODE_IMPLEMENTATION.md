@@ -24,7 +24,6 @@ Added three new models to `schema.prisma`:
 - `order`: Step sequence number
 - `text`: Step narrative text
 - `mediaUrl`: Optional media content
-- `mediaCost`: Optional credit cost for media
 - `choices`: Array of available choices
 
 ### FantasyChoice

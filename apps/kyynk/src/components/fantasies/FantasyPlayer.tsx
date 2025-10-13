@@ -73,63 +73,58 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
   }
 
   return (
-    <div className="space-y-6">
-      <Card className="p-6">
-        <div className="space-y-4">
-          {currentStep.mediaUrl && (
-            <div className="relative aspect-video w-full max-w-md mx-auto overflow-hidden rounded-lg">
-              <Image
-                src={imgixLoader({
-                  src: currentStep.mediaUrl,
-                  width: 600,
-                  quality: 90,
-                })}
-                alt="Fantasy scene"
-                fill
-                className="object-cover"
-              />
-              {currentStep.mediaCost && (
-                <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
-                  {currentStep.mediaCost} credits
-                </div>
-              )}
-            </div>
-          )}
-
-          <div className="text-center">
-            <p className="text-lg text-primary font-medium leading-relaxed">
-              {currentStep.text}
-            </p>
-          </div>
+    <div className="h-screen flex flex-col p-4 gap-4 max-w-md mx-auto">
+      <div className="flex-shrink-0">
+        <div className="text-center">
+          <p className="text-2xl text-primary font-medium leading-relaxed">
+            {currentStep.text}
+          </p>
         </div>
+      </div>
+
+      <Card className="p-0">
+        {currentStep.mediaUrl && (
+          <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg">
+            <Image
+              src={imgixLoader({
+                src: currentStep.mediaUrl,
+                width: 600,
+                quality: 90,
+              })}
+              alt="Fantasy scene"
+              fill
+              className="object-cover"
+            />
+          </div>
+        )}
       </Card>
 
-      <div className="space-y-3">
+      <div className="flex gap-2 w-full">
         {currentStep.choices.map((choice) => (
           <Button
             key={choice.id}
-            variant="secondary"
-            className="w-full p-4 h-auto text-left justify-start"
+            variant="default"
+            className="flex-1 p-3 h-auto text-center justify-center min-w-0"
             onClick={() => handleChoiceClick(choice)}
             disabled={isPending}
           >
-            <div className="flex items-center justify-between w-full">
-              <span>{choice.label}</span>
-              {choice.cost && choice.cost > 0 && (
-                <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+            <div className="flex flex-col items-center gap-2 justify-between w-full h-full">
+              <div className="text-base leading-tight text-center break-words whitespace-normal">
+                {choice.label}
+              </div>
+              {choice.cost && choice.cost > 0 ? (
+                <div className="text-xs bg-background/10 text-background px-1 py-0.5 rounded mt-1 whitespace-nowrap">
                   {choice.cost} credits
-                </span>
+                </div>
+              ) : (
+                <div className="text-xs bg-background/10 text-background px-1 py-0.5 rounded mt-1 whitespace-nowrap">
+                  Free
+                </div>
               )}
             </div>
           </Button>
         ))}
       </div>
-
-      {user && (
-        <div className="text-center text-sm text-muted-foreground">
-          Credits: {user.creditBalance}
-        </div>
-      )}
     </div>
   );
 };

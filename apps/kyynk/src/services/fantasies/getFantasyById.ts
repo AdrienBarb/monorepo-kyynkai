@@ -7,6 +7,7 @@ export async function getFantasyById({ fantasyId }: { fantasyId: string }) {
       isActive: true,
     },
     include: {
+      aiGirlfriend: true,
       steps: {
         orderBy: { order: 'asc' },
         include: {

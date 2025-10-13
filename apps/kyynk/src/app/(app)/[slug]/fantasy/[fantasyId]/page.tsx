@@ -10,6 +10,7 @@ import FantasyPlayer from '@/components/fantasies/FantasyPlayer';
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { ArrowLeft } from 'lucide-react';
+import { Fantasy } from '@/types/fantasies';
 
 export type PageProps = {
   params: Promise<{ slug: string; fantasyId: string }>;
@@ -34,7 +35,7 @@ const FantasyPlayPage = async ({ params }: PageProps) => {
 
   const [aiGirlfriend, fantasy] = await Promise.all([
     getAiGirlfriendBySlug({ slug }),
-    getFantasyById({ fantasyId }),
+    getFantasyById({ fantasyId }) as Promise<Fantasy>,
   ]);
 
   if (!aiGirlfriend || !fantasy) {
@@ -48,21 +49,6 @@ const FantasyPlayPage = async ({ params }: PageProps) => {
   return (
     <PageContainer>
       <div className="space-y-6">
-        <div className="flex items-center gap-4">
-          <Link href={`/${slug}/fantasy`}>
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Fantasies
-            </Button>
-          </Link>
-        </div>
-
-        <PageHeader
-          title={fantasy.title}
-          description={fantasy.description}
-          tag="h1"
-        />
-
         <FantasyPlayer fantasy={fantasy} slug={slug} />
       </div>
     </PageContainer>

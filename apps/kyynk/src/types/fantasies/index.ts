@@ -1,5 +1,9 @@
+import { AIGirlfriend } from '@prisma/client';
+
 export interface Fantasy {
   id: string;
+  aiGirlfriendId: string;
+  aiGirlfriend: AIGirlfriend;
   title: string;
   description: string;
   steps: FantasyStep[];
@@ -10,7 +14,6 @@ export interface FantasyStep {
   order: number;
   text: string;
   mediaUrl?: string;
-  mediaCost?: number;
   choices: FantasyChoice[];
 }
 

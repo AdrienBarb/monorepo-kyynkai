@@ -308,7 +308,6 @@ model FantasyStep {
   order     Int
   text      String
   mediaUrl  String?
-  mediaCost Int?
 
   choices FantasyChoice[]
   fantasy Fantasy         @relation(fields: [fantasyId], references: [id], onDelete: Cascade)
