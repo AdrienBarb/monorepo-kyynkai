@@ -15,6 +15,7 @@ export async function getFantasyById({ fantasyId }: { fantasyId: string }) {
             select: {
               id: true,
               label: true,
+              mediaUrl: true,
               nextStepId: true,
               cost: true,
             },
