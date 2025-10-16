@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  VisuallyHidden,
 } from '@/components/ui/Dialog';
 
 import { useTranslations } from 'next-intl';
@@ -72,6 +73,9 @@ const AuthModal: React.FC<AuthModalProps> = ({
           </DialogHeader>
         ) : (
           <DialogHeader>
+            <VisuallyHidden>
+              <DialogTitle>{t('signUp')}</DialogTitle>
+            </VisuallyHidden>
             <SignUpOffer
               girlfriendName={girlfriendName}
               context={context}

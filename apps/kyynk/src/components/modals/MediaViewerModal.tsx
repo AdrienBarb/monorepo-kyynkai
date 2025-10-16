@@ -2,7 +2,12 @@
 
 import { FC } from 'react';
 import Image from 'next/image';
-import { Dialog, DialogContent } from '@/components/ui/Dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  VisuallyHidden,
+} from '@/components/ui/Dialog';
 import imgixLoader from '@/lib/imgix/loader';
 
 interface MediaViewerModalProps {
@@ -38,6 +43,9 @@ const MediaViewerModal: FC<MediaViewerModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] w-full bg-background-light border border-primary/20 p-0 [&>button]:text-white [&>button]:bg-black/50 [&>button]:hover:bg-black/70 [&>button]:border-background">
+        <VisuallyHidden>
+          <DialogTitle>Media Viewer</DialogTitle>
+        </VisuallyHidden>
         {mediaKey ? renderSingleImage() : null}
       </DialogContent>
     </Dialog>

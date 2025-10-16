@@ -133,3 +133,5 @@ export {
   DialogTitle,
   DialogDescription,
 };
+
+export { VisuallyHidden } from './VisuallyHidden';

@@ -3,7 +3,13 @@ import { TwitterShareButton, TelegramShareButton } from 'react-share';
 import LinkIcon from '@mui/icons-material/Link';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import TelegramIcon from '@mui/icons-material/Telegram';
-import { Dialog, DialogContent, DialogClose } from '@/components/ui/Dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+  DialogTitle,
+  VisuallyHidden,
+} from '@/components/ui/Dialog';
 import toast from 'react-hot-toast';
 
 interface ShareModalProps {
@@ -48,6 +54,9 @@ const ShareModal: FC<ShareModalProps> = ({
   return (
     <Dialog open={open} onOpenChange={setOpen} modal={true}>
       <DialogContent className="z-[1000] bg-secondary p-16">
+        <VisuallyHidden>
+          <DialogTitle>Share</DialogTitle>
+        </VisuallyHidden>
         <div className="flex flex-wrap justify-around items-center gap-8">
           {renderShareButton(TwitterShareButton, TwitterIcon, 'Twitter')}
           {renderShareButton(TelegramShareButton, TelegramIcon, 'Telegram')}

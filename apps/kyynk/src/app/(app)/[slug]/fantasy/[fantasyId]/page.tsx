@@ -5,12 +5,9 @@ import { redirect } from 'next/navigation';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
 import { getFantasyById } from '@/services/fantasies/getFantasyById';
 import PageContainer from '@/components/PageContainer';
-import PageHeader from '@/components/PageHeader';
 import FantasyPlayer from '@/components/fantasies/FantasyPlayer';
-import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
-import { ArrowLeft } from 'lucide-react';
 import { Fantasy } from '@/types/fantasies';
+import FantasyPageView from '@/components/tracking/FantasyPageView';
 
 export type PageProps = {
   params: Promise<{ slug: string; fantasyId: string }>;
@@ -48,6 +45,7 @@ const FantasyPlayPage = async ({ params }: PageProps) => {
 
   return (
     <PageContainer>
+      <FantasyPageView />
       <div className="space-y-6">
         <FantasyPlayer fantasy={fantasy} slug={slug} />
       </div>

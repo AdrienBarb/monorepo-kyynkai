@@ -13,6 +13,8 @@ import { useFetchCurrentAiGirlfriend } from '@/hooks/ai-girlfriends/useFetchCurr
 import { hasEnoughCredits } from '@/utils/users/hasEnoughCredits';
 import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 import { trackingEvent } from '@/constants/trackingEvent';
+import { MessageCircle } from 'lucide-react';
+import Link from 'next/link';
 
 interface FantasyPlayerProps {
   fantasy: Fantasy;
@@ -52,6 +54,9 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
     // If choice costs credits, require authentication
     if (choice.cost && choice.cost > 0) {
       if (!user) {
+        sendEvent({
+          eventName: trackingEvent.fantasy_auth_wall_shown,
+        });
         openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
         return;
       }
@@ -62,6 +67,9 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
           requiredCredits: choice.cost,
         })
       ) {
+        sendEvent({
+          eventName: trackingEvent.fantasy_credit_wall_shown,
+        });
         openModal('notEnoughCredits');
         return;
       }
@@ -163,6 +171,15 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
 
           {/* Overlay gradient for better text readability */}
           <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
+
+          {/* Chat icon */}
+          <Link
+            href={`/${slug}/chat`}
+            className="absolute top-2 right-2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition-colors z-10"
+            aria-label="Chat with AI girlfriend"
+          >
+            <MessageCircle className="w-6 h-6 text-white" />
+          </Link>
 
           {/* Text and buttons overlay */}
           <div className="absolute inset-x-0 bottom-0 p-4 space-y-3">
