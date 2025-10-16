@@ -19,13 +19,6 @@ export const POST = async (
     });
     const userId = session?.user?.id;
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: errorMessages.UNAUTHORIZED },
-        { status: 401 },
-      );
-    }
-
     if (!slug || Array.isArray(slug)) {
       return NextResponse.json(
         { error: errorMessages.MISSING_FIELDS },
@@ -36,7 +29,7 @@ export const POST = async (
     const validatedBody = playFantasyChoiceSchema.parse(body);
 
     const result = await playFantasyChoice({
-      userId,
+      userId: userId ?? null,
       slug,
       ...validatedBody,
     });

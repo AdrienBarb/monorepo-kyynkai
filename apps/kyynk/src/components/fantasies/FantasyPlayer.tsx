@@ -49,19 +49,22 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
       },
     });
 
-    if (!user) {
-      openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
-      return;
-    }
+    // If choice costs credits, require authentication
+    if (choice.cost && choice.cost > 0) {
+      if (!user) {
+        openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
+        return;
+      }
 
-    if (
-      !hasEnoughCredits({
-        user: user,
-        requiredCredits: choice.cost ?? 0,
-      })
-    ) {
-      openModal('notEnoughCredits');
-      return;
+      if (
+        !hasEnoughCredits({
+          user: user,
+          requiredCredits: choice.cost,
+        })
+      ) {
+        openModal('notEnoughCredits');
+        return;
+      }
     }
 
     playChoice(

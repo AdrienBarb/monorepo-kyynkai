@@ -7,7 +7,7 @@ export async function playFantasyChoice({
   fantasyId,
   choiceId,
 }: {
-  userId: string;
+  userId: string | null;
   slug: string;
   fantasyId: string;
   choiceId: string;
@@ -41,20 +41,26 @@ export async function playFantasyChoice({
     throw new Error(errorMessages.INVALID_FANTASY);
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { creditBalance: true },
-  });
-
-  if (!user) {
-    throw new Error(errorMessages.USER_NOT_FOUND);
-  }
-
-  if (choice.cost && user.creditBalance < choice.cost) {
-    throw new Error(errorMessages.INSUFFICIENT_CREDITS);
-  }
-
+  // If choice costs credits, require authentication and check balance
   if (choice.cost && choice.cost > 0) {
+    if (!userId) {
+      throw new Error(errorMessages.AUTH_REQUIRED);
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { creditBalance: true },
+    });
+
+    if (!user) {
+      throw new Error(errorMessages.USER_NOT_FOUND);
+    }
+
+    if (user.creditBalance < choice.cost) {
+      throw new Error(errorMessages.INSUFFICIENT_CREDITS);
+    }
+
+    // Deduct credits and create sale record
     await prisma.$transaction([
       prisma.user.update({
         where: { id: userId },
