@@ -292,6 +292,7 @@ model Fantasy {
   title          String
   description    String
   mediaUrl       String
+  videoUrl       String?
   isActive       Boolean  @default(true)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
@@ -321,6 +322,7 @@ model FantasyChoice {
   stepId     String
   label      String
   mediaUrl   String
+  videoUrl   String?
   nextStepId String?
   cost       Int?
 

@@ -11,7 +11,8 @@ export async function getFantasiesBySlug({ slug }: { slug: string }) {
           id: true,
           title: true,
           description: true,
-          mediaUrl: true, // Fantasy cover image
+          mediaUrl: true,
+          videoUrl: true,
           steps: {
             orderBy: { order: 'asc' },
             select: {
@@ -22,7 +23,8 @@ export async function getFantasiesBySlug({ slug }: { slug: string }) {
                 select: {
                   id: true,
                   label: true,
-                  mediaUrl: true, // Choice result image
+                  mediaUrl: true,
+                  videoUrl: true,
                   nextStepId: true,
                   cost: true,
                 },

@@ -24,6 +24,9 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
   const [currentMediaUrl, setCurrentMediaUrl] = useState<string>(
     fantasy.mediaUrl,
   );
+  const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(
+    fantasy.videoUrl ?? null,
+  );
 
   const [isEnded, setIsEnded] = useState(false);
   const [isFinalImage, setIsFinalImage] = useState(false);
@@ -68,10 +71,14 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
       },
       {
         onSuccess: (data) => {
-          if (choice.mediaUrl) {
+          // Update video URL if exists, otherwise update media URL
+          if (choice.videoUrl) {
+            setCurrentVideoUrl(choice.videoUrl);
+          } else if (choice.mediaUrl) {
             setCurrentMediaUrl(choice.mediaUrl);
+            setCurrentVideoUrl(null);
           } else {
-            console.warn('Choice mediaUrl is null, keeping current media');
+            console.warn('Choice has no media, keeping current media');
           }
 
           if (data.nextStep) {
@@ -104,6 +111,7 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
   const resetFantasy = () => {
     setCurrentStep(fantasy.steps[0]);
     setCurrentMediaUrl(fantasy.mediaUrl);
+    setCurrentVideoUrl(fantasy.videoUrl ?? null);
     setIsEnded(false);
     setIsFinalImage(false);
   };
@@ -126,65 +134,83 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
 
   return (
     <div className="h-screen flex flex-col p-4 max-w-md mx-auto">
-      <Card className="p-0 mb-4">
+      <Card className="p-0 relative">
         <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg">
-          <Image
-            src={imgixLoader({
-              src: currentMediaUrl,
-              width: 600,
-              quality: 90,
-            })}
-            alt="Fantasy scene"
-            fill
-            className="object-cover"
-          />
-        </div>
-      </Card>
+          {currentVideoUrl ? (
+            <video
+              className="w-full h-full object-cover"
+              src={`https://ddl4c6oftb93z.cloudfront.net/${currentVideoUrl}`}
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          ) : (
+            <Image
+              src={imgixLoader({
+                src: currentMediaUrl,
+                width: 600,
+                quality: 90,
+              })}
+              alt="Fantasy scene"
+              fill
+              className="object-cover"
+            />
+          )}
 
-      <Card className="p-2 border border-primary/20 mb-2">
-        <div className="text-center">
-          <p className="text-sm text-primary font-light leading-relaxed">
-            {currentStep.text}
-          </p>
-        </div>
-      </Card>
+          {/* Overlay gradient for better text readability */}
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
 
-      {!isFinalImage && (
-        <div className="flex gap-2 w-full">
-          {currentStep.choices.map((choice) => (
-            <Button
-              key={choice.id}
-              variant="default"
-              className="flex-1 p-3 h-auto text-center justify-center min-w-0"
-              onClick={() => handleChoiceClick(choice)}
-              disabled={isPending}
-            >
-              <div className="flex flex-col items-center gap-2 justify-between w-full h-full">
-                <div className="text-base leading-tight text-center break-words whitespace-normal">
-                  {choice.label}
-                </div>
-                {choice.cost && choice.cost > 0 ? (
-                  <div className="text-xs bg-background/10 text-background px-1 py-0.5 rounded mt-1 whitespace-nowrap">
-                    {choice.cost} credits
-                  </div>
-                ) : (
-                  <div className="text-xs bg-background/10 text-background px-1 py-0.5 rounded mt-1 whitespace-nowrap">
-                    Free
-                  </div>
-                )}
+          {/* Text and buttons overlay */}
+          <div className="absolute inset-x-0 bottom-0 p-4 space-y-3">
+            {/* Story text */}
+            <div className="text-center">
+              <p className="text-sm text-white font-light leading-relaxed drop-shadow-lg">
+                {currentStep.text}
+              </p>
+            </div>
+
+            {/* Choice buttons */}
+            {!isFinalImage && (
+              <div className="flex gap-2 w-full">
+                {currentStep.choices.map((choice) => (
+                  <Button
+                    key={choice.id}
+                    variant="default"
+                    className="flex-1 p-1 h-auto text-center justify-center min-w-0 bg-background/10 border-primary hover:bg-background/20"
+                    onClick={() => handleChoiceClick(choice)}
+                    disabled={isPending}
+                  >
+                    <div className="flex flex-col items-center justify-between w-full h-full">
+                      <div className="text-base leading-tight text-center text-primary break-words whitespace-normal">
+                        {choice.label}
+                      </div>
+                      {choice.cost && choice.cost > 0 ? (
+                        <div className="text-xs bg-background/10 text-primary px-1 py-0.5 rounded mt-1 whitespace-nowrap">
+                          {choice.cost} credits
+                        </div>
+                      ) : (
+                        <div className="text-xs bg-background/10 text-primary px-1 py-0.5 rounded mt-1 whitespace-nowrap">
+                          Free
+                        </div>
+                      )}
+                    </div>
+                  </Button>
+                ))}
               </div>
-            </Button>
-          ))}
-        </div>
-      )}
+            )}
 
-      {isFinalImage && (
-        <div className="flex justify-center">
-          <Button onClick={resetFantasy} variant="default">
-            Play Again
-          </Button>
+            {/* Play Again button */}
+            {isFinalImage && (
+              <div className="flex justify-center">
+                <Button onClick={resetFantasy} variant="default">
+                  Play Again
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+      </Card>
     </div>
   );
 };
