@@ -3,6 +3,7 @@
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
+import { trackingEvent } from '@/constants/trackingEvent';
 
 const FantasyPageView = () => {
   const { slug, fantasyId } = useParams();
@@ -10,7 +11,7 @@ const FantasyPageView = () => {
 
   useEffect(() => {
     sendEventOnce({
-      eventName: 'fantasy_page_view',
+      eventName: trackingEvent.fantasy_page_view,
       properties: { character_slug: slug, fantasy_id: fantasyId },
     });
   }, [slug, fantasyId, sendEventOnce]);

@@ -1,6 +1,7 @@
 export const trackingEvent = {
   fantasy_credit_wall_shown: 'fantasy_credit_wall_shown',
   fantasy_auth_wall_shown: 'fantasy_auth_wall_shown',
+  credit_wall_shown: 'credit_wall_shown',
   credit_topup_clicked: 'credit_topup_clicked',
   signup_completed: 'signup_completed',
   media_requested: 'media_requested',
@@ -13,4 +14,5 @@ export const trackingEvent = {
   fantasy_choice_clicked: 'fantasy_choice_clicked',
   fantasy_completed: 'fantasy_completed',
   fantasy_reset: 'fantasy_reset',
+  fantasy_page_view: 'fantasy_page_view',
 };
