@@ -38,8 +38,8 @@ const HomePage = async () => {
               GET YOUR FANTASM DONE
             </h1>
             <h2 className="text-sm md:text-lg opacity-80 font-light">
-              Get your fantasy fulfilled with lifelike MILF AI girlfriends who
-              chat, tease, and turn you on anytime.
+              Get your fantasy fulfilled with lifelike AI girlfriends who chat,
+              tease, and turn you on anytime.
             </h2>
           </div>
         </div>

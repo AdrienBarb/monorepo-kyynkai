@@ -8,7 +8,6 @@ import { getFirstFantasyBySlug } from '@/services/fantasies/getFirstFantasyBySlu
 import CharacterPageView from '@/components/tracking/CharacterPageView';
 import Image from 'next/image';
 import ProfileButtons from '@/components/ProfileButtons';
-import PostsList from '@/components/posts/PostsList';
 import Title from '@/components/ui/Title';
 
 export type PageProps = {
@@ -86,10 +85,6 @@ const ProfilePage = async ({ params }: PageProps) => {
 
           <ProfileButtons slug={slug} firstFantasyId={firstFantasy?.id} />
         </div>
-      </div>
-
-      <div className="pb-6">
-        <PostsList />
       </div>
 
       <CharacterPageView />
