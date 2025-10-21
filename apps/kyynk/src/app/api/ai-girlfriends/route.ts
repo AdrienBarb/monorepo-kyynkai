@@ -2,9 +2,6 @@ import { getAiGirlfriends } from '@/services/ai-girlfriends-service/getAiGirlfri
 import { errorHandler } from '@/utils/errors/errorHandler';
 import { NextResponse } from 'next/server';
 
-export const maxDuration = 30;
-export const revalidate = 300;
-
 export const GET = async (req: Request) => {
   try {
     const users = await getAiGirlfriends();
