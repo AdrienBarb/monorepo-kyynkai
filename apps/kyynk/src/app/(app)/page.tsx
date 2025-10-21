@@ -1,7 +1,5 @@
 import UsersList from '@/components/UsersList';
 import React from 'react';
-import Image from 'next/image';
-
 import { AIGirlfriend } from '@prisma/client';
 import PaddingContainer from '@/components/layout/PaddingContainer';
 import { Metadata } from 'next';
@@ -17,8 +15,6 @@ export type PageProps = {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata | undefined> {
-  const { locale } = await params;
-
   return genPageMetadata({
     title: 'MILF AI Girlfriend App – Realistic Virtual Companions 24/7',
     description:
