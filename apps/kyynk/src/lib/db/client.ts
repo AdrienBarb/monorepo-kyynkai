@@ -6,7 +6,6 @@ const globalForPrisma = global as unknown as {
   prisma: PrismaClient;
 };
 
-// Prevent Prisma from running in browser environments
 const createPrismaClient = () => {
   if (typeof window !== 'undefined') {
     throw new Error(
@@ -14,7 +13,14 @@ const createPrismaClient = () => {
     );
   }
 
-  return new PrismaClient().$extends(withAccelerate());
+  return new PrismaClient({
+    log: isProduction ? ['error'] : ['query', 'error', 'warn'],
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL,
+      },
+    },
+  }).$extends(withAccelerate());
 };
 
 const prisma = globalForPrisma.prisma || createPrismaClient();

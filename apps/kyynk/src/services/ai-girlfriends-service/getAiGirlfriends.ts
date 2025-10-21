@@ -31,7 +31,12 @@ export const getAiGirlfriends = async ({
 
     return aiGirlfriends;
   } catch (error) {
-    console.log(error);
+    console.error('Error fetching AI girlfriends:', error);
+
+    if (error instanceof Error) {
+      throw new Error(`Failed to fetch AI girlfriends: ${error.message}`);
+    }
+
     throw new Error('Failed to fetch AI girlfriends');
   }
 };
