@@ -108,7 +108,7 @@ const AskInput: React.FC<AskInputProps> = ({ disabled = false, onSuccess }) => {
               <div className="flex justify-between w-full items-center">
                 <span className="font-medium text-sm">{action.label}</span>
                 <span className="text-xs text-muted-foreground">
-                  {action.credits} credits
+                  {action.credits > 0 ? `${action.credits} credits` : 'Free'}
                 </span>
               </div>
             </DropdownMenuItem>
