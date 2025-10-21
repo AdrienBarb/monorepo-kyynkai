@@ -1,6 +1,5 @@
 import { isProduction } from '@/utils/environments';
 import { PrismaClient } from '@prisma/client';
-import { withAccelerate } from '@prisma/extension-accelerate';
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient;
@@ -15,12 +14,7 @@ const createPrismaClient = () => {
 
   return new PrismaClient({
     log: isProduction ? ['error'] : ['query', 'error', 'warn'],
-    datasources: {
-      db: {
-        url: process.env.DATABASE_URL,
-      },
-    },
-  }).$extends(withAccelerate());
+  });
 };
 
 const prisma = globalForPrisma.prisma || createPrismaClient();
