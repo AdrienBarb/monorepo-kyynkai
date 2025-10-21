@@ -21,6 +21,7 @@ import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 import { trackingEvent } from '@/constants/trackingEvent';
 import { useFetchCurrentAiGirlfriend } from '@/hooks/ai-girlfriends/useFetchCurrentAiGirlfriend';
 import { NUDE_ACTIONS, NudeActionType } from '@/constants/nudeActions';
+import { GeneratedMedia } from '@prisma/client';
 
 interface AskInputProps {
   disabled?: boolean;
@@ -39,10 +40,6 @@ const AskInput: React.FC<AskInputProps> = ({ disabled = false, onSuccess }) => {
     '/api/generate-nude',
     {
       onSuccess: () => {
-        sendEventOnce({
-          eventName: trackingEvent.media_requested,
-        });
-
         if (loggedUser) {
           refetchUser();
         }
@@ -78,6 +75,13 @@ const AskInput: React.FC<AskInputProps> = ({ disabled = false, onSuccess }) => {
       openModal('notEnoughCredits');
       return;
     }
+
+    sendEventOnce({
+      eventName: trackingEvent.media_requested,
+      properties: {
+        isFree: action.credits === 0,
+      },
+    });
 
     generateNude({
       slug: slug as string,
