@@ -1,6 +1,5 @@
 import { isProduction } from '@/utils/environments';
 import { PrismaClient } from '@prisma/client';
-import { withAccelerate } from '@prisma/extension-accelerate';
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient;
@@ -14,7 +13,7 @@ const createPrismaClient = () => {
     );
   }
 
-  return new PrismaClient().$extends(withAccelerate());
+  return new PrismaClient();
 };
 
 const prisma = globalForPrisma.prisma || createPrismaClient();
