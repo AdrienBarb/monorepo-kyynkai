@@ -4,11 +4,13 @@ import { genPageMetadata } from '@/app/seo';
 import { redirect } from 'next/navigation';
 import imgixLoader from '@/lib/imgix/loader';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
-import { getFirstFantasyBySlug } from '@/services/fantasies/getFirstFantasyBySlug';
+import { getMainFantasy } from '@/services/fantasies/getMainFantasy';
 import CharacterPageView from '@/components/tracking/CharacterPageView';
-import Image from 'next/image';
-import ProfileButtons from '@/components/ProfileButtons';
-import Title from '@/components/ui/Title';
+import PageContainer from '@/components/PageContainer';
+import FantasyPageView from '@/components/tracking/FantasyPageView';
+import FantasyPlayer from '@/components/fantasies/FantasyPlayer';
+import { Fantasy } from '@/types/fantasies';
+import ProfileConversationInput from '@/components/conversations/ProfileConversationInput';
 
 export type PageProps = {
   params: Promise<{ slug: string }>;
@@ -45,50 +47,43 @@ const ProfilePage = async ({ params }: PageProps) => {
     redirect('/404');
   }
 
-  const firstFantasy = await getFirstFantasyBySlug({ slug });
+  const mainFantasy = (await getMainFantasy({
+    aiGirlfriendId: aiGirlfriend.id,
+  })) as Fantasy;
 
-  const profileImageUrl = imgixLoader({
-    src: aiGirlfriend.profileImageId || '',
-    width: 600,
-    quality: 90,
-  });
+  const locale = 'en';
+  const chatOpeningLine =
+    typeof aiGirlfriend.chatOpeningLine === 'object' &&
+    aiGirlfriend.chatOpeningLine !== null &&
+    !Array.isArray(aiGirlfriend.chatOpeningLine)
+      ? (aiGirlfriend.chatOpeningLine as Record<string, string>)[locale] ?? ''
+      : '';
+
+  let view = (
+    <div className="flex flex-col" style={{ height: 'calc(100dvh - 68px)' }}>
+      <ProfileConversationInput
+        chatOpeningLine={chatOpeningLine}
+        profileVideoId={aiGirlfriend.profileVideoId}
+      />
+    </div>
+  );
+
+  if (mainFantasy) {
+    view = (
+      <PageContainer>
+        <FantasyPageView />
+        <div className="space-y-6">
+          <FantasyPlayer fantasy={mainFantasy} slug={slug} />
+        </div>
+      </PageContainer>
+    );
+  }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <div className="flex flex-col items-center justify-center p-6 mb-8">
-        <div className="flex flex-col items-center max-w-md w-full">
-          <div className="relative aspect-[3/4] w-full max-w-48 overflow-hidden rounded-lg border border-primary/20 shadow-lg mb-2">
-            <Image
-              src={profileImageUrl}
-              alt={aiGirlfriend.pseudo}
-              fill
-              className="object-cover transition-all duration-500 ease-in-out"
-            />
-          </div>
-
-          <div className="text-center mb-4">
-            <Title
-              Tag="h1"
-              className="text-xl font-bold font-karla text-primary mb-2"
-            >
-              {`${aiGirlfriend.pseudo}, ${aiGirlfriend.age}`}
-            </Title>
-            <p className="text-sm font-semibold font-karla text-muted-foreground">
-              {aiGirlfriend.archetype}
-            </p>
-            {aiGirlfriend.hook && (
-              <p className="text-xs text-muted-foreground max-w-xs mx-auto">
-                {aiGirlfriend.hook}
-              </p>
-            )}
-          </div>
-
-          <ProfileButtons slug={slug} firstFantasyId={firstFantasy?.id} />
-        </div>
-      </div>
-
+    <>
+      {view}
       <CharacterPageView />
-    </div>
+    </>
   );
 };
 

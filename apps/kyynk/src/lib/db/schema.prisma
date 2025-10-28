@@ -292,6 +292,7 @@ model Fantasy {
   title          String
   description    String
   mediaUrl       String
+  isMain         Boolean  @default(false)
   videoUrl       String?
   isActive       Boolean  @default(true)
   createdAt      DateTime @default(now())

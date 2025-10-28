@@ -25,13 +25,6 @@ export const NUDE_ACTIONS: NudeAction[] = [
       'fully nude woman taking a mirror selfie in a cozy bedroom, phone in one hand, subtle hip pop, relaxed natural smile, golden hour light, warm shadows, realistic skin texture, soft lighting, subtle film grain, shallow depth of field, 85mm lens, erotic photo realism',
   },
   {
-    id: NudeActionType.SHOWER_STEAM,
-    label: '🚿 Wet & Wild',
-    credits: 0,
-    prompt:
-      'fully nude woman standing in a steamed-up shower, wet skin glistening under warm backlight, condensation on glass, water droplets on skin, soft rimlight tracing her shoulders and hips, relaxed sensual expression, golden hour light, warm shadows, realistic skin texture, soft lighting, subtle film grain, shallow depth of field, 85mm lens, erotic photo realism',
-  },
-  {
     id: NudeActionType.BED_SOLO,
     label: '🔥 Solo Pleasure',
     credits: 10,

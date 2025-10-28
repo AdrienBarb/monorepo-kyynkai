@@ -1,0 +1,423 @@
+---
+Rule Name: fantasy-image-video-generation
+Description: Generate 3 image prompts and 3 video animation prompts based on men's fantasy archetypes for FLUX-dev and Wan-2.2-i2v-fast models
+---
+
+# Fantasy Image & Video Generation - Cursor Rule
+
+## Overview
+
+This rule defines the process for generating **3 sexy/teasing image prompts** and **3 corresponding video animation prompts** based on a single men's fantasy input (e.g., "hot teacher", "sexy nurse", "MILF secretary").
+
+The workflow uses:
+
+- **black-forest-labs/flux-dev** for image generation
+- **wan-video/wan-2.2-i2v-fast** for image-to-video animation
+
+## Core Workflow
+
+### Input
+
+User provides a **men's fantasy archetype** (e.g., "hot teacher", "sexy boss", "naughty nurse")
+
+### Output
+
+Generate exactly **6 prompts total**:
+
+1. **3 Image Prompts** (for FLUX-dev model)
+2. **3 Video Animation Prompts** (for Wan-2.2-i2v-fast model)
+
+Each image/video pair corresponds to one of three required views.
+
+---
+
+## Image Generation Requirements
+
+### Three Required Views
+
+#### 1. Front Full Body POV
+
+**Purpose**: Showcase the full character in their environment, very sexy and suggestive
+
+**Key Elements**:
+
+- POV: Front view, full body visible
+- Environment: Must match the fantasy (classroom for teacher, office for boss, etc.)
+- Body Focus: Full figure, emphasizing curves, long legs
+- Clothing: Very short skirt, plunging neckline, revealing
+- Breast Emphasis: Big breasts, visible cleavage
+- Expression: Seductive, looking at camera
+- Pose: Standing confidently or sitting suggestively
+
+**Example Template**:
+
+```
+POV front view of a [fantasy character] in [environment], standing confidently near [furniture/prop], (big breasts:1.3), plunging neckline, extremely short skirt, (long legs:1.2), seductive smile looking at camera, [environment details] visible behind, professional lighting, (realistic:1.1)
+```
+
+#### 2. Back View (Teasing/Bending)
+
+**Purpose**: Maximum teasing view, showing ass and curves from behind
+
+**Key Elements**:
+
+- POV: Back view, full body
+- Pose: **Must be bending over** something (desk, table, counter, bed)
+- Clothing: Micro/very short skirt that rides up
+- Focus: Bottom of ass visible under skirt, teasing glimpse
+- Legs: Long legs, high heels
+- Environment: Fantasy-appropriate setting
+- Lighting: Natural, emphasizes curves
+
+**Example Template**:
+
+```
+POV back view of [fantasy character] bending over [furniture] reaching for [object], (micro skirt:1.3), (ass visible under skirt:1.4), long legs, high heels, [environment] setting, natural lighting, (teasing pose:1.3), (realistic:1.1)
+```
+
+#### 3. Medium Shot (Top Body/Breasts Focus)
+
+**Purpose**: Intimate, close view focusing on breasts and face
+
+**Key Elements**:
+
+- POV: Medium shot, waist-up or chest-up
+- Focus: **Huge breasts, deep cleavage** as main focal point
+- Pose: Leaning forward to emphasize cleavage
+- Clothing: Unbuttoned blouse, low-cut top, barely contained breasts
+- Expression: Direct eye contact, lustful/seductive gaze
+- Environment: Blurred background, fantasy setting visible but not focus
+- Lighting: Warm, intimate
+
+**Example Template**:
+
+```
+POV medium shot of [fantasy character] leaning forward on [furniture], (huge breasts:1.3), (deep cleavage:1.4), unbuttoned blouse, looking directly at camera with lustful eyes, (seductive expression:1.3), [environment] background blurred, warm lighting, (realistic:1.1)
+```
+
+---
+
+## Image Prompt Engineering Guidelines
+
+### Content Requirements
+
+- **Very Sexy/Suggestive**: Every image must be highly sexual and teasing
+- **Big Breasts**: Always emphasize large breasts, cleavage, neckline
+- **Very Short Skirts**: Micro skirts, revealing clothing
+- **Environment Match**: Background must match fantasy (classroom, office, hospital, etc.)
+- **Full Visibility**: Clear view of body, no obscured elements
+
+### Prompt Structure
+
+1. Start with POV specification
+2. Describe character and action in natural language
+3. Add strategic weights (1.2-1.4) on 2-3 most important sexy elements
+4. Include environment/setting details
+5. Add lighting description
+6. End with technical quality tag (realistic:1.1)
+
+### Weight Usage
+
+- **1.3-1.4**: Core sexy elements (big breasts, deep cleavage, ass visible, micro skirt)
+- **1.2-1.3**: Supporting elements (long legs, teasing pose, seductive expression)
+- **1.1**: Technical quality (realistic, detailed)
+- **Unweighted**: Environment, basic descriptors, lighting
+
+### Strong Words to Use
+
+- Sexy, seductive, teasing, suggestive
+- Big breasts, huge breasts, deep cleavage
+- Micro skirt, extremely short skirt
+- Plunging neckline, unbuttoned
+- Long legs, curves
+- Lustful eyes, seductive smile
+- Ass visible, bent over
+
+### Keep It Simple
+
+- Don't over-describe details
+- Let the AI imagination fill in the scene
+- Use strong, direct words
+- Focus on 2-3 weighted elements maximum
+- Clear POV and pose description
+
+---
+
+## Video Animation Requirements
+
+### Animation Goal
+
+Bring static images to life with **slow, sensual, natural movements** that enhance the teasing/sexy nature of each image.
+
+### Three Required Animation Prompts
+
+#### 1. Front Full Body Animation (matches Image 1)
+
+**Purpose**: Slow sensual body movement while maintaining camera eye contact
+
+**Key Elements**:
+
+- Slow body sway/hip movement
+- Intense gaze into camera maintained throughout
+- Natural breathing motion (chest rising/falling)
+- Subtle seductive gestures (smile appearing, hair flowing)
+- Minimal camera movement
+- Smooth, fluid motion
+
+**Example Template**:
+
+```
+Slow sensual body sway, [fantasy character] gazing intensely into camera, subtle hip movement side to side, hair flowing gently, natural breathing motion with chest rising and falling, seductive smile appearing gradually, minimal camera movement, smooth fluid motion, cinematic quality
+```
+
+#### 2. Back View Animation (matches Image 2)
+
+**Purpose**: Teasing hip/ass movement, emphasizing curves
+
+**Key Elements**:
+
+- Slow hip sway side to side
+- Back arch emphasizing curves
+- Skirt slightly lifting/moving with motion
+- Weight shifting between legs naturally
+- Hair swaying softly
+- Subtle body rotation to show ass better
+- Very slow, teasing motion
+
+**Example Template**:
+
+```
+Slow teasing hip sway side to side, gentle back arch emphasizing curves, skirt slightly lifting with movement, leg shifting weight naturally, hair swaying softly, subtle body rotation showing ass, very slow sensual motion, smooth transitions, natural lighting variations
+```
+
+#### 3. Medium Shot Animation (matches Image 3)
+
+**Purpose**: Intimate forward lean with chest movement and eye contact
+
+**Key Elements**:
+
+- Slow forward lean towards camera
+- Maintained intense eye contact
+- Natural breathing causing chest/breast movement
+- Subtle shoulder roll or upper body movement
+- Hair falling forward gently
+- Seductive facial expressions (lip bite, smile)
+- Intimate, close atmosphere
+
+**Example Template**:
+
+```
+Slow forward lean towards camera, intense eye contact maintained, natural breathing causing chest movement, subtle shoulder roll, hair falling forward gently, seductive lip bite or smile, minimal upper body sway, smooth fluid motion, intimate atmosphere
+```
+
+---
+
+## Video Animation Prompt Engineering Guidelines
+
+### Animation Principles
+
+- **Slow Motion Emphasis**: Always use words like "slow", "gentle", "subtle"
+- **Natural Movements**: Breathing, swaying, hair flowing for realism
+- **Maintain Character**: Eye contact for frontal views, teasing for back views
+- **Smooth Quality**: "Fluid", "cinematic", "smooth transitions"
+- **Simple Movements**: Keep complexity low for better rendering
+
+### Strong Animation Words
+
+- Slow, gentle, subtle, natural
+- Sensual, teasing, seductive
+- Sway, flowing, swaying, shifting
+- Gaze, eye contact, looking into camera
+- Rising and falling (breathing)
+- Smooth, fluid, cinematic
+- Intimate atmosphere
+
+### What to Avoid
+
+- Fast movements (model can't handle well)
+- Complex multi-action animations
+- Camera zooms or pans (keep minimal)
+- Abrupt transitions
+- Too many simultaneous movements
+
+---
+
+## Fantasy Archetype Reference
+
+### Common Fantasy Categories
+
+#### Hot Teacher/Professor
+
+- **Environment**: Classroom, desk, chalkboard, library
+- **Props**: Books, desk, glasses (optional)
+- **Clothing**: Short skirt, unbuttoned blouse, professional but sexy
+
+#### Sexy Boss/Executive
+
+- **Environment**: Office, desk, conference room, window view
+- **Props**: Laptop, papers, office furniture
+- **Clothing**: Business attire, pencil skirt, blazer, stockings
+
+#### Naughty Nurse
+
+- **Environment**: Hospital room, examination table, clinic
+- **Props**: Medical equipment, bed, stethoscope
+- **Clothing**: Nurse uniform (short), white stockings, heels
+
+#### MILF/Step Mom
+
+- **Environment**: Kitchen, bedroom, living room, laundry room
+- **Props**: Counter, table, appliances, furniture
+- **Clothing**: Casual but revealing, yoga pants, tank top, robe
+
+#### Sexy Secretary
+
+- **Environment**: Office desk, filing room, meeting room
+- **Props**: Computer, files, phone, office chair
+- **Clothing**: Tight blouse, pencil skirt, stockings, heels
+
+#### Personal Trainer
+
+- **Environment**: Gym, workout room, yoga studio
+- **Props**: Exercise equipment, yoga mat, weights
+- **Clothing**: Tight sports bra, short shorts, leggings
+
+#### Massage Therapist
+
+- **Environment**: Massage room, spa setting, dim lighting
+- **Props**: Massage table, candles, oils
+- **Clothing**: Minimal clothing, towel, revealing outfit
+
+---
+
+## Output Format
+
+When user provides a fantasy input, generate output in this exact format:
+
+```
+## Image Prompts for FLUX-dev
+
+### Prompt 1 - Front Full Body POV
+[generated prompt]
+
+### Prompt 2 - Back View (Teasing/Bending)
+[generated prompt]
+
+### Prompt 3 - Medium Shot (Top Body/Breasts Focus)
+[generated prompt]
+
+---
+
+## Video Animation Prompts for Wan-2.2-i2v-fast
+
+### Animation 1 - Front Full Body (matches Image 1)
+[generated animation prompt]
+
+### Animation 2 - Back View (matches Image 2)
+[generated animation prompt]
+
+### Animation 3 - Medium Shot (matches Image 3)
+[generated animation prompt]
+```
+
+---
+
+## Quality Checklist
+
+Before delivering prompts, verify:
+
+### Image Prompts
+
+- [ ] POV clearly specified for each view
+- [ ] Fantasy environment matches archetype
+- [ ] Big breasts emphasized (especially in prompt 3)
+- [ ] Very short/micro skirt mentioned
+- [ ] Back view shows bending pose with ass visible
+- [ ] Strategic weights (1.2-1.4) on 2-3 key sexy elements
+- [ ] Realistic quality tag included (1.1)
+- [ ] Simple, strong language used
+- [ ] Seductive/lustful expression mentioned
+
+### Animation Prompts
+
+- [ ] Slow/gentle movement emphasized
+- [ ] Natural motion described (breathing, swaying)
+- [ ] Front views maintain eye contact
+- [ ] Back view emphasizes hip/ass teasing
+- [ ] Chest movement mentioned for medium shot
+- [ ] Smooth/fluid/cinematic quality noted
+- [ ] Simple, achievable movements (not complex)
+- [ ] Matches corresponding image view
+
+---
+
+## Example Usage
+
+**User Input**: "hot teacher"
+
+**Assistant Output**:
+
+## Image Prompts for FLUX-dev
+
+### Prompt 1 - Front Full Body POV
+
+```
+POV front view of a sexy teacher in classroom, standing confidently near desk, (big breasts:1.3), plunging neckline, extremely short skirt, (long legs:1.2), seductive smile looking at camera, chalkboard visible behind, professional lighting, (realistic:1.1)
+```
+
+### Prompt 2 - Back View (Teasing/Bending)
+
+```
+POV back view of teacher bending over desk reaching for books, (micro skirt:1.3), (ass visible under skirt:1.4), long legs, high heels, classroom setting, natural lighting, (teasing pose:1.3), (realistic:1.1)
+```
+
+### Prompt 3 - Medium Shot (Top Body/Breasts Focus)
+
+```
+POV medium shot of teacher leaning forward on desk, (huge breasts:1.3), (deep cleavage:1.4), unbuttoned blouse, looking directly at camera with lustful eyes, (seductive expression:1.3), classroom background blurred, warm lighting, (realistic:1.1)
+```
+
+---
+
+## Video Animation Prompts for Wan-2.2-i2v-fast
+
+### Animation 1 - Front Full Body (matches Image 1)
+
+```
+Slow sensual body sway, teacher gazing intensely into camera, subtle hip movement side to side, hair flowing gently, natural breathing motion with chest rising and falling, seductive smile appearing gradually, minimal camera movement, smooth fluid motion, cinematic quality
+```
+
+### Animation 2 - Back View (matches Image 2)
+
+```
+Slow teasing hip sway side to side, gentle back arch emphasizing curves, skirt slightly lifting with movement, leg shifting weight naturally, hair swaying softly, subtle body rotation showing ass, very slow sensual motion, smooth transitions, natural lighting variations
+```
+
+### Animation 3 - Medium Shot (matches Image 3)
+
+```
+Slow forward lean towards camera, intense eye contact maintained, natural breathing causing chest movement, subtle shoulder roll, hair falling forward gently, seductive lip bite or smile, minimal upper body sway, smooth fluid motion, intimate atmosphere
+```
+
+---
+
+## Key Principles Summary
+
+1. **Always generate 6 prompts total**: 3 images + 3 animations
+2. **Match environment to fantasy**: Classroom for teacher, office for boss, etc.
+3. **Very sexy/teasing required**: Big breasts, short skirts, visible curves
+4. **Three specific views**: Front full body, back bending, medium chest focus
+5. **Simple but strong words**: Let AI imagination fill in details
+6. **Strategic weighting**: 2-3 elements max at 1.2-1.4 weight
+7. **Slow animations**: Natural, sensual, achievable movements
+8. **Maintain consistency**: Animation prompts match their image counterparts
+
+---
+
+## Notes
+
+- This workflow is optimized for **FLUX-dev** and **Wan-2.2-i2v-fast** models specifically
+- Prompts are designed to be **adult/NSFW** but not explicit hardcore content
+- Focus is on **teasing, suggestive, sexy** rather than explicit sexual acts
+- Each fantasy should have appropriate environment and character styling
+- Keep prompts concise - let the AI model do creative interpretation
