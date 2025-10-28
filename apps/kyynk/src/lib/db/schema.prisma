@@ -78,31 +78,32 @@ model Verification {
 }
 
 model AIGirlfriend {
-  id                String   @id @default(cuid())
-  pseudo            String   @unique
-  slug              String   @unique
-  profileImageId    String
-  profileVideoId    String?
-  age               Int      @default(40)
-  isActive          Boolean  @default(true)
-  hook              String?
-  chatOpeningLine   Json?
-  traits            String[] @default([])
-  archetype         String?
-  voice             String?
-  boundaries        String[] @default([])
-  styleReminders    String[] @default([])
-  petNames          String[] @default([])
-  emojiRatio        Float    @default(0.1)
-  sentenceLength    String?  @default("short")
-  aftercare         Boolean  @default(true)
-  consentChecks     String[] @default([])
-  genTemperature    Float    @default(0.9)
-  genTopP           Float    @default(0.9)
-  genMaxTokens      Int      @default(220)
-  visualStylePrompt String?
-  version           String   @default("v1")
-  faceIdKey         String?
+  id                    String   @id @default(cuid())
+  pseudo                String   @unique
+  slug                  String   @unique
+  profileImageId        String
+  profileVideoId        String?
+  age                   Int      @default(40)
+  isActive              Boolean  @default(true)
+  hook                  String?
+  chatOpeningLine       Json?
+  traits                String[] @default([])
+  archetype             String?
+  voice                 String?
+  boundaries            String[] @default([])
+  styleReminders        String[] @default([])
+  petNames              String[] @default([])
+  emojiRatio            Float    @default(0.1)
+  sentenceLength        String?  @default("short")
+  aftercare             Boolean  @default(true)
+  consentChecks         String[] @default([])
+  genTemperature        Float    @default(0.9)
+  genTopP               Float    @default(0.9)
+  genMaxTokens          Int      @default(220)
+  visualStylePrompt     String?
+  version               String   @default("v1")
+  faceIdKey             String?
+  pregeneratedMediaUrls String[] @default([])
 
   bodyBuild String? // slim | fit | curvy | athletic | petite | tall | average
   bustSize  String? // small | medium | full
