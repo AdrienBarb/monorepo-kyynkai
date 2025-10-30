@@ -2,6 +2,8 @@ import { errorMessages } from '@/lib/constants/errorMessage';
 import { getFantasiesBySlug } from '@/services/fantasies/getFantasiesBySlug';
 import { errorHandler } from '@/utils/errors/errorHandler';
 import { NextResponse } from 'next/server';
+import { auth } from '@/lib/better-auth/auth';
+import { headers } from 'next/headers';
 
 export const GET = async (
   req: Request,
@@ -17,7 +19,12 @@ export const GET = async (
       );
     }
 
-    const fantasies = await getFantasiesBySlug({ slug });
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    const userId = session?.user?.id;
+
+    const fantasies = await getFantasiesBySlug({ slug, userId });
 
     return NextResponse.json(fantasies, { status: 200 });
   } catch (error) {

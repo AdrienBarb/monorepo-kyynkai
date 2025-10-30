@@ -3,7 +3,7 @@
 import Avatar from '../ui/Avatar';
 import { cn } from '@/utils/tailwind/cn';
 
-export type SignUpOfferVariant = 'message' | 'media' | 'default';
+export type SignUpOfferVariant = 'message' | 'media' | 'default' | 'fantasy';
 
 interface SignUpOfferProps {
   context?: SignUpOfferVariant;
@@ -26,6 +26,11 @@ const copy = (v: SignUpOfferVariant, name: string) => {
       return {
         title: `${you} sent you a photo 📸`,
         cta,
+      };
+    case 'fantasy':
+      return {
+        title: `Let’s get a little closer 🔥`,
+        cta: 'Create your account to play with her',
       };
     default:
       return {

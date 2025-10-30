@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Fantasy, FantasyStep, FantasyChoice } from '@/types/fantasies';
@@ -13,30 +13,150 @@ import { useFetchCurrentAiGirlfriend } from '@/hooks/ai-girlfriends/useFetchCurr
 import { hasEnoughCredits } from '@/utils/users/hasEnoughCredits';
 import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 import { trackingEvent } from '@/constants/trackingEvent';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { useQueryState } from 'nuqs';
 
 interface FantasyPlayerProps {
   fantasy: Fantasy;
   slug: string;
 }
 
-const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
-  const [currentStep, setCurrentStep] = useState<FantasyStep>(fantasy.steps[0]);
-  const [currentMediaUrl, setCurrentMediaUrl] = useState<string>(
-    fantasy.mediaUrl,
-  );
-  const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(
-    fantasy.videoUrl ?? null,
-  );
+interface StepHistoryItem {
+  stepId: string;
+  videoUrl: string;
+}
 
-  const [isEnded, setIsEnded] = useState(false);
+const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
+  const [stepId, setStepId] = useQueryState('step', {
+    defaultValue: fantasy.steps[0].id,
+    history: 'push',
+    shallow: true,
+  });
+
+  const [historyParam, setHistoryParam] = useQueryState('history');
+
+  const [unlockedChoices, setUnlockedChoices] = useState<Set<string>>(() => {
+    const unlocked = new Set<string>();
+    fantasy.steps.forEach((step) => {
+      step.choices.forEach((choice) => {
+        if (choice.isUnlocked) {
+          unlocked.add(choice.id);
+        }
+      });
+    });
+    return unlocked;
+  });
+
+  const stepsMap = useMemo(() => {
+    const map = new Map<string, FantasyStep>();
+    fantasy.steps.forEach((step) => {
+      const stepWithUnlocked = {
+        ...step,
+        choices: step.choices.map((choice) => ({
+          ...choice,
+          isUnlocked: unlockedChoices.has(choice.id),
+        })),
+      };
+      map.set(step.id, stepWithUnlocked);
+    });
+    return map;
+  }, [fantasy.steps, unlockedChoices]);
+
+  const initialStep = stepsMap.get(stepId) || fantasy.steps[0];
+
+  const initialHistory = useMemo(() => {
+    if (historyParam) {
+      try {
+        const parsed = JSON.parse(
+          decodeURIComponent(historyParam),
+        ) as StepHistoryItem[];
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        console.error('Failed to parse history from URL:', e);
+      }
+    }
+    return [
+      {
+        stepId: initialStep.id,
+        videoUrl: fantasy.videoUrl,
+      },
+    ];
+  }, [historyParam, initialStep.id, fantasy.videoUrl]);
+
+  const [currentStep, setCurrentStep] = useState<FantasyStep>(initialStep);
+  const [currentVideoUrl, setCurrentVideoUrl] = useState<string>(
+    initialHistory[initialHistory.length - 1]?.videoUrl || fantasy.videoUrl,
+  );
+  const [stepHistory, setStepHistory] =
+    useState<StepHistoryItem[]>(initialHistory);
   const [isFinalImage, setIsFinalImage] = useState(false);
+
   const { mutate: playChoice, isPending } = usePlayFantasy(slug);
   const { user, refetch: refetchUser } = useUser();
   const { openModal } = useGlobalModalStore();
   const { aiGirlfriend } = useFetchCurrentAiGirlfriend();
   const { sendEvent } = useClientPostHogEvent();
+
+  useEffect(() => {
+    const step = stepsMap.get(stepId || fantasy.steps[0].id);
+    if (step) {
+      setCurrentStep(step);
+    }
+  }, [stepsMap, stepId, fantasy.steps]);
+
+  const updateHistoryInUrl = (history: StepHistoryItem[]) => {
+    if (history.length > 1) {
+      const encoded = encodeURIComponent(JSON.stringify(history));
+      setHistoryParam(encoded as any);
+    } else {
+      setHistoryParam(null as any);
+    }
+  };
+
+  const navigateToChoice = (choice: FantasyChoice) => {
+    const newVideoUrl = choice.videoUrl;
+
+    if (choice.nextStepId) {
+      const nextStep = stepsMap.get(choice.nextStepId);
+      if (nextStep) {
+        const newHistory = [
+          ...stepHistory,
+          {
+            stepId: nextStep.id,
+            videoUrl: newVideoUrl,
+          },
+        ];
+        setCurrentStep(nextStep);
+        setCurrentVideoUrl(newVideoUrl);
+        setStepHistory(newHistory);
+        updateHistoryInUrl(newHistory);
+        setStepId(nextStep.id);
+      }
+    } else {
+      const newHistory = [
+        ...stepHistory,
+        {
+          stepId: currentStep.id,
+          videoUrl: newVideoUrl,
+        },
+      ];
+      setCurrentVideoUrl(newVideoUrl);
+      setStepHistory(newHistory);
+      setIsFinalImage(true);
+      updateHistoryInUrl(newHistory);
+      sendEvent({
+        eventName: trackingEvent.fantasy_completed,
+        properties: {
+          character_slug: slug,
+          fantasy_id: fantasy.id,
+          final_choice_id: choice.id,
+        },
+      });
+    }
+  };
 
   const handleChoiceClick = (choice: FantasyChoice) => {
     sendEvent({
@@ -51,13 +171,16 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
       },
     });
 
-    // If choice costs credits, require authentication
-    if (choice.cost && choice.cost > 0) {
+    const isChoiceUnlocked = unlockedChoices.has(choice.id);
+    if (choice.cost && choice.cost > 0 && !isChoiceUnlocked) {
       if (!user) {
         sendEvent({
           eventName: trackingEvent.fantasy_auth_wall_shown,
         });
-        openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
+        openModal('auth', {
+          avatarImageId: aiGirlfriend?.profileImageId,
+          context: 'fantasy',
+        });
         return;
       }
 
@@ -73,75 +196,63 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
         openModal('notEnoughCredits');
         return;
       }
+
+      playChoice(
+        {
+          fantasyId: fantasy.id,
+          choiceId: choice.id,
+        },
+        {
+          onSuccess: (data) => {
+            setUnlockedChoices((prev) => new Set([...prev, choice.id]));
+            navigateToChoice(choice);
+            if (data.creditsUsed > 0) {
+              refetchUser();
+            }
+          },
+          onError: (error) => {
+            console.error('Error playing choice:', error);
+            alert('Something went wrong. Please try again.');
+          },
+        },
+      );
+    } else {
+      navigateToChoice(choice);
     }
+  };
 
-    playChoice(
-      {
-        fantasyId: fantasy.id,
-        choiceId: choice.id,
-      },
-      {
-        onSuccess: (data) => {
-          // Update video URL if exists, otherwise update media URL
-          if (choice.videoUrl) {
-            setCurrentVideoUrl(choice.videoUrl);
-          } else if (choice.mediaUrl) {
-            setCurrentMediaUrl(choice.mediaUrl);
-            setCurrentVideoUrl(null);
-          } else {
-            console.warn('Choice has no media, keeping current media');
-          }
+  const handleGoBack = () => {
+    if (stepHistory.length <= 1) return;
 
-          if (data.nextStep) {
-            setCurrentStep(data.nextStep);
-          } else {
-            // Final choice - show image but hide buttons
-            setIsFinalImage(true);
-            sendEvent({
-              eventName: trackingEvent.fantasy_completed,
-              properties: {
-                character_slug: slug,
-                fantasy_id: fantasy.id,
-                final_choice_id: choice.id,
-              },
-            });
-          }
+    const newHistory = stepHistory.slice(0, -1);
+    const previousItem = newHistory[newHistory.length - 1];
+    const previousStep = stepsMap.get(previousItem.stepId);
 
-          if (data.creditsUsed > 0) {
-            refetchUser();
-          }
-        },
-        onError: (error) => {
-          console.error('Error playing choice:', error);
-          alert('Something went wrong. Please try again.');
-        },
-      },
-    );
+    if (previousStep) {
+      setStepHistory(newHistory);
+      setCurrentStep(previousStep);
+      setCurrentVideoUrl(previousItem.videoUrl);
+      setIsFinalImage(false);
+      updateHistoryInUrl(newHistory);
+      setStepId(previousStep.id);
+    }
   };
 
   const resetFantasy = () => {
-    setCurrentStep(fantasy.steps[0]);
-    setCurrentMediaUrl(fantasy.mediaUrl);
+    const firstStep = fantasy.steps[0];
+    const resetHistory = [
+      {
+        stepId: firstStep.id,
+        videoUrl: fantasy.videoUrl ?? null,
+      },
+    ];
+    setCurrentStep(firstStep);
     setCurrentVideoUrl(fantasy.videoUrl ?? null);
-    setIsEnded(false);
+    setStepHistory(resetHistory);
     setIsFinalImage(false);
+    updateHistoryInUrl(resetHistory);
+    setStepId(null);
   };
-
-  if (isEnded) {
-    return (
-      <Card className="p-6 text-center">
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold font-karla text-primary">
-            Story Complete
-          </h2>
-          <p className="text-muted-foreground">
-            Thanks for playing! Want to try again?
-          </p>
-          <Button onClick={resetFantasy}>Play Again</Button>
-        </div>
-      </Card>
-    );
-  }
 
   return (
     <div className="h-screen flex flex-col p-4 max-w-md mx-auto">
@@ -159,7 +270,7 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
           ) : (
             <Image
               src={imgixLoader({
-                src: currentMediaUrl,
+                src: currentVideoUrl,
                 width: 600,
                 quality: 90,
               })}
@@ -172,14 +283,27 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
           {/* Overlay gradient for better text readability */}
           <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
 
-          {/* Chat icon */}
-          <Link
-            href={`/${slug}/chat`}
-            className="absolute top-2 right-2 p-2 bg-black/50 hover:bg-black/70 rounded-full transition-colors z-10"
-            aria-label="Chat with AI girlfriend"
-          >
-            <MessageCircle className="w-6 h-6 text-white" />
-          </Link>
+          {/* Top navigation icons */}
+          <div className="absolute top-2 left-2 right-2 flex justify-between z-10">
+            {stepHistory.length > 1 && (
+              <button
+                onClick={handleGoBack}
+                className="p-2 bg-black/50 hover:bg-black/70 rounded-full transition-colors"
+                aria-label="Go back"
+              >
+                <ArrowLeft className="w-6 h-6 text-white" />
+              </button>
+            )}
+            <div className="ml-auto">
+              <Link
+                href={`/${slug}/chat`}
+                className="block p-2 bg-black/50 hover:bg-black/70 rounded-full transition-colors"
+                aria-label="Chat with AI girlfriend"
+              >
+                <MessageCircle className="w-6 h-6 text-white" />
+              </Link>
+            </div>
+          </div>
 
           {/* Text and buttons overlay */}
           <div className="absolute inset-x-0 bottom-0 p-4 space-y-3">
@@ -206,9 +330,15 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
                         {choice.label}
                       </div>
                       {choice.cost && choice.cost > 0 ? (
-                        <div className="text-xs bg-background/10 text-primary px-1 py-0.5 rounded mt-1 whitespace-nowrap">
-                          {choice.cost} credits
-                        </div>
+                        choice.isUnlocked ? (
+                          <div className="text-xs bg-background/10 text-primary px-1 py-0.5 rounded mt-1 whitespace-nowrap">
+                            Unlocked
+                          </div>
+                        ) : (
+                          <div className="text-xs bg-background/10 text-primary px-1 py-0.5 rounded mt-1 whitespace-nowrap">
+                            {choice.cost} credits
+                          </div>
+                        )
                       ) : (
                         <div className="text-xs bg-background/10 text-primary px-1 py-0.5 rounded mt-1 whitespace-nowrap">
                           Free
