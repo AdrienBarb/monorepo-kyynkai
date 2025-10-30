@@ -165,12 +165,10 @@ const ConversationInput = () => {
 
             <div className="h-14 rounded-b-xl flex items-center">
               <div className="absolute left-3 right-3 bottom-3 flex items-center justify-end gap-2 w-[calc(100%-24px)]">
-                {aiGirlfriend?.version === 'v2' && (
-                  <AskInput
-                    disabled={isAiPending || isPending}
-                    onSuccess={handleAskInputSuccess}
-                  />
-                )}
+                <AskInput
+                  disabled={isAiPending || isPending}
+                  onSuccess={handleAskInputSuccess}
+                />
 
                 <Button
                   aria-label="Send message"
