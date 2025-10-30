@@ -66,7 +66,7 @@ const UsersList: FC<Props> = ({ initialAiGirlfriends }) => {
 
   return (
     <div
-      className={cn('grid gap-4 mx-auto mt-8', 'grid-cols-2 md:grid-cols-3')}
+      className={cn('grid gap-4 mx-auto mt-8', 'grid-cols-1 md:grid-cols-3')}
     >
       {filteredUsers.map((user: AIGirlfriend) => (
         <AiGirlfriendCard key={user.id} user={user} />
