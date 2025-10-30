@@ -11,6 +11,8 @@ import FantasyPageView from '@/components/tracking/FantasyPageView';
 import FantasyPlayer from '@/components/fantasies/FantasyPlayer';
 import { Fantasy } from '@/types/fantasies';
 import ProfileConversationInput from '@/components/conversations/ProfileConversationInput';
+import { auth } from '@/lib/better-auth/auth';
+import { headers } from 'next/headers';
 
 export type PageProps = {
   params: Promise<{ slug: string }>;
@@ -47,8 +49,14 @@ const ProfilePage = async ({ params }: PageProps) => {
     redirect('/404');
   }
 
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const userId = session?.user?.id;
+
   const mainFantasy = (await getMainFantasy({
     aiGirlfriendId: aiGirlfriend.id,
+    userId,
   })) as Fantasy;
 
   const locale = 'en';

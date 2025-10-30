@@ -1,6 +1,12 @@
 import { prisma } from '@/lib/db/client';
 
-export async function getFantasyById({ fantasyId }: { fantasyId: string }) {
+export async function getFantasyById({
+  fantasyId,
+  userId,
+}: {
+  fantasyId: string;
+  userId?: string | null;
+}) {
   const fantasy = await prisma.fantasy.findUnique({
     where: {
       id: fantasyId,
@@ -19,6 +25,12 @@ export async function getFantasyById({ fantasyId }: { fantasyId: string }) {
               videoUrl: true,
               nextStepId: true,
               cost: true,
+              unlocks: userId
+                ? {
+                    where: { userId },
+                    select: { id: true },
+                  }
+                : undefined,
             },
           },
         },
@@ -26,5 +38,21 @@ export async function getFantasyById({ fantasyId }: { fantasyId: string }) {
     },
   });
 
-  return fantasy;
+  if (!fantasy) {
+    return null;
+  }
+
+  return {
+    ...fantasy,
+    steps: fantasy.steps.map((step) => ({
+      ...step,
+      choices: step.choices.map((choice) => ({
+        ...choice,
+        isUnlocked: userId
+          ? (choice.unlocks as any[])?.length > 0
+          : false,
+        unlocks: undefined,
+      })),
+    })),
+  };
 }

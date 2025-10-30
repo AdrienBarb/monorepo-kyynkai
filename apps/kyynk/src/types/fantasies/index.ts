@@ -25,6 +25,7 @@ export interface FantasyChoice {
   videoUrl: string;
   nextStepId?: string;
   cost?: number;
+  isUnlocked?: boolean;
 }
 
 export interface PlayFantasyRequest {

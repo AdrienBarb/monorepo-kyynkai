@@ -8,6 +8,8 @@ import PageContainer from '@/components/PageContainer';
 import FantasyPlayer from '@/components/fantasies/FantasyPlayer';
 import { Fantasy } from '@/types/fantasies';
 import FantasyPageView from '@/components/tracking/FantasyPageView';
+import { auth } from '@/lib/better-auth/auth';
+import { headers } from 'next/headers';
 
 export type PageProps = {
   params: Promise<{ slug: string; fantasyId: string }>;
@@ -30,9 +32,14 @@ export async function generateMetadata({
 const FantasyPlayPage = async ({ params }: PageProps) => {
   const { slug, fantasyId } = await params;
 
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+  const userId = session?.user?.id;
+
   const [aiGirlfriend, fantasy] = await Promise.all([
     getAiGirlfriendBySlug({ slug }),
-    getFantasyById({ fantasyId }) as Promise<Fantasy>,
+    getFantasyById({ fantasyId, userId }) as Promise<Fantasy>,
   ]);
 
   if (!aiGirlfriend || !fantasy) {

@@ -25,8 +25,9 @@ model User {
   accounts          Account[]
   conversations     Conversation[]
   CreditTransaction CreditTransaction[]
-  roles             UserRole[]          @default([USER])
+  roles             UserRole[]            @default([USER])
   CreditSale        CreditSale[]
+  fantasyUnlocks    FantasyChoiceUnlock[]
 
   @@unique([email])
   @@map("user")
@@ -328,7 +329,22 @@ model FantasyChoice {
   nextStepId String?
   cost       Int?
 
-  step FantasyStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  step    FantasyStep           @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  unlocks FantasyChoiceUnlock[]
 
   @@index([stepId])
+}
+
+model FantasyChoiceUnlock {
+  id        String   @id @default(cuid())
+  userId    String
+  choiceId  String
+  createdAt DateTime @default(now())
+
+  user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  choice FantasyChoice @relation(fields: [choiceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, choiceId])
+  @@index([userId])
+  @@index([choiceId])
 }

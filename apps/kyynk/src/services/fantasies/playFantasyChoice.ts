@@ -41,39 +41,60 @@ export async function playFantasyChoice({
     throw new Error(errorMessages.INVALID_FANTASY);
   }
 
-  // If choice costs credits, require authentication and check balance
+  let existingUnlock = null;
+  let creditsUsed = 0;
+
   if (choice.cost && choice.cost > 0) {
     if (!userId) {
       throw new Error(errorMessages.AUTH_REQUIRED);
     }
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { creditBalance: true },
+    existingUnlock = await prisma.fantasyChoiceUnlock.findUnique({
+      where: {
+        userId_choiceId: {
+          userId,
+          choiceId: choice.id,
+        },
+      },
     });
 
-    if (!user) {
-      throw new Error(errorMessages.USER_NOT_FOUND);
-    }
-
-    if (user.creditBalance < choice.cost) {
-      throw new Error(errorMessages.INSUFFICIENT_CREDITS);
-    }
-
-    // Deduct credits and create sale record
-    await prisma.$transaction([
-      prisma.user.update({
+    if (!existingUnlock) {
+      const user = await prisma.user.findUnique({
         where: { id: userId },
-        data: { creditBalance: { decrement: choice.cost } },
-      }),
-      prisma.creditSale.create({
-        data: {
-          userId,
-          type: 'MEDIA',
-          amount: choice.cost,
-        },
-      }),
-    ]);
+        select: { creditBalance: true },
+      });
+
+      if (!user) {
+        throw new Error(errorMessages.USER_NOT_FOUND);
+      }
+
+      if (user.creditBalance < choice.cost) {
+        throw new Error(errorMessages.INSUFFICIENT_CREDITS);
+      }
+
+      await prisma.$transaction([
+        prisma.user.update({
+          where: { id: userId },
+          data: { creditBalance: { decrement: choice.cost } },
+        }),
+        prisma.creditSale.create({
+          data: {
+            userId,
+            type: 'MEDIA',
+            amount: choice.cost,
+          },
+        }),
+        prisma.fantasyChoiceUnlock.create({
+          data: {
+            userId,
+            choiceId: choice.id,
+          },
+        }),
+      ]);
+      creditsUsed = choice.cost;
+    }
+  } else {
+    creditsUsed = 0;
   }
 
   let nextStep = null;
@@ -98,7 +119,7 @@ export async function playFantasyChoice({
   return {
     choice,
     nextStep,
-    creditsUsed: choice.cost || 0,
+    creditsUsed,
     isEnding: !choice.nextStepId,
   };
 }

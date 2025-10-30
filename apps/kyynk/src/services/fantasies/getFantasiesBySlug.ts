@@ -1,6 +1,12 @@
 import { prisma } from '@/lib/db/client';
 
-export async function getFantasiesBySlug({ slug }: { slug: string }) {
+export async function getFantasiesBySlug({
+  slug,
+  userId,
+}: {
+  slug: string;
+  userId?: string | null;
+}) {
   const aiGirlfriend = await prisma.aIGirlfriend.findUnique({
     where: { slug },
     select: {
@@ -27,6 +33,12 @@ export async function getFantasiesBySlug({ slug }: { slug: string }) {
                   videoUrl: true,
                   nextStepId: true,
                   cost: true,
+                  unlocks: userId
+                    ? {
+                        where: { userId },
+                        select: { id: true },
+                      }
+                    : undefined,
                 },
               },
             },
@@ -40,5 +52,17 @@ export async function getFantasiesBySlug({ slug }: { slug: string }) {
     return [];
   }
 
-  return aiGirlfriend.fantasies;
+  return aiGirlfriend.fantasies.map((fantasy) => ({
+    ...fantasy,
+    steps: fantasy.steps.map((step) => ({
+      ...step,
+      choices: step.choices.map((choice) => ({
+        ...choice,
+        isUnlocked: userId
+          ? (choice.unlocks as any[])?.length > 0
+          : false,
+        unlocks: undefined,
+      })),
+    })),
+  }));
 }

@@ -36,11 +36,32 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
 
   const [historyParam, setHistoryParam] = useQueryState('history');
 
+  const [unlockedChoices, setUnlockedChoices] = useState<Set<string>>(() => {
+    const unlocked = new Set<string>();
+    fantasy.steps.forEach((step) => {
+      step.choices.forEach((choice) => {
+        if (choice.isUnlocked) {
+          unlocked.add(choice.id);
+        }
+      });
+    });
+    return unlocked;
+  });
+
   const stepsMap = useMemo(() => {
     const map = new Map<string, FantasyStep>();
-    fantasy.steps.forEach((step) => map.set(step.id, step));
+    fantasy.steps.forEach((step) => {
+      const stepWithUnlocked = {
+        ...step,
+        choices: step.choices.map((choice) => ({
+          ...choice,
+          isUnlocked: unlockedChoices.has(choice.id),
+        })),
+      };
+      map.set(step.id, stepWithUnlocked);
+    });
     return map;
-  }, [fantasy.steps]);
+  }, [fantasy.steps, unlockedChoices]);
 
   const initialStep = stepsMap.get(stepId) || fantasy.steps[0];
 
@@ -80,13 +101,11 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
   const { sendEvent } = useClientPostHogEvent();
 
   useEffect(() => {
-    if (stepId && stepId !== currentStep.id) {
-      const step = stepsMap.get(stepId);
-      if (step) {
-        setCurrentStep(step);
-      }
+    const step = stepsMap.get(stepId || fantasy.steps[0].id);
+    if (step) {
+      setCurrentStep(step);
     }
-  }, [stepId, currentStep.id, stepsMap]);
+  }, [stepsMap, stepId, fantasy.steps]);
 
   const updateHistoryInUrl = (history: StepHistoryItem[]) => {
     if (history.length > 1) {
@@ -117,8 +136,17 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
         setStepId(nextStep.id);
       }
     } else {
+      const newHistory = [
+        ...stepHistory,
+        {
+          stepId: currentStep.id,
+          videoUrl: newVideoUrl,
+        },
+      ];
       setCurrentVideoUrl(newVideoUrl);
+      setStepHistory(newHistory);
       setIsFinalImage(true);
+      updateHistoryInUrl(newHistory);
       sendEvent({
         eventName: trackingEvent.fantasy_completed,
         properties: {
@@ -143,7 +171,8 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
       },
     });
 
-    if (choice.cost && choice.cost > 0) {
+    const isChoiceUnlocked = unlockedChoices.has(choice.id);
+    if (choice.cost && choice.cost > 0 && !isChoiceUnlocked) {
       if (!user) {
         sendEvent({
           eventName: trackingEvent.fantasy_auth_wall_shown,
@@ -172,6 +201,7 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
         },
         {
           onSuccess: (data) => {
+            setUnlockedChoices((prev) => new Set([...prev, choice.id]));
             navigateToChoice(choice);
             if (data.creditsUsed > 0) {
               refetchUser();
@@ -297,9 +327,15 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
                         {choice.label}
                       </div>
                       {choice.cost && choice.cost > 0 ? (
-                        <div className="text-xs bg-background/10 text-primary px-1 py-0.5 rounded mt-1 whitespace-nowrap">
-                          {choice.cost} credits
-                        </div>
+                        choice.isUnlocked ? (
+                          <div className="text-xs bg-background/10 text-primary px-1 py-0.5 rounded mt-1 whitespace-nowrap">
+                            Unlocked
+                          </div>
+                        ) : (
+                          <div className="text-xs bg-background/10 text-primary px-1 py-0.5 rounded mt-1 whitespace-nowrap">
+                            {choice.cost} credits
+                          </div>
+                        )
                       ) : (
                         <div className="text-xs bg-background/10 text-primary px-1 py-0.5 rounded mt-1 whitespace-nowrap">
                           Free
