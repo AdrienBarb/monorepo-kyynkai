@@ -18,8 +18,6 @@ const UsersList: FC<Props> = ({ initialAiGirlfriends }) => {
     undefined,
   );
 
-  console.log('🚀 ~ UsersList ~ featureFlag:', featureFlag);
-
   const { data: users } = useGet(
     '/api/ai-girlfriends',
     {},
@@ -30,12 +28,11 @@ const UsersList: FC<Props> = ({ initialAiGirlfriends }) => {
   );
 
   useEffect(() => {
-    console.log('🚀 ~ UsersList ~ posthog:', posthog);
     if (!posthog) return;
 
     const checkFeatureFlag = () => {
       const flagValue = posthog.getFeatureFlag('fantasyorchat');
-      console.log('🚀 ~ checkFeatureFlag ~ flagValue:', flagValue);
+
       setFeatureFlag(flagValue);
     };
 
