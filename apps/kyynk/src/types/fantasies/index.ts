@@ -7,7 +7,7 @@ export interface Fantasy {
   title: string;
   description: string;
   mediaUrl: string;
-  videoUrl?: string | null;
+  videoUrl: string;
   steps: FantasyStep[];
 }
 
@@ -22,7 +22,7 @@ export interface FantasyChoice {
   id: string;
   label: string;
   mediaUrl: string;
-  videoUrl?: string | null;
+  videoUrl: string;
   nextStepId?: string;
   cost?: number;
 }

@@ -24,8 +24,7 @@ interface FantasyPlayerProps {
 
 interface StepHistoryItem {
   stepId: string;
-  mediaUrl: string;
-  videoUrl: string | null;
+  videoUrl: string;
 }
 
 const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
@@ -35,6 +34,8 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
     shallow: true,
   });
 
+  const [historyParam, setHistoryParam] = useQueryState('history');
+
   const stepsMap = useMemo(() => {
     const map = new Map<string, FantasyStep>();
     fantasy.steps.forEach((step) => map.set(step.id, step));
@@ -43,20 +44,33 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
 
   const initialStep = stepsMap.get(stepId) || fantasy.steps[0];
 
+  const initialHistory = useMemo(() => {
+    if (historyParam) {
+      try {
+        const parsed = JSON.parse(
+          decodeURIComponent(historyParam),
+        ) as StepHistoryItem[];
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      } catch (e) {
+        console.error('Failed to parse history from URL:', e);
+      }
+    }
+    return [
+      {
+        stepId: initialStep.id,
+        videoUrl: fantasy.videoUrl,
+      },
+    ];
+  }, [historyParam, initialStep.id, fantasy.videoUrl]);
+
   const [currentStep, setCurrentStep] = useState<FantasyStep>(initialStep);
-  const [currentMediaUrl, setCurrentMediaUrl] = useState<string>(
-    fantasy.mediaUrl,
+  const [currentVideoUrl, setCurrentVideoUrl] = useState<string>(
+    initialHistory[initialHistory.length - 1]?.videoUrl || fantasy.videoUrl,
   );
-  const [currentVideoUrl, setCurrentVideoUrl] = useState<string | null>(
-    fantasy.videoUrl ?? null,
-  );
-  const [stepHistory, setStepHistory] = useState<StepHistoryItem[]>([
-    {
-      stepId: initialStep.id,
-      mediaUrl: fantasy.mediaUrl,
-      videoUrl: fantasy.videoUrl ?? null,
-    },
-  ]);
+  const [stepHistory, setStepHistory] =
+    useState<StepHistoryItem[]>(initialHistory);
   const [isFinalImage, setIsFinalImage] = useState(false);
 
   const { mutate: playChoice, isPending } = usePlayFantasy(slug);
@@ -74,28 +88,35 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
     }
   }, [stepId, currentStep.id, stepsMap]);
 
+  const updateHistoryInUrl = (history: StepHistoryItem[]) => {
+    if (history.length > 1) {
+      const encoded = encodeURIComponent(JSON.stringify(history));
+      setHistoryParam(encoded as any);
+    } else {
+      setHistoryParam(null as any);
+    }
+  };
+
   const navigateToChoice = (choice: FantasyChoice) => {
-    const newMediaUrl = choice.mediaUrl || currentMediaUrl;
-    const newVideoUrl = choice.videoUrl || null;
+    const newVideoUrl = choice.videoUrl;
 
     if (choice.nextStepId) {
       const nextStep = stepsMap.get(choice.nextStepId);
       if (nextStep) {
-        setCurrentStep(nextStep);
-        setCurrentMediaUrl(newMediaUrl);
-        setCurrentVideoUrl(newVideoUrl);
-        setStepHistory((prev) => [
-          ...prev,
+        const newHistory = [
+          ...stepHistory,
           {
             stepId: nextStep.id,
-            mediaUrl: newMediaUrl,
             videoUrl: newVideoUrl,
           },
-        ]);
+        ];
+        setCurrentStep(nextStep);
+        setCurrentVideoUrl(newVideoUrl);
+        setStepHistory(newHistory);
+        updateHistoryInUrl(newHistory);
         setStepId(nextStep.id);
       }
     } else {
-      setCurrentMediaUrl(newMediaUrl);
       setCurrentVideoUrl(newVideoUrl);
       setIsFinalImage(true);
       sendEvent({
@@ -177,26 +198,26 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
     if (previousStep) {
       setStepHistory(newHistory);
       setCurrentStep(previousStep);
-      setCurrentMediaUrl(previousItem.mediaUrl);
       setCurrentVideoUrl(previousItem.videoUrl);
       setIsFinalImage(false);
+      updateHistoryInUrl(newHistory);
       setStepId(previousStep.id);
     }
   };
 
   const resetFantasy = () => {
     const firstStep = fantasy.steps[0];
-    setCurrentStep(firstStep);
-    setCurrentMediaUrl(fantasy.mediaUrl);
-    setCurrentVideoUrl(fantasy.videoUrl ?? null);
-    setStepHistory([
+    const resetHistory = [
       {
         stepId: firstStep.id,
-        mediaUrl: fantasy.mediaUrl,
         videoUrl: fantasy.videoUrl ?? null,
       },
-    ]);
+    ];
+    setCurrentStep(firstStep);
+    setCurrentVideoUrl(fantasy.videoUrl ?? null);
+    setStepHistory(resetHistory);
     setIsFinalImage(false);
+    updateHistoryInUrl(resetHistory);
     setStepId(null);
   };
 
@@ -216,7 +237,7 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
           ) : (
             <Image
               src={imgixLoader({
-                src: currentMediaUrl,
+                src: currentVideoUrl,
                 width: 600,
                 quality: 90,
               })}
