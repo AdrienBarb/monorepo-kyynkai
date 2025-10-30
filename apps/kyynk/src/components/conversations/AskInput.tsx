@@ -21,6 +21,7 @@ import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 import { trackingEvent } from '@/constants/trackingEvent';
 import { useFetchCurrentAiGirlfriend } from '@/hooks/ai-girlfriends/useFetchCurrentAiGirlfriend';
 import { NUDE_ACTIONS, NudeActionType } from '@/constants/nudeActions';
+import { GeneratedMedia } from '@prisma/client';
 
 interface AskInputProps {
   disabled?: boolean;
@@ -39,10 +40,6 @@ const AskInput: React.FC<AskInputProps> = ({ disabled = false, onSuccess }) => {
     '/api/generate-nude',
     {
       onSuccess: () => {
-        sendEventOnce({
-          eventName: trackingEvent.media_requested,
-        });
-
         if (loggedUser) {
           refetchUser();
         }
@@ -79,6 +76,13 @@ const AskInput: React.FC<AskInputProps> = ({ disabled = false, onSuccess }) => {
       return;
     }
 
+    sendEventOnce({
+      eventName: trackingEvent.media_requested,
+      properties: {
+        isFree: action.credits === 0,
+      },
+    });
+
     generateNude({
       slug: slug as string,
       actionType,
@@ -108,7 +112,7 @@ const AskInput: React.FC<AskInputProps> = ({ disabled = false, onSuccess }) => {
               <div className="flex justify-between w-full items-center">
                 <span className="font-medium text-sm">{action.label}</span>
                 <span className="text-xs text-muted-foreground">
-                  {action.credits} credits
+                  {action.credits > 0 ? `${action.credits} credits` : 'Free'}
                 </span>
               </div>
             </DropdownMenuItem>

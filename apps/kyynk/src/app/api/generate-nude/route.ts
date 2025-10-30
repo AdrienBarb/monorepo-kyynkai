@@ -18,6 +18,7 @@ import { getRandomImageDeliveryResponse } from '@/constants/fallbackResponses';
 import { NudeActionType, getNudeActionById } from '@/constants/nudeActions';
 import { buildBodyDescription } from '@/utils/ai/parseBodyDetails';
 import { generateSignedUrl } from '@/utils/s3/generateSignedUrl';
+import { getRandomPregeneratedMedia } from '@/services/ai-girlfriends-service/getRandomPregeneratedMedia';
 
 const generateNudeSchema = z.object({
   slug: z.string(),
@@ -68,6 +69,13 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
       );
     }
 
+    const isFreeAction = action.credits === 0;
+    const pregeneratedMediaUrl = isFreeAction
+      ? await getRandomPregeneratedMedia({
+          aiGirlfriendId: aiGirlfriend.id,
+        })
+      : null;
+
     const result = await prisma.$transaction(async (tx) => {
       const conversation = await findOrCreateConversation({
         userId: userId!,
@@ -78,9 +86,12 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
       const generatedMedia = await tx.generatedMedia.create({
         data: {
           type: MediaType.IMAGE,
-          status: GenerationStatus.PENDING,
+          status: pregeneratedMediaUrl
+            ? GenerationStatus.COMPLETED
+            : GenerationStatus.PENDING,
           userId: userId!,
           conversationId: conversation.id,
+          mediaKey: pregeneratedMediaUrl || undefined,
         },
       });
 
@@ -118,99 +129,101 @@ export const POST = strictlyAuth(async (req: NextRequest) => {
       return generatedMedia;
     });
 
-    try {
-      const appUrl = process.env.NEXT_PUBLIC_BASE_URL;
-      const falWebhookUrl = `${appUrl}/api/webhooks/fal`;
+    if (!pregeneratedMediaUrl) {
+      try {
+        const appUrl = process.env.NEXT_PUBLIC_BASE_URL;
+        const falWebhookUrl = `${appUrl}/api/webhooks/fal`;
 
-      const bodyDescription = buildBodyDescription({
-        bodyBuild: aiGirlfriend.bodyBuild,
-        bustSize: aiGirlfriend.bustSize,
-        hipSize: aiGirlfriend.hipSize,
-        hairColor: aiGirlfriend.hairColor,
-        hairStyle: aiGirlfriend.hairStyle,
-        skinTone: aiGirlfriend.skinTone,
-      });
+        const bodyDescription = buildBodyDescription({
+          bodyBuild: aiGirlfriend.bodyBuild,
+          bustSize: aiGirlfriend.bustSize,
+          hipSize: aiGirlfriend.hipSize,
+          hairColor: aiGirlfriend.hairColor,
+          hairStyle: aiGirlfriend.hairStyle,
+          skinTone: aiGirlfriend.skinTone,
+        });
 
-      const faceIdImageUrl = await generateSignedUrl({
-        bucketName: 'kyynk-faceid-prod',
-        key: aiGirlfriend.faceIdKey!,
-        expiresIn: 3600,
-      });
+        const faceIdImageUrl = await generateSignedUrl({
+          bucketName: 'kyynk-faceid-prod',
+          key: aiGirlfriend.faceIdKey!,
+          expiresIn: 3600,
+        });
 
-      const falResponse = await fetch(
-        `https://queue.fal.run/fal-ai/lora?fal_webhook=${falWebhookUrl}`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Key ${process.env.FAL_KEY}`,
-            'Content-Type': 'application/json',
+        const falResponse = await fetch(
+          `https://queue.fal.run/fal-ai/lora?fal_webhook=${falWebhookUrl}`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Key ${process.env.FAL_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model_name:
+                'https://huggingface.co/adrienfndr/cyberrealistic-pony/resolve/60ea6d7e5b3ca88168feaea651060415f478114f/cyberrealisticPony_v130.safetensors',
+              prompt: `CyberRealistic_Positive_PONY, score_9, score_8_up, score_7_up, ${bodyDescription}, ${action.prompt}`,
+              negative_prompt:
+                'CyberRealistic_Negative_PONY, easynegative, teeth, score_5, score_4, 3d, doll, angular face, (worst quality:1.2), (low quality:1.2), (normal quality:1.2), lowres, bad anatomy, bad hands, (bad finger:1.2), signature, watermarks, ugly, blurry face, imperfect eyes, skewed eyes, unnatural face, unnatural body, error, extra limb, missing limbs',
+              prompt_weighting: true,
+              ip_adapter: [
+                {
+                  ip_adapter_image_url: faceIdImageUrl,
+                  path: 'h94/IP-Adapter',
+                  model_subfolder: 'sdxl_models',
+                  weight_name: 'ip-adapter-plus-face_sdxl_vit-h.safetensors',
+                  scale: 0.32,
+                },
+              ],
+              embeddings: [],
+              controlnets: [],
+              image_size: 'portrait_4_3',
+              num_inference_steps: 32,
+              guidance_scale: 4.6,
+              clip_skip: 2,
+              sampler: 'DPM++ 2M SDE',
+              scheduler: 'DPM++ 2M SDE Karras',
+              prediction_type: 'epsilon',
+              image_format: 'jpeg',
+              num_images: 1,
+              width: 1024,
+              height: 1365,
+              tile_width: 1024,
+              tile_height: 1024,
+              tile_stride_width: 512,
+              tile_stride_height: 512,
+              image_encoder_path: 'h94/IP-Adapter',
+              image_encoder_subfolder: 'models/image_encoder',
+            }),
           },
-          body: JSON.stringify({
-            model_name:
-              'https://huggingface.co/adrienfndr/cyberrealistic-pony/resolve/60ea6d7e5b3ca88168feaea651060415f478114f/cyberrealisticPony_v130.safetensors',
-            prompt: `CyberRealistic_Positive_PONY, score_9, score_8_up, score_7_up, ${bodyDescription}, ${action.prompt}`,
-            negative_prompt:
-              'CyberRealistic_Negative_PONY, easynegative, teeth, score_5, score_4, 3d, doll, angular face, (worst quality:1.2), (low quality:1.2), (normal quality:1.2), lowres, bad anatomy, bad hands, (bad finger:1.2), signature, watermarks, ugly, blurry face, imperfect eyes, skewed eyes, unnatural face, unnatural body, error, extra limb, missing limbs',
-            prompt_weighting: true,
-            ip_adapter: [
-              {
-                ip_adapter_image_url: faceIdImageUrl,
-                path: 'h94/IP-Adapter',
-                model_subfolder: 'sdxl_models',
-                weight_name: 'ip-adapter-plus-face_sdxl_vit-h.safetensors',
-                scale: 0.32,
-              },
-            ],
-            embeddings: [],
-            controlnets: [],
-            image_size: 'portrait_4_3',
-            num_inference_steps: 32,
-            guidance_scale: 4.6,
-            clip_skip: 2,
-            sampler: 'DPM++ 2M SDE',
-            scheduler: 'DPM++ 2M SDE Karras',
-            prediction_type: 'epsilon',
-            image_format: 'jpeg',
-            num_images: 1,
-            width: 1024,
-            height: 1365,
-            tile_width: 1024,
-            tile_height: 1024,
-            tile_stride_width: 512,
-            tile_stride_height: 512,
-            image_encoder_path: 'h94/IP-Adapter',
-            image_encoder_subfolder: 'models/image_encoder',
-          }),
-        },
-      );
+        );
 
-      if (!falResponse.ok) {
+        if (!falResponse.ok) {
+          await prisma.generatedMedia.update({
+            where: { id: result.id },
+            data: {
+              status: GenerationStatus.FAILED,
+            },
+          });
+          throw new Error('Failed to submit generation request');
+        }
+
+        const falData = await falResponse.json();
+
+        await prisma.generatedMedia.update({
+          where: { id: result.id },
+          data: {
+            status: GenerationStatus.PROCESSING,
+            externalId: falData.request_id,
+          },
+        });
+      } catch (falError) {
         await prisma.generatedMedia.update({
           where: { id: result.id },
           data: {
             status: GenerationStatus.FAILED,
           },
         });
-        throw new Error('Failed to submit generation request');
+        throw falError;
       }
-
-      const falData = await falResponse.json();
-
-      await prisma.generatedMedia.update({
-        where: { id: result.id },
-        data: {
-          status: GenerationStatus.PROCESSING,
-          externalId: falData.request_id,
-        },
-      });
-    } catch (falError) {
-      await prisma.generatedMedia.update({
-        where: { id: result.id },
-        data: {
-          status: GenerationStatus.FAILED,
-        },
-      });
-      throw falError;
     }
 
     return NextResponse.json(result, { status: 201 });
