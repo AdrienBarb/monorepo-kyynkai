@@ -177,7 +177,10 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
         sendEvent({
           eventName: trackingEvent.fantasy_auth_wall_shown,
         });
-        openModal('auth', { avatarImageId: aiGirlfriend?.profileImageId });
+        openModal('auth', {
+          avatarImageId: aiGirlfriend?.profileImageId,
+          context: 'fantasy',
+        });
         return;
       }
 
