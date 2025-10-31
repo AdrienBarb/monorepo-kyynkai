@@ -50,6 +50,24 @@ export const PUT = strictlyAuth(
         },
       });
 
+      if (
+        body.utmTracking &&
+        typeof body.utmTracking === 'object' &&
+        body.utmTracking.tracker
+      ) {
+        try {
+          const trackerValue = body.utmTracking.tracker;
+          const exoClickUrl = `http://s.magsrv.com/tag.php?goal=d568aee27c097d13d806a4bed4ee7b93&tag=${encodeURIComponent(
+            trackerValue,
+          )}`;
+
+          await fetch(exoClickUrl, {
+            method: 'GET',
+            signal: AbortSignal.timeout(5000),
+          }).catch(() => {});
+        } catch (exoClickError) {}
+      }
+
       return NextResponse.json('OK', { status: 200 });
     } catch (error) {
       return errorHandler(error);
