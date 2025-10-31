@@ -78,12 +78,13 @@ const ProfilePage = async ({ params }: PageProps) => {
 
   if (mainFantasy) {
     view = (
-      <PageContainer>
+      <div
+        className="overflow-hidden"
+        style={{ height: 'calc(100dvh - 68px)' }}
+      >
         <FantasyPageView />
-        <div className="space-y-6">
-          <FantasyPlayer fantasy={mainFantasy} slug={slug} />
-        </div>
-      </PageContainer>
+        <FantasyPlayer fantasy={mainFantasy} slug={slug} />
+      </div>
     );
   }
 
