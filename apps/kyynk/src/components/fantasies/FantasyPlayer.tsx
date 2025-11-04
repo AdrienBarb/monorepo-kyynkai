@@ -193,7 +193,9 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
         sendEvent({
           eventName: trackingEvent.fantasy_credit_wall_shown,
         });
-        openModal('notEnoughCredits');
+        openModal('notEnoughCredits', {
+          avatarImageId: aiGirlfriend?.profileImageId,
+        });
         return;
       }
 

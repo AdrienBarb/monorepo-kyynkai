@@ -24,7 +24,8 @@ export const GET = strictlyAuth(
         },
       });
 
-      const isFirstTimeBuyer = successfulTransactions === 0;
+      // const isFirstTimeBuyer = successfulTransactions === 0;
+      const isFirstTimeBuyer = false;
 
       return NextResponse.json({ isFirstTimeBuyer });
     } catch (error) {

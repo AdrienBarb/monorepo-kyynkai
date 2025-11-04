@@ -21,9 +21,11 @@ import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 const NotEnoughCreditsModal = ({
   open,
   setOpen,
+  avatarImageId,
 }: {
   open: boolean;
   setOpen: (open: boolean) => void;
+  avatarImageId: string;
 }) => {
   const { user } = useUser();
   const { data: firstTimeBuyerData } = useIsFirstTimeBuyer();
@@ -64,7 +66,9 @@ const NotEnoughCreditsModal = ({
         <div className="px-4">
           <div className="flex justify-center mt-4">
             <Avatar
-              imageId={process.env.NEXT_PUBLIC_DEFAULT_SIGN_UP_IMAGE}
+              imageId={
+                avatarImageId ?? process.env.NEXT_PUBLIC_DEFAULT_SIGN_UP_IMAGE
+              }
               size={180}
             />
           </div>
