@@ -18,7 +18,6 @@ export async function getMainFantasy({
             select: {
               id: true,
               label: true,
-              mediaUrl: true,
               videoUrl: true,
               nextStepId: true,
               cost: true,
@@ -45,9 +44,7 @@ export async function getMainFantasy({
       ...step,
       choices: step.choices.map((choice) => ({
         ...choice,
-        isUnlocked: userId
-          ? (choice.unlocks as any[])?.length > 0
-          : false,
+        isUnlocked: userId ? (choice.unlocks as any[])?.length > 0 : false,
         unlocks: undefined,
       })),
     })),

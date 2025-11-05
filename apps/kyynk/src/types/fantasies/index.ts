@@ -21,7 +21,6 @@ export interface FantasyStep {
 export interface FantasyChoice {
   id: string;
   label: string;
-  mediaUrl: string;
   videoUrl: string;
   nextStepId?: string;
   cost?: number;

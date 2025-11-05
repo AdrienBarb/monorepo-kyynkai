@@ -17,7 +17,6 @@ export async function playFantasyChoice({
     select: {
       id: true,
       label: true,
-      mediaUrl: true,
       videoUrl: true,
       nextStepId: true,
       cost: true,
@@ -106,7 +105,6 @@ export async function playFantasyChoice({
           select: {
             id: true,
             label: true,
-            mediaUrl: true,
             videoUrl: true,
             nextStepId: true,
             cost: true,
