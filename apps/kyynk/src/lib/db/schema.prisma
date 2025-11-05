@@ -324,7 +324,6 @@ model FantasyChoice {
   id         String  @id @default(cuid())
   stepId     String
   label      String
-  mediaUrl   String
   videoUrl   String
   nextStepId String?
   cost       Int?
