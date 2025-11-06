@@ -1,11 +1,11 @@
-import UsersList from '@/components/UsersList';
 import React from 'react';
-import { AIGirlfriend } from '@prisma/client';
 import PaddingContainer from '@/components/layout/PaddingContainer';
 import { Metadata } from 'next';
 import { genPageMetadata } from '@/app/seo';
-import { getAiGirlfriends } from '@/services/ai-girlfriends-service/getAiGirlfriends';
 import AppFAQ from '@/components/home/AppFAQ';
+import { getAllFantasies } from '@/services/fantasies/getAllFantasies';
+import FantasiesList from '@/components/fantasies/FantasiesList';
+import { Fantasy } from '@/types/fantasies';
 
 export type PageProps = {
   params: Promise<{ locale: string }>;
@@ -23,7 +23,7 @@ export async function generateMetadata({
 }
 
 const HomePage = async () => {
-  const initialAiGirlfriends = (await getAiGirlfriends()) as AIGirlfriend[];
+  const initialFantasies = (await getAllFantasies()) as Fantasy[];
 
   return (
     <PaddingContainer>
@@ -31,16 +31,16 @@ const HomePage = async () => {
         <div className="absolute inset-0 flex items-center rounded-2xl justify-center">
           <div className="text-center text-primary px-4 max-w-lg">
             <h1 className="text-2xl md:text-2xl lg:text-4xl font-bold mb-2">
-              GET YOUR FANTASM DONE
+              GET YOUR FANTASY DONE
             </h1>
             <h2 className="text-sm md:text-lg opacity-80 font-light">
-              Get your fantasy fulfilled with lifelike AI girlfriends who chat,
-              tease, and turn you on anytime.
+              Explore immersive fantasies with lifelike AI girlfriends who bring
+              your deepest desires to life.
             </h2>
           </div>
         </div>
       </div>
-      <UsersList initialAiGirlfriends={initialAiGirlfriends} />
+      <FantasiesList initialFantasies={initialFantasies} />
       <AppFAQ />
     </PaddingContainer>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { UsersRound } from 'lucide-react';
+import { UsersRound, Sparkles } from 'lucide-react';
 import { FaTelegram, FaTiktok, FaInstagram, FaXTwitter } from 'react-icons/fa6';
 import {
   Sidebar,
@@ -25,8 +25,14 @@ export function AppSidebar() {
   const t = useTranslations();
   const platforms = [
     {
-      title: 'models',
+      title: 'fantasies',
       url: appRouter.home,
+      icon: Sparkles,
+      isVisible: true,
+    },
+    {
+      title: 'girls',
+      url: '/girls',
       icon: UsersRound,
       isVisible: true,
     },

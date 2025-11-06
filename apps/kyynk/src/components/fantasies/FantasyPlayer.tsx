@@ -259,28 +259,15 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
   return (
     <div className="flex flex-col p-4 max-w-md mx-auto h-full">
       <Card className="p-0 relative">
-        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg">
-          {currentVideoUrl ? (
-            <video
-              className="w-full h-full object-cover"
-              src={`https://ddl4c6oftb93z.cloudfront.net/${currentVideoUrl}`}
-              autoPlay
-              loop
-              muted
-              playsInline
-            />
-          ) : (
-            <Image
-              src={imgixLoader({
-                src: currentVideoUrl,
-                width: 600,
-                quality: 90,
-              })}
-              alt="Fantasy scene"
-              fill
-              className="object-cover"
-            />
-          )}
+        <div className="relative aspect-[9/16] w-full overflow-hidden rounded-lg">
+          <video
+            className="w-full h-full object-cover"
+            src={`https://ddl4c6oftb93z.cloudfront.net/${currentVideoUrl}`}
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
 
           {/* Overlay gradient for better text readability */}
           <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />

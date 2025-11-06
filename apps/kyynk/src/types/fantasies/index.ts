@@ -3,11 +3,18 @@ import { AIGirlfriend } from '@prisma/client';
 export interface Fantasy {
   id: string;
   aiGirlfriendId: string;
-  aiGirlfriend: AIGirlfriend;
+  aiGirlfriend: Pick<
+    AIGirlfriend,
+    'id' | 'pseudo' | 'slug' | 'profileImageId' | 'age' | 'archetype'
+  >;
   title: string;
   description: string;
   mediaUrl: string;
   videoUrl: string;
+  isMain?: boolean;
+  isActive?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
   steps: FantasyStep[];
 }
 
