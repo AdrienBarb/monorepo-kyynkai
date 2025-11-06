@@ -16,7 +16,7 @@ const OpeningMessage: FC<OpeningMessageProps> = ({
         <div className="mb-3 w-full max-w-56 rounded-lg overflow-hidden">
           <video
             className="w-full h-full object-cover"
-            style={{ aspectRatio: '4/5' }}
+            style={{ aspectRatio: '9/16' }}
             src={`https://ddl4c6oftb93z.cloudfront.net/${profileVideoId}`}
             autoPlay
             loop
