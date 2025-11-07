@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Fantasy } from '@/types/fantasies';
+import { getCloudFrontUrl } from '@/utils/medias/getCloudFrontUrl';
 
 interface Props {
   fantasy: Fantasy;
@@ -8,11 +9,11 @@ interface Props {
 
 const FantasyCard = ({ fantasy }: Props) => {
   return (
-    <Link href={`/${fantasy.aiGirlfriend.slug}`} prefetch={true}>
+    <Link href={`/fantasy/${fantasy.id}`} prefetch={true}>
       <div className="flex flex-col">
-        <div className="relative aspect-[3/4] w-full overflow-hidden rounded-md border border-primary/20">
+        <div className="relative aspect-[9/16] w-full overflow-hidden rounded-md border border-primary/20">
           <video
-            src={`https://ddl4c6oftb93z.cloudfront.net/${fantasy.videoUrl}`}
+            src={getCloudFrontUrl(fantasy.videoUrl)}
             autoPlay
             loop
             muted

@@ -67,30 +67,14 @@ const ProfilePage = async ({ params }: PageProps) => {
       ? (aiGirlfriend.chatOpeningLine as Record<string, string>)[locale] ?? ''
       : '';
 
-  let view = (
-    <div className="flex flex-col" style={{ height: 'calc(100dvh - 68px)' }}>
-      <ProfileConversationInput
-        chatOpeningLine={chatOpeningLine}
-        profileVideoId={aiGirlfriend.profileVideoId}
-      />
-    </div>
-  );
-
-  if (mainFantasy) {
-    view = (
-      <div
-        className="overflow-hidden"
-        style={{ height: 'calc(100dvh - 68px)' }}
-      >
-        <FantasyPageView />
-        <FantasyPlayer fantasy={mainFantasy} slug={slug} />
-      </div>
-    );
-  }
-
   return (
     <>
-      {view}
+      <div className="flex flex-col" style={{ height: 'calc(100dvh - 68px)' }}>
+        <ProfileConversationInput
+          chatOpeningLine={chatOpeningLine}
+          profileVideoId={aiGirlfriend.profileVideoId}
+        />
+      </div>
       <CharacterPageView />
     </>
   );

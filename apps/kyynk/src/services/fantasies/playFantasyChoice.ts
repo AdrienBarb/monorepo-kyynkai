@@ -3,12 +3,10 @@ import { errorMessages } from '@/lib/constants/errorMessage';
 
 export async function playFantasyChoice({
   userId,
-  slug,
   fantasyId,
   choiceId,
 }: {
   userId: string | null;
-  slug: string;
   fantasyId: string;
   choiceId: string;
 }) {
@@ -32,7 +30,7 @@ export async function playFantasyChoice({
     },
   });
 
-  if (!choice || choice.step.fantasy.aiGirlfriend.slug !== slug) {
+  if (!choice) {
     throw new Error(errorMessages.CHOICE_NOT_FOUND);
   }
 

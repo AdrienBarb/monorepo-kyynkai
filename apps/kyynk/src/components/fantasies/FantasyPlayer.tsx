@@ -6,20 +6,17 @@ import { Button } from '@/components/ui/Button';
 import { Fantasy, FantasyStep, FantasyChoice } from '@/types/fantasies';
 import { usePlayFantasy } from '@/hooks/fantasies/usePlayFantasy';
 import { useUser } from '@/hooks/users/useUser';
-import Image from 'next/image';
-import imgixLoader from '@/lib/imgix/loader';
 import { useGlobalModalStore } from '@/stores/GlobalModalStore';
-import { useFetchCurrentAiGirlfriend } from '@/hooks/ai-girlfriends/useFetchCurrentAiGirlfriend';
 import { hasEnoughCredits } from '@/utils/users/hasEnoughCredits';
 import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 import { trackingEvent } from '@/constants/trackingEvent';
 import { MessageCircle, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useQueryState } from 'nuqs';
+import { getCloudFrontUrl } from '@/utils/medias/getCloudFrontUrl';
 
 interface FantasyPlayerProps {
   fantasy: Fantasy;
-  slug: string;
 }
 
 interface StepHistoryItem {
@@ -27,7 +24,7 @@ interface StepHistoryItem {
   videoUrl: string;
 }
 
-const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
+const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy }) => {
   const [stepId, setStepId] = useQueryState('step', {
     defaultValue: fantasy.steps[0].id,
     history: 'push',
@@ -94,10 +91,9 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
     useState<StepHistoryItem[]>(initialHistory);
   const [isFinalImage, setIsFinalImage] = useState(false);
 
-  const { mutate: playChoice, isPending } = usePlayFantasy(slug);
+  const { mutate: playChoice, isPending } = usePlayFantasy();
   const { user, refetch: refetchUser } = useUser();
   const { openModal } = useGlobalModalStore();
-  const { aiGirlfriend } = useFetchCurrentAiGirlfriend();
   const { sendEvent } = useClientPostHogEvent();
 
   useEffect(() => {
@@ -150,7 +146,6 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
       sendEvent({
         eventName: trackingEvent.fantasy_completed,
         properties: {
-          character_slug: slug,
           fantasy_id: fantasy.id,
           final_choice_id: choice.id,
         },
@@ -162,7 +157,6 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
     sendEvent({
       eventName: trackingEvent.fantasy_choice_clicked,
       properties: {
-        character_slug: slug,
         fantasy_id: fantasy.id,
         choice_id: choice.id,
         choice_label: choice.label,
@@ -178,7 +172,7 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
           eventName: trackingEvent.fantasy_auth_wall_shown,
         });
         openModal('auth', {
-          avatarImageId: aiGirlfriend?.profileImageId,
+          avatarImageId: fantasy.aiGirlfriend.profileImageId,
           context: 'fantasy',
         });
         return;
@@ -194,7 +188,7 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
           eventName: trackingEvent.fantasy_credit_wall_shown,
         });
         openModal('notEnoughCredits', {
-          avatarImageId: aiGirlfriend?.profileImageId,
+          avatarImageId: fantasy.aiGirlfriend.profileImageId,
         });
         return;
       }
@@ -262,7 +256,7 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
         <div className="relative aspect-[9/16] w-full overflow-hidden rounded-lg">
           <video
             className="w-full h-full object-cover"
-            src={`https://ddl4c6oftb93z.cloudfront.net/${currentVideoUrl}`}
+            src={getCloudFrontUrl(currentVideoUrl)}
             autoPlay
             loop
             muted
@@ -285,7 +279,7 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy, slug }) => {
             )}
             <div className="ml-auto">
               <Link
-                href={`/${slug}/chat`}
+                href={`/${fantasy.aiGirlfriend.slug}`}
                 className="block p-2 bg-black/50 hover:bg-black/70 rounded-full transition-colors"
                 aria-label="Chat with AI girlfriend"
               >

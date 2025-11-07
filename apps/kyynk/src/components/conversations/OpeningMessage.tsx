@@ -1,5 +1,6 @@
 import { FC } from 'react';
 import { cn } from '@/utils/tailwind/cn';
+import { getCloudFrontUrl } from '@/utils/medias/getCloudFrontUrl';
 
 interface OpeningMessageProps {
   content: string;
@@ -17,7 +18,7 @@ const OpeningMessage: FC<OpeningMessageProps> = ({
           <video
             className="w-full h-full object-cover"
             style={{ aspectRatio: '9/16' }}
-            src={`https://ddl4c6oftb93z.cloudfront.net/${profileVideoId}`}
+            src={getCloudFrontUrl(profileVideoId)}
             autoPlay
             loop
             muted

@@ -47,6 +47,8 @@ export async function getFantasyById({
       ...step,
       choices: step.choices.map((choice) => ({
         ...choice,
+        nextStepId: choice.nextStepId ?? undefined,
+        cost: choice.cost ?? undefined,
         isUnlocked: userId ? (choice.unlocks as any[])?.length > 0 : false,
         unlocks: undefined,
       })),

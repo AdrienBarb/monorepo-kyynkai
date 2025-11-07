@@ -1,9 +1,9 @@
 import useApi from '@/hooks/requests/useApi';
 
-export const usePlayFantasy = (slug: string) => {
+export const usePlayFantasy = () => {
   const { usePost } = useApi();
 
-  return usePost(`/api/fantasies/${slug}/play`, {
+  return usePost(`/api/fantasies/play`, {
     onSuccess: (data: any) => {
       console.log('Fantasy choice played:', data);
     },
