@@ -7,19 +7,17 @@ import { Textarea } from '@/components/ui/TextArea';
 import { cn } from '@/utils/tailwind/cn';
 import { Button } from '@/components/ui/Button';
 import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import useApi from '@/hooks/requests/useApi';
 import { useConversations } from '@/hooks/conversations/useConversations';
 import { useFetchMessages } from '@/hooks/messages/useFetchMessages';
 import { MessageType } from '@/types/messages';
 import { useUser } from '@/hooks/users/useUser';
 import { useTypingIndicatorStore } from '@/stores/TypingIndicatorStore';
-import { hasEnoughCredits } from '@/utils/users/hasEnoughCredits';
 import { useGlobalModalStore } from '@/stores/GlobalModalStore';
 import { errorMessages } from '@/lib/constants/errorMessage';
-import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 import { useFetchCurrentAiGirlfriend } from '@/hooks/ai-girlfriends/useFetchCurrentAiGirlfriend';
-import AskInput from './AskInput';
+import { Fantasy } from '@/types/fantasies';
 
 interface UseAutoResizeTextareaProps {
   minHeight: number;
@@ -70,7 +68,7 @@ function useAutoResizeTextarea({
   return { textareaRef, adjustHeight };
 }
 
-const ConversationInput = () => {
+const ConversationInput = ({ mainFantasy }: { mainFantasy?: Fantasy }) => {
   const [value, setValue] = useState('');
   const t = useTranslations();
   const { user: loggedUser, refetch: refetchUser } = useUser();
@@ -80,7 +78,7 @@ const ConversationInput = () => {
     minHeight: 72,
     maxHeight: 300,
   });
-
+  const router = useRouter();
   const { slug } = useParams<{ slug: string }>();
 
   const { refetch: refetchConversations } = useConversations();
@@ -170,6 +168,21 @@ const ConversationInput = () => {
                   onSuccess={handleAskInputSuccess}
                 /> */}
 
+                {mainFantasy && (
+                  <Button
+                    variant="secondary"
+                    className="text-lg font-semibold text-background"
+                    style={{
+                      background:
+                        'linear-gradient(90deg, hsla(234, 80%, 88%, 1) 0%, hsla(340, 68%, 88%, 1) 50%, hsla(342, 72%, 85%, 1) 100%)',
+                    }}
+                    onClick={() => {
+                      router.push(`/fantasy/${mainFantasy?.id}`);
+                    }}
+                  >
+                    Play
+                  </Button>
+                )}
                 <Button
                   aria-label="Send message"
                   variant="default"

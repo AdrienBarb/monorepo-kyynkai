@@ -49,14 +49,8 @@ const ProfilePage = async ({ params }: PageProps) => {
     redirect('/404');
   }
 
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  const userId = session?.user?.id;
-
   const mainFantasy = (await getMainFantasy({
     aiGirlfriendId: aiGirlfriend.id,
-    userId,
   })) as Fantasy;
 
   const locale = 'en';
@@ -73,6 +67,7 @@ const ProfilePage = async ({ params }: PageProps) => {
         <ProfileConversationInput
           chatOpeningLine={chatOpeningLine}
           profileVideoId={aiGirlfriend.profileVideoId}
+          mainFantasy={mainFantasy}
         />
       </div>
       <CharacterPageView />
