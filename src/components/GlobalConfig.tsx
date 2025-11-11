@@ -12,6 +12,8 @@ import {
   getTrackdeskCidFromCookie,
 } from '@/utils/tracking/getTrackdeskCidFromCookie';
 import useApi from '@/hooks/requests/useApi';
+import { useGlobalModalStore } from '@/stores/GlobalModalStore';
+import { useFreeCreditCountdown } from '@/hooks/credits/useFreeCreditCountdown';
 
 interface Props {
   children: ReactNode;
@@ -21,7 +23,11 @@ const GlobalConfig: FC<Props> = ({ children }) => {
   const [shouldAllowAccess, setShouldAllowAccess] = useState(true);
   const { refetch, user } = useUser();
   const [shouldRefetch, setShouldRefetch] = useQueryState('shouldRefetch');
+  const [claimFreeCreditParam, setClaimFreeCreditParam] =
+    useQueryState('claimFreeCredit');
   const { usePut } = useApi();
+  const openModal = useGlobalModalStore((s) => s.openModal);
+  const { canClaim } = useFreeCreditCountdown(user?.lastClaimFreeCredit);
 
   const { mutate: updateUser } = usePut('/api/me', {
     onSuccess: () => {
@@ -57,6 +63,19 @@ const GlobalConfig: FC<Props> = ({ children }) => {
       }
     }
   }, [user, updateUser]);
+
+  useEffect(() => {
+    if (claimFreeCreditParam === 'true' && user && canClaim) {
+      setClaimFreeCreditParam(null);
+      openModal('claimFreeCredit');
+    }
+  }, [
+    claimFreeCreditParam,
+    user,
+    canClaim,
+    setClaimFreeCreditParam,
+    openModal,
+  ]);
 
   return <>{children}</>;
 };
