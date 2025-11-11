@@ -1,12 +1,11 @@
 'use client';
 
-import { Coins, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -16,7 +15,6 @@ import { useUser } from '@/hooks/users/useUser';
 import { useTranslations } from 'next-intl';
 import { signOut } from '@/lib/better-auth/auth-client';
 import { useRouter } from 'next/navigation';
-import { getPaymentPageLink } from '@/utils/navigation/getPaymentPageLink';
 
 export const UserDropdown: React.FC = () => {
   const { user } = useUser();
@@ -39,9 +37,6 @@ export const UserDropdown: React.FC = () => {
         <Avatar size={32} />
         <div className="grid flex-1 text-left text-sm leading-tight text-primary">
           <span className="text-sm truncate">{user?.email}</span>
-          <span className="text-xs truncate">
-            {user?.creditBalance} credits
-          </span>
         </div>
       </div>
     );
@@ -63,20 +58,6 @@ export const UserDropdown: React.FC = () => {
             <UserDetails />
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuGroup>
-          <DropdownMenuItem
-            onClick={() => {
-              window.location.href = getPaymentPageLink(
-                user?.id!,
-                window.location.href,
-              );
-            }}
-            className="text-primary"
-          >
-            <Coins />
-            {t('navUserBuyCredits')}
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={logout} className="text-primary">
           <LogOut />

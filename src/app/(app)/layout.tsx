@@ -3,7 +3,7 @@ import { SidebarProvider, SidebarTrigger } from '@/components/ui/Sidebar';
 import { cookies } from 'next/headers';
 import React, { FC, ReactNode } from 'react';
 import { getCookie } from 'cookies-next/server';
-import LanguageSwitcher from '@/components/layout/LanguageSwitcher';
+import CreditsDropdown from '@/components/layout/CreditsDropdown';
 import LoginWrapper from '@/components/auth/LoginWrapper';
 
 interface Props {
@@ -21,7 +21,7 @@ const AppLayout: FC<Props> = async ({ children }) => {
         <header className="fixed right-0 left-0 top-0 z-50 p-4 flex justify-between align-center bg-background border-b border-primary/20 h-[68px]">
           <SidebarTrigger />
           <div className="flex items-center gap-2">
-            <LanguageSwitcher />
+            <CreditsDropdown />
             <LoginWrapper />
           </div>
         </header>

@@ -13,10 +13,16 @@ import { useUser } from '@/hooks/users/useUser';
 import { useIsFirstTimeBuyer } from '@/hooks/users/useIsFirstTimeBuyer';
 import { CountdownTimer } from '../ui/CountdownTimer';
 import Avatar from '../ui/Avatar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/utils/tailwind/cn';
 import { trackingEvent } from '@/constants/trackingEvent';
 import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
+import useApi from '@/hooks/requests/useApi';
+import toast from 'react-hot-toast';
+import { Coins, Gift } from 'lucide-react';
+
+const FREE_CREDITS_AMOUNT = 5;
+const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
 
 const NotEnoughCreditsModal = ({
   open,
@@ -27,14 +33,76 @@ const NotEnoughCreditsModal = ({
   setOpen: (open: boolean) => void;
   avatarImageId: string;
 }) => {
-  const { user } = useUser();
+  const { user, refetch } = useUser();
   const { data: firstTimeBuyerData } = useIsFirstTimeBuyer();
   const [offerExpired, setOfferExpired] = useState(false);
+  const { usePut } = useApi();
+  const [timeUntilNextClaim, setTimeUntilNextClaim] = useState<number | null>(
+    null,
+  );
 
   const isFirstTimeBuyer = firstTimeBuyerData?.isFirstTimeBuyer;
   const showDiscount = isFirstTimeBuyer && !offerExpired;
   const discount = showDiscount ? 80 : undefined;
   const { sendEventOnce } = useClientPostHogEvent();
+
+  const claimMutation = usePut('/api/credits/claim-free', {}, {});
+
+  useEffect(() => {
+    if (!user?.lastClaimFreeCredit) {
+      setTimeUntilNextClaim(null);
+      return;
+    }
+
+    const updateCountdown = () => {
+      const lastClaim = new Date(user.lastClaimFreeCredit).getTime();
+      const now = Date.now();
+      const timeSinceLastClaim = now - lastClaim;
+      const timeUntilNext = WEEK_IN_MS - timeSinceLastClaim;
+
+      if (timeUntilNext <= 0) {
+        setTimeUntilNextClaim(null);
+      } else {
+        setTimeUntilNextClaim(timeUntilNext);
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
+  }, [user?.lastClaimFreeCredit]);
+
+  const canClaimFreeCredit =
+    !user?.lastClaimFreeCredit || timeUntilNextClaim === null;
+
+  const formatTimeRemaining = (ms: number): string => {
+    const days = Math.floor(ms / (24 * 60 * 60 * 1000));
+    const hours = Math.floor((ms % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+    const minutes = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
+    const seconds = Math.floor((ms % (60 * 1000)) / 1000);
+
+    if (days > 0) {
+      return `${days}d ${hours}h ${minutes}m`;
+    }
+    if (hours > 0) {
+      return `${hours}h ${minutes}m ${seconds}s`;
+    }
+    if (minutes > 0) {
+      return `${minutes}m ${seconds}s`;
+    }
+    return `${seconds}s`;
+  };
+
+  const handleClaimFreeCredit = async () => {
+    try {
+      await claimMutation.mutateAsync({});
+      toast.success(`You've claimed ${FREE_CREDITS_AMOUNT} free credits!`);
+      await refetch();
+    } catch (error: any) {
+      toast.error(error?.response?.data?.error || 'Failed to claim credits');
+    }
+  };
 
   const handleBuyMoreCredits = () => {
     sendEventOnce({
@@ -76,6 +144,53 @@ const NotEnoughCreditsModal = ({
             Hey babe! It looks like you&apos;re running low on credits.
             Let&apos;s top up so we can keep having fun together ❤️
           </h3>
+
+          {canClaimFreeCredit && (
+            <div className="mt-4 space-y-3 flex justify-center w-full">
+              <div className="bg-secondary/20 p-4 rounded-lg border border-secondary text-center w-full">
+                <div className="flex items-center justify-center mb-2 gap-2">
+                  <Gift size={20} className="text-secondary" />
+                  <span className="font-bold text-custom-black font-rubik">
+                    Claim Your Weekly Free Credits!
+                  </span>
+                </div>
+                <p className="text-sm text-custom-black/90 mb-3 font-karla">
+                  Get{' '}
+                  <span className="font-bold text-custom-black text-lg">
+                    {FREE_CREDITS_AMOUNT} free credits
+                  </span>{' '}
+                  right now!
+                </p>
+                <Button
+                  onClick={handleClaimFreeCredit}
+                  disabled={claimMutation.isPending}
+                  variant="secondary"
+                  className="w-full font-karla"
+                >
+                  {claimMutation.isPending
+                    ? 'Claiming...'
+                    : `Claim ${FREE_CREDITS_AMOUNT} Free Credits`}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {!canClaimFreeCredit && timeUntilNextClaim !== null && (
+            <div className="mt-4 space-y-3 flex justify-center w-full">
+              <div className="bg-primary/10 p-4 rounded-lg border border-primary/30 text-center w-full">
+                <div className="flex items-center justify-center mb-2 gap-2">
+                  <Gift size={20} className="text-primary/70" />
+                  <span className="font-semibold text-custom-black font-rubik text-sm">
+                    Free Credits Available In:
+                  </span>
+                </div>
+                <div className="text-lg font-bold text-primary font-rubik">
+                  {formatTimeRemaining(timeUntilNextClaim)}
+                </div>
+              </div>
+            </div>
+          )}
+
           {showDiscount && (
             <div className="mt-4 space-y-3 flex justify-center w-full">
               <div className="bg-primary/20 p-4 rounded-lg border border-primary text-center w-full">

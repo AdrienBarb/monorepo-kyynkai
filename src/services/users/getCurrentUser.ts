@@ -11,6 +11,7 @@ export const getCurrentUser = async ({ userId }: { userId: string }) => {
         email: true,
         creditBalance: true,
         roles: true,
+        lastClaimFreeCredit: true,
       },
     });
 

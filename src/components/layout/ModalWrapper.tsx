@@ -3,6 +3,7 @@
 import { useGlobalModalStore } from '@/stores/GlobalModalStore';
 import NotEnoughCreditsModal from '../modals/NotEnoughCreditsModal';
 import AuthModal from '../auth/AuthModal';
+import ClaimFreeCreditModal from '../modals/ClaimFreeCreditModal';
 
 const ModalWrapper = () => {
   const stack = useGlobalModalStore((s) => s.stack);
@@ -16,6 +17,15 @@ const ModalWrapper = () => {
       return <NotEnoughCreditsModal {...top.data} open setOpen={closeModal} />;
     case 'auth':
       return <AuthModal {...top.data} open setOpen={closeModal} />;
+    case 'claimFreeCredit':
+      return (
+        <ClaimFreeCreditModal
+          open={true}
+          setOpen={(open) => {
+            if (!open) closeModal();
+          }}
+        />
+      );
 
     default:
       return null;

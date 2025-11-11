@@ -9,6 +9,7 @@ type ModalType =
   | 'confirmation'
   | 'privateNude'
   | 'auth'
+  | 'claimFreeCredit'
   | null;
 
 interface ModalStackItem {

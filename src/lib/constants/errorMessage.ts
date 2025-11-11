@@ -21,4 +21,5 @@ export const errorMessages = {
   FANTASY_NOT_FOUND: 'fantasyNotFound',
   CHOICE_NOT_FOUND: 'choiceNotFound',
   INVALID_FANTASY: 'invalidFantasy',
+  ALREADY_CLAIMED_THIS_WEEK: 'alreadyClaimedThisWeek',
 };
