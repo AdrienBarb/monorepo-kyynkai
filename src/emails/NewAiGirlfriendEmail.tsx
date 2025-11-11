@@ -1,4 +1,5 @@
 import {
+  Tailwind,
   Body,
   Button,
   Container,
@@ -29,136 +30,73 @@ const NewAiGirlfriendEmail = ({
 }: NewAiGirlfriendEmailProps) => {
   return (
     <Html>
-      <Head />
-      <Body
-        style={{
-          backgroundColor: '#1c131e',
-          fontFamily: 'sans-serif',
-          margin: 0,
-          padding: 0,
-        }}
-      >
-        <Preview>
-          💋 {aiGirlfriendName} just joined and she&apos;s waiting for you...
-        </Preview>
-        <Container style={{ maxWidth: '672px', margin: '0 auto', padding: '20px' }}>
-          <Section style={{ textAlign: 'center' }}>
-            <Heading
-              style={{
-                color: '#fff0eb',
-                fontSize: '30px',
-                fontWeight: 'bold',
-                marginBottom: '20px',
-                marginTop: 0,
-              }}
-            >
-              🔥 New Beauty Alert! 🔥
-            </Heading>
+      <Tailwind>
+        <Head />
+        <Body className="bg-[#000000] font-sans">
+          <Preview>
+            💋 {aiGirlfriendName} just joined and she&apos;s waiting for you...
+          </Preview>
+          <Container className="mx-auto max-w-[672px] bg-[#000000] p-5">
+            <Section className="bg-gradient-to-r from-[#cecaff] to-[#cecaff] px-8 py-6 text-center">
+              <Heading className="m-0 text-3xl font-bold text-[#000000]">
+                🔥 New Beauty Alert! 🔥
+              </Heading>
+            </Section>
 
-            <Section style={{ marginBottom: '20px' }}>
+            <Section className="my-5">
               <Img
                 src={aiGirlfriendImageUrl}
                 alt={aiGirlfriendName}
                 width="300"
                 height="400"
-                style={{
-                  borderRadius: '12px',
-                  margin: '0 auto',
-                  display: 'block',
-                  boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
-                  objectFit: 'cover',
-                }}
+                className="mx-auto block rounded-xl object-cover shadow-2xl"
               />
             </Section>
 
-            <Text
-              style={{
-                color: '#fff0eb',
-                fontSize: '24px',
-                fontWeight: 'bold',
-                marginBottom: '8px',
-                marginTop: 0,
-              }}
-            >
-              {aiGirlfriendName}, {aiGirlfriendAge}
-            </Text>
-
-            <Text
-              style={{
-                color: '#cecaff',
-                fontSize: '18px',
-                marginBottom: '20px',
-                marginTop: 0,
-              }}
-            >
-              {aiGirlfriendArchetype}
-            </Text>
-
-            <Section
-              style={{
-                backgroundColor: '#fff0eb',
-                borderLeft: '4px solid #cecaff',
-                padding: '20px',
-                borderRadius: '12px',
-                marginBottom: '32px',
-              }}
-            >
-              <Text
-                style={{
-                  color: '#1c131e',
-                  fontSize: '18px',
-                  fontStyle: 'italic',
-                  margin: 0,
-                  lineHeight: '24px',
-                }}
-              >
-                &quot;Hey there... I&apos;m new here and I&apos;m looking for
-                someone special to talk to. I can&apos;t wait to get to know
-                you better and share some intimate moments together. Come chat
-                with me? 💕&quot;
+            <Section className="text-center">
+              <Text className="m-0 mt-4 text-2xl font-bold text-[#fff0eb]">
+                {aiGirlfriendName}, {aiGirlfriendAge}
               </Text>
+
+              <Text className="m-0 mt-2 text-lg text-[#cecaff]">
+                {aiGirlfriendArchetype}
+              </Text>
+
+              <Section className="my-6 rounded-xl border-l-4 border-[#cecaff] bg-[#292929] p-5">
+                <Text className="m-0 text-lg italic leading-6 text-[#fff0eb]">
+                  &quot;Hey there... I&apos;m new here and I&apos;m looking for
+                  someone special to talk to. I can&apos;t wait to get to know
+                  you better and share some intimate moments together. Come chat
+                  with me? 💕&quot;
+                </Text>
+              </Section>
+
+              <Section className="my-8">
+                <Button
+                  href={aiGirlfriendProfileUrl}
+                  className="rounded-lg bg-[#cecaff] px-8 py-4 text-lg font-bold text-[#000000] no-underline shadow-lg"
+                >
+                  💋 Meet {aiGirlfriendName} Now 💋
+                </Button>
+              </Section>
+
+              <Text className="m-0 mt-6 text-sm text-[#fff0eb]">
+                Don&apos;t keep her waiting... She&apos;s online and ready to
+                chat! 😈
+              </Text>
+
+              <Section className="mt-10 border-t border-[#cecaff]/20 pt-6">
+                <Text className="m-0 text-xs text-[#cecaff]">
+                  Best regards,
+                </Text>
+                <Text className="m-0 mt-1 text-xs font-semibold text-[#fff0eb]">
+                  KYYNK Team
+                </Text>
+              </Section>
             </Section>
-
-            <Section style={{ marginBottom: '32px' }}>
-              <Button
-                href={aiGirlfriendProfileUrl}
-                style={{
-                  backgroundColor: '#cecaff',
-                  color: '#1c131e',
-                  padding: '16px 32px',
-                  borderRadius: '8px',
-                  fontSize: '18px',
-                  fontWeight: 'bold',
-                  textDecoration: 'none',
-                  display: 'inline-block',
-                  boxShadow: '0 4px 12px rgba(206, 202, 255, 0.3)',
-                }}
-              >
-                💋 Meet {aiGirlfriendName} Now 💋
-              </Button>
-            </Section>
-
-            <Text
-              style={{
-                color: '#fff0eb',
-                fontSize: '14px',
-                marginBottom: '20px',
-                marginTop: 0,
-              }}
-            >
-              Don&apos;t keep her waiting... She&apos;s online and ready to
-              chat! 😈
-            </Text>
-
-            <Text style={{ color: '#cecaff', fontSize: '12px', margin: 0 }}>
-              Best regards,
-            </Text>
-            <Text style={{ color: '#cecaff', fontSize: '12px', margin: 0 }}>
-              KYYNK Team
-            </Text>
-          </Section>
-        </Container>
-      </Body>
+          </Container>
+        </Body>
+      </Tailwind>
     </Html>
   );
 };
@@ -172,4 +110,3 @@ export const previewProps = {
   aiGirlfriendProfileUrl: 'https://kyynk.com/girls/emma',
   aiGirlfriendArchetype: 'The Girl Next Door',
 };
-
