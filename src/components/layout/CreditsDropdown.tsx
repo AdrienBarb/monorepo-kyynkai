@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { Coins, Gift } from 'lucide-react';
 import {
   DropdownMenu,
@@ -18,13 +18,14 @@ const CreditsDropdown: FC = () => {
   const { user } = useUser();
   const t = useTranslations();
   const { openModal } = useGlobalModalStore();
+  const [open, setOpen] = useState(false);
 
   if (!user) {
     return null;
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -39,6 +40,7 @@ const CreditsDropdown: FC = () => {
       <DropdownMenuContent align="end" className="min-w-[150px]">
         <DropdownMenuItem
           onClick={() => {
+            setOpen(false);
             openModal('claimFreeCredit');
           }}
           className="text-primary cursor-pointer"

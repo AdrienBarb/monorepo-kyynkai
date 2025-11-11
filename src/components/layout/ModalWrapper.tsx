@@ -18,14 +18,7 @@ const ModalWrapper = () => {
     case 'auth':
       return <AuthModal {...top.data} open setOpen={closeModal} />;
     case 'claimFreeCredit':
-      return (
-        <ClaimFreeCreditModal
-          open={true}
-          setOpen={(open) => {
-            if (!open) closeModal();
-          }}
-        />
-      );
+      return <ClaimFreeCreditModal open setOpen={closeModal} />;
 
     default:
       return null;

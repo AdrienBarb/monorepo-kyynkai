@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -13,14 +13,16 @@ import { useUser } from '@/hooks/users/useUser';
 import { Coins } from 'lucide-react';
 import useApi from '@/hooks/requests/useApi';
 import toast from 'react-hot-toast';
+import {
+  useFreeCreditCountdown,
+  FREE_CREDITS_AMOUNT,
+} from '@/hooks/credits/useFreeCreditCountdown';
+import { formatTimeRemaining } from '@/utils/credits/formatTimeRemaining';
 
 interface ClaimFreeCreditModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
 }
-
-const FREE_CREDITS_AMOUNT = 5;
-const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
 
 const ClaimFreeCreditModal: FC<ClaimFreeCreditModalProps> = ({
   open,
@@ -28,56 +30,11 @@ const ClaimFreeCreditModal: FC<ClaimFreeCreditModalProps> = ({
 }) => {
   const { user, refetch } = useUser();
   const { usePut } = useApi();
-  const [timeUntilNextClaim, setTimeUntilNextClaim] = useState<number | null>(
-    null,
+  const { timeUntilNextClaim, canClaim } = useFreeCreditCountdown(
+    user?.lastClaimFreeCredit,
   );
 
-  const claimMutation = usePut('/api/credits/claim-free', {}, {});
-
-  useEffect(() => {
-    if (!user?.lastClaimFreeCredit) {
-      setTimeUntilNextClaim(null);
-      return;
-    }
-
-    const updateCountdown = () => {
-      const lastClaim = new Date(user.lastClaimFreeCredit).getTime();
-      const now = Date.now();
-      const timeSinceLastClaim = now - lastClaim;
-      const timeUntilNext = WEEK_IN_MS - timeSinceLastClaim;
-
-      if (timeUntilNext <= 0) {
-        setTimeUntilNextClaim(null);
-      } else {
-        setTimeUntilNextClaim(timeUntilNext);
-      }
-    };
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-
-    return () => clearInterval(interval);
-  }, [user?.lastClaimFreeCredit]);
-
-  const canClaim = !user?.lastClaimFreeCredit || timeUntilNextClaim === null;
-
-  const formatTimeRemaining = (ms: number): string => {
-    const days = Math.floor(ms / (24 * 60 * 60 * 1000));
-    const hours = Math.floor((ms % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-    const minutes = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
-    const seconds = Math.floor((ms % (60 * 1000)) / 1000);
-
-    if (days > 0) {
-      return `${days}d ${hours}h ${minutes}m`;
-    }
-    if (hours > 0) {
-      return `${hours}h ${minutes}m ${seconds}s`;
-    }
-    if (minutes > 0) {
-      return `${minutes}m ${seconds}s`;
-    }
-    return `${seconds}s`;
-  };
+  const claimMutation = usePut('/api/credits/claim-free', {});
 
   const handleClaim = async () => {
     try {
@@ -92,7 +49,7 @@ const ClaimFreeCreditModal: FC<ClaimFreeCreditModalProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md p-0 h-full w-full max-h-screen sm:h-auto sm:max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-md p-0 h-full w-full max-h-screen sm:h-auto sm:max-h-[90vh] overflow-y-auto z-[1000]">
         <DialogHeader className="p-4">
           <DialogTitle className="text-center text-primary">
             Claim Free Credits
@@ -161,4 +118,3 @@ const ClaimFreeCreditModal: FC<ClaimFreeCreditModalProps> = ({
 };
 
 export default ClaimFreeCreditModal;
-

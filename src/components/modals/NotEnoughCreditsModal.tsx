@@ -13,16 +13,18 @@ import { useUser } from '@/hooks/users/useUser';
 import { useIsFirstTimeBuyer } from '@/hooks/users/useIsFirstTimeBuyer';
 import { CountdownTimer } from '../ui/CountdownTimer';
 import Avatar from '../ui/Avatar';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { cn } from '@/utils/tailwind/cn';
 import { trackingEvent } from '@/constants/trackingEvent';
 import { useClientPostHogEvent } from '@/utils/tracking/useClientPostHogEvent';
 import useApi from '@/hooks/requests/useApi';
 import toast from 'react-hot-toast';
 import { Coins, Gift } from 'lucide-react';
-
-const FREE_CREDITS_AMOUNT = 5;
-const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
+import {
+  useFreeCreditCountdown,
+  FREE_CREDITS_AMOUNT,
+} from '@/hooks/credits/useFreeCreditCountdown';
+import { formatTimeRemaining } from '@/utils/credits/formatTimeRemaining';
 
 const NotEnoughCreditsModal = ({
   open,
@@ -37,62 +39,15 @@ const NotEnoughCreditsModal = ({
   const { data: firstTimeBuyerData } = useIsFirstTimeBuyer();
   const [offerExpired, setOfferExpired] = useState(false);
   const { usePut } = useApi();
-  const [timeUntilNextClaim, setTimeUntilNextClaim] = useState<number | null>(
-    null,
-  );
+  const { timeUntilNextClaim, canClaim: canClaimFreeCredit } =
+    useFreeCreditCountdown(user?.lastClaimFreeCredit);
 
   const isFirstTimeBuyer = firstTimeBuyerData?.isFirstTimeBuyer;
   const showDiscount = isFirstTimeBuyer && !offerExpired;
   const discount = showDiscount ? 80 : undefined;
   const { sendEventOnce } = useClientPostHogEvent();
 
-  const claimMutation = usePut('/api/credits/claim-free', {}, {});
-
-  useEffect(() => {
-    if (!user?.lastClaimFreeCredit) {
-      setTimeUntilNextClaim(null);
-      return;
-    }
-
-    const updateCountdown = () => {
-      const lastClaim = new Date(user.lastClaimFreeCredit).getTime();
-      const now = Date.now();
-      const timeSinceLastClaim = now - lastClaim;
-      const timeUntilNext = WEEK_IN_MS - timeSinceLastClaim;
-
-      if (timeUntilNext <= 0) {
-        setTimeUntilNextClaim(null);
-      } else {
-        setTimeUntilNextClaim(timeUntilNext);
-      }
-    };
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-
-    return () => clearInterval(interval);
-  }, [user?.lastClaimFreeCredit]);
-
-  const canClaimFreeCredit =
-    !user?.lastClaimFreeCredit || timeUntilNextClaim === null;
-
-  const formatTimeRemaining = (ms: number): string => {
-    const days = Math.floor(ms / (24 * 60 * 60 * 1000));
-    const hours = Math.floor((ms % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-    const minutes = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
-    const seconds = Math.floor((ms % (60 * 1000)) / 1000);
-
-    if (days > 0) {
-      return `${days}d ${hours}h ${minutes}m`;
-    }
-    if (hours > 0) {
-      return `${hours}h ${minutes}m ${seconds}s`;
-    }
-    if (minutes > 0) {
-      return `${minutes}m ${seconds}s`;
-    }
-    return `${seconds}s`;
-  };
+  const claimMutation = usePut('/api/credits/claim-free', {});
 
   const handleClaimFreeCredit = async () => {
     try {
