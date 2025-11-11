@@ -3,6 +3,7 @@ export const trackingEvent = {
   fantasy_auth_wall_shown: 'fantasy_auth_wall_shown',
   credit_wall_shown: 'credit_wall_shown',
   credit_topup_clicked: 'credit_topup_clicked',
+  free_credit_claimed: 'free_credit_claimed',
   signup_completed: 'signup_completed',
   media_requested: 'media_requested',
   media_unlocked: 'media_unlocked',

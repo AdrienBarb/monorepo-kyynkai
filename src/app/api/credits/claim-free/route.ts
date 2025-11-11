@@ -4,6 +4,8 @@ import { strictlyAuth } from '@/hoc/strictlyAuth';
 import { NextResponse, NextRequest } from 'next/server';
 import { auth } from '@/lib/better-auth/auth';
 import { prisma } from '@/lib/db/client';
+import { sendPostHogEvent } from '@/utils/tracking/sendPostHogEvent';
+import { trackingEvent } from '@/constants/trackingEvent';
 
 const FREE_CREDITS_AMOUNT = 5;
 const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
@@ -51,6 +53,8 @@ export const PUT = strictlyAuth(
         );
       }
 
+      const newBalance = user.creditBalance + FREE_CREDITS_AMOUNT;
+
       await prisma.user.update({
         where: { id: userId },
         data: {
@@ -59,11 +63,20 @@ export const PUT = strictlyAuth(
         },
       });
 
+      sendPostHogEvent({
+        distinctId: userId,
+        event: trackingEvent.free_credit_claimed,
+        properties: {
+          creditsAdded: FREE_CREDITS_AMOUNT,
+          newBalance,
+        },
+      });
+
       return NextResponse.json(
         {
           success: true,
           creditsAdded: FREE_CREDITS_AMOUNT,
-          newBalance: user.creditBalance + FREE_CREDITS_AMOUNT,
+          newBalance,
         },
         { status: 200 },
       );
@@ -72,4 +85,3 @@ export const PUT = strictlyAuth(
     }
   },
 );
-
