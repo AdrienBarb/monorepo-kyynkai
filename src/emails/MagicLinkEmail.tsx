@@ -1,17 +1,14 @@
 import {
+  Tailwind,
   Body,
-  Button,
   Container,
   Head,
-  Heading,
   Html,
-  Tailwind,
   Preview,
   Section,
   Text,
 } from '@react-email/components';
 import * as React from 'react';
-import { tailwindConfig } from '../config';
 
 interface MagicLinkEmailProps {
   otp: string;
@@ -20,8 +17,8 @@ interface MagicLinkEmailProps {
 const MagicLinkEmail = ({ otp }: MagicLinkEmailProps) => {
   return (
     <Html>
-      <Head />
-      <Tailwind config={tailwindConfig}>
+      <Tailwind>
+        <Head />
         <Body className="bg-white font-sans">
           <Preview>Your verification code</Preview>
           <Container className="mx-auto p-4">
@@ -42,3 +39,7 @@ const MagicLinkEmail = ({ otp }: MagicLinkEmailProps) => {
 };
 
 export default MagicLinkEmail;
+
+export const previewProps = {
+  otp: '123456',
+};
