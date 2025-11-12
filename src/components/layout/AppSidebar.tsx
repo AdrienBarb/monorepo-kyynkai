@@ -1,6 +1,6 @@
 'use client';
 
-import { UsersRound, Sparkles } from 'lucide-react';
+import { UsersRound, Sparkles, Images } from 'lucide-react';
 import { FaTelegram, FaTiktok, FaInstagram, FaXTwitter } from 'react-icons/fa6';
 import {
   Sidebar,
@@ -34,6 +34,12 @@ export function AppSidebar() {
       title: 'girls',
       url: '/girls',
       icon: UsersRound,
+      isVisible: true,
+    },
+    {
+      title: 'gallery',
+      url: '/gallery',
+      icon: Images,
       isVisible: true,
     },
   ];
