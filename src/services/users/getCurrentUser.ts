@@ -9,6 +9,7 @@ export const getCurrentUser = async ({ userId }: { userId: string }) => {
       select: {
         id: true,
         email: true,
+        toltData: true,
         creditBalance: true,
         roles: true,
         lastClaimFreeCredit: true,

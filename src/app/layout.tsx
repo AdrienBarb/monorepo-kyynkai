@@ -105,19 +105,10 @@ const RootLayout: FC<Props> = async ({ children }) => {
           <GoogleTagManager gtmId="GTM-KHBKVG2G" />
           <body>
             <Script
-              id="trackdesk-script"
-              src="//cdn.trackdesk.com/tracking.js"
-              strategy="beforeInteractive"
-            />
-            <Script
-              id="trackdesk-init"
-              strategy="beforeInteractive"
-              dangerouslySetInnerHTML={{
-                __html: `
-                  (function(t,d,k){(t[k]=t[k]||[]).push(d);t[d]=t[d]||t[k].f||function(){(t[d].q=t[d].q||[]).push(arguments)}})(window,"trackdesk","TrackdeskObject");
-                  trackdesk("kyynk", "click");
-                `,
-              }}
+              id="tolt-script"
+              src="https://cdn.tolt.io/tolt.js"
+              strategy="afterInteractive"
+              data-tolt="pk_TvByUWFwkBvHWJ92kgcAvf6e"
             />
             <NuqsAdapter>
               <Toaster position="bottom-center" />

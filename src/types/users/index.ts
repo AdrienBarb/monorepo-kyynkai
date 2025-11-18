@@ -2,5 +2,5 @@ import { User } from '@prisma/client';
 
 export type LoggedUserType = Pick<
   User,
-  'id' | 'email' | 'creditBalance' | 'lastClaimFreeCredit'
+  'id' | 'email' | 'creditBalance' | 'lastClaimFreeCredit' | 'toltData'
 >;

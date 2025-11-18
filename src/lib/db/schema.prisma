@@ -9,15 +9,15 @@ generator client {
 }
 
 model User {
-  id            String  @id
-  name          String?
-  image         String?
-  email         String
-  emailVerified Boolean
-  utmTracking   Json?
-  trackdeskCid  Json?
-  creditBalance Int     @default(0)
-  originGuestId String?
+  id                  String    @id
+  name                String?
+  image               String?
+  email               String
+  emailVerified       Boolean
+  utmTracking         Json?
+  toltData            Json?
+  creditBalance       Int       @default(0)
+  originGuestId       String?
   lastClaimFreeCredit DateTime?
 
   createdAt         DateTime

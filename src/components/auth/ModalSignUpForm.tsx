@@ -112,7 +112,8 @@ const ModalSignUpForm: React.FC<ModalSignUpFormProps> = ({
           otp: values.otp,
         },
         {
-          onSuccess: () => {
+          onSuccess: (event: any) => {
+            console.log('event', event);
             sendEventOnce({
               eventName: trackingEvent.signup_completed,
             });

@@ -7,10 +7,6 @@ import {
   cleanUTMFromLocalStorage,
   getUTMFromLocalStorage,
 } from '@/utils/tracking/getUTMFromLocalStorage';
-import {
-  cleanTrackdeskCidFromCookie,
-  getTrackdeskCidFromCookie,
-} from '@/utils/tracking/getTrackdeskCidFromCookie';
 import useApi from '@/hooks/requests/useApi';
 import { useGlobalModalStore } from '@/stores/GlobalModalStore';
 import { useFreeCreditCountdown } from '@/hooks/credits/useFreeCreditCountdown';
@@ -20,7 +16,6 @@ interface Props {
 }
 
 const GlobalConfig: FC<Props> = ({ children }) => {
-  const [shouldAllowAccess, setShouldAllowAccess] = useState(true);
   const { refetch, user } = useUser();
   const [shouldRefetch, setShouldRefetch] = useQueryState('shouldRefetch');
   const [claimFreeCreditParam, setClaimFreeCreditParam] =
@@ -32,9 +27,16 @@ const GlobalConfig: FC<Props> = ({ children }) => {
   const { mutate: updateUser } = usePut('/api/me', {
     onSuccess: () => {
       cleanUTMFromLocalStorage();
-      cleanTrackdeskCidFromCookie();
     },
   });
+
+  const handleToltSignup = async (email: string) => {
+    const result = await window.tolt.signup(email);
+
+    updateUser({
+      toltData: result,
+    });
+  };
 
   useEffect(() => {
     if (shouldRefetch) {
@@ -43,23 +45,24 @@ const GlobalConfig: FC<Props> = ({ children }) => {
     }
   }, [shouldRefetch, refetch, setShouldRefetch]);
 
+  // Signup to Tolt if user doesn't have toltData
+  useEffect(() => {
+    if (user) {
+      if (!user.toltData) {
+        handleToltSignup(user.email);
+      }
+    }
+  }, [user, updateUser]);
+
+  // Update utm values
   useEffect(() => {
     if (user) {
       const utmValues = getUTMFromLocalStorage();
-      const trackdeskCid = getTrackdeskCidFromCookie();
-
-      const updateData: any = {};
 
       if (utmValues) {
-        updateData.utmTracking = utmValues;
-      }
-
-      if (trackdeskCid) {
-        updateData.trackdeskCid = trackdeskCid;
-      }
-
-      if (Object.keys(updateData).length > 0) {
-        updateUser(updateData);
+        updateUser({
+          utmTracking: utmValues,
+        });
       }
     }
   }, [user, updateUser]);
