@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import '@/styles/globals.css';
 import '@/styles/tailwind.css';
 import siteMetadata from '@/data/siteMetadata';
+import { genPageMetadata } from '@/app/seo';
 import { NextIntlClientProvider } from 'next-intl';
 import GlobalErrorProvider from '@/components/provider/GlobalErrorProvider';
 import { Toaster } from 'react-hot-toast';
@@ -26,42 +27,11 @@ import Script from 'next/script';
 
 config.autoAddCss = false;
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteMetadata.siteUrl!),
-  title: {
-    default: siteMetadata.title,
-    template: `%s | ${siteMetadata.title}`,
-  },
+export const metadata: Metadata = genPageMetadata({
+  title: siteMetadata.title,
   description: siteMetadata.description,
-  openGraph: {
-    title: siteMetadata.title,
-    description: siteMetadata.description,
-    url: './',
-    siteName: siteMetadata.title,
-    images: [siteMetadata.socialBanner],
-    locale: 'en_US',
-    type: 'website',
-  },
-  alternates: {
-    canonical: './',
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  twitter: {
-    title: siteMetadata.title,
-    card: 'summary_large_image',
-    images: [siteMetadata.socialBanner],
-  },
-};
+  url: './',
+});
 
 const karlaFont = Karla({
   subsets: ['latin'],
@@ -90,18 +60,6 @@ const RootLayout: FC<Props> = async ({ children }) => {
           lang={locale}
           className={clsx(karlaFont.variable, rubikFont.variable)}
         >
-          <link
-            rel="icon"
-            type="image/png"
-            sizes="32x32"
-            href="/images/favicon-32x32.png"
-          />
-          <link
-            rel="icon"
-            type="image/png"
-            sizes="16x16"
-            href="/images/favicon-16x16.png"
-          />
           <GoogleTagManager gtmId="GTM-KHBKVG2G" />
           <body>
             <Script

@@ -16,17 +16,39 @@ export function genPageMetadata({
   url = './',
   ...rest
 }: PageSEOProps): Metadata {
-  const absoluteUrl = url.startsWith('http')
-    ? url
-    : `${siteMetadata.siteUrl}${url}`;
+  const siteUrl = siteMetadata.siteUrl || 'https://kyynk.ai';
 
-  const imageUrl = image
-    ? image
-    : `${siteMetadata.siteUrl}${siteMetadata.socialBanner}`;
+  const absoluteUrl = url.startsWith('http') ? url : `${siteUrl}${url}`;
+
+  const imageUrl = image ? image : `${siteUrl}${siteMetadata.socialBanner}`;
 
   return {
-    title: title || siteMetadata.title,
+    metadataBase: new URL(siteUrl),
+    title: {
+      default: title || siteMetadata.title,
+      template: `%s | ${siteMetadata.title}`,
+    },
     description: description || siteMetadata.description,
+    keywords: [
+      'AI girlfriend',
+      'virtual companion',
+      'AI chat',
+      'adult AI',
+      'MILF AI',
+      'AI companion',
+      'chatbot',
+      'virtual girlfriend',
+      'AI conversation',
+      'adult chatbot',
+    ],
+    authors: [{ name: siteMetadata.title }],
+    creator: siteMetadata.title,
+    publisher: siteMetadata.title,
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
     openGraph: {
       title: `${title} | ${siteMetadata.title}`,
       description: description || siteMetadata.description,
@@ -53,6 +75,20 @@ export function genPageMetadata({
           alt: `${title} | ${siteMetadata.title}`,
         },
       ],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+    alternates: {
+      canonical: absoluteUrl,
     },
     ...rest,
   };
