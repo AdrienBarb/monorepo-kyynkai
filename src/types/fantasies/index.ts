@@ -13,6 +13,7 @@ export interface Fantasy {
   videoUrl: string;
   isMain?: boolean;
   isActive?: boolean;
+  viewCount?: number;
   createdAt?: Date;
   updatedAt?: Date;
   steps: FantasyStep[];

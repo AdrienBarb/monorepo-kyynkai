@@ -298,6 +298,7 @@ model Fantasy {
   isMain         Boolean  @default(false)
   videoUrl       String
   isActive       Boolean  @default(true)
+  viewCount      Int      @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
