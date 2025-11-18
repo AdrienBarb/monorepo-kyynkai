@@ -5,8 +5,7 @@ import { genPageMetadata } from '@/app/seo';
 import AppFAQ from '@/components/home/AppFAQ';
 import { getAllFantasies } from '@/services/fantasies/getAllFantasies';
 import { getTagsOrderedByFrequency } from '@/services/fantasies/getTagsOrderedByFrequency';
-import FantasiesList from '@/components/fantasies/FantasiesList';
-import FantasyTags from '@/components/fantasies/FantasyTags';
+import FantasiesExplorer from '@/components/fantasies/FantasiesExplorer';
 import { Fantasy } from '@/types/fantasies';
 
 export type PageProps = {
@@ -45,8 +44,10 @@ const HomePage = async () => {
           </div>
         </div>
       </div>
-      <FantasyTags tags={tags} />
-      <FantasiesList initialFantasies={initialFantasies as Fantasy[]} />
+      <FantasiesExplorer
+        initialFantasies={initialFantasies as Fantasy[]}
+        tags={tags}
+      />
       <AppFAQ />
     </PaddingContainer>
   );
