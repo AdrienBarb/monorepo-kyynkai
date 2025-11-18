@@ -99,6 +99,15 @@ export function AppSidebar() {
         )}
       </SidebarContent>
       <SidebarFooter className="flex-shrink-0">
+        <div className="flex items-center justify-center px-2 mb-2">
+          <Link
+            href="/affiliate"
+            onClick={closeSidebarOnMobile}
+            className="w-full rounded-md bg-primary px-3 py-2 text-center text-base font-semibold text-background hover:bg-primary/90 transition-colors"
+          >
+            Affiliate Program 💰
+          </Link>
+        </div>
         <div className="flex items-center justify-center gap-4 px-2 mb-2">
           <Link
             href="https://t.me/kyynkai"
