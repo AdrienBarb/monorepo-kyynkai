@@ -18,12 +18,12 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { PostHogProvider } from '@/components/provider/PostHogProvider';
 import { AxiomWebVitals } from 'next-axiom';
 import UTMTracking from '@/components/tracking/UTMTracking';
-import VisitorTracking from '@/components/tracking/VisitorTracking';
 import PostHogIdentify from '@/components/tracking/PostHogIdentify';
 import { GoogleTagManager } from '@next/third-parties/google';
 import ModalWrapper from '@/components/layout/ModalWrapper';
 import AutoMergeWrapper from '@/components/auth/AutoMergeWrapper';
 import Script from 'next/script';
+import GlobalTracking from '@/components/GlobalTracking';
 
 config.autoAddCss = false;
 
@@ -70,14 +70,14 @@ const RootLayout: FC<Props> = async ({ children }) => {
             />
             <NuqsAdapter>
               <Toaster position="bottom-center" />
-              <GlobalConfig>
-                <PostHogProvider>
-                  <PostHogIdentify />
-                  {children}
-                </PostHogProvider>
-              </GlobalConfig>
+
+              <PostHogProvider>
+                <PostHogIdentify />
+                {children}
+              </PostHogProvider>
+              <GlobalConfig />
+              <GlobalTracking />
               <UTMTracking />
-              <VisitorTracking />
               <GlobalErrorProvider />
               <AutoMergeWrapper />
 
