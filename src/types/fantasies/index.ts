@@ -14,6 +14,7 @@ export interface Fantasy {
   isMain?: boolean;
   isActive?: boolean;
   viewCount?: number;
+  tags?: string[];
   createdAt?: Date;
   updatedAt?: Date;
   steps: FantasyStep[];

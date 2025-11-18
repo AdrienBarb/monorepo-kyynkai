@@ -4,7 +4,9 @@ import { Metadata } from 'next';
 import { genPageMetadata } from '@/app/seo';
 import AppFAQ from '@/components/home/AppFAQ';
 import { getAllFantasies } from '@/services/fantasies/getAllFantasies';
+import { getTagsOrderedByFrequency } from '@/services/fantasies/getTagsOrderedByFrequency';
 import FantasiesList from '@/components/fantasies/FantasiesList';
+import FantasyTags from '@/components/fantasies/FantasyTags';
 import { Fantasy } from '@/types/fantasies';
 
 export type PageProps = {
@@ -23,7 +25,10 @@ export async function generateMetadata({
 }
 
 const HomePage = async () => {
-  const initialFantasies = (await getAllFantasies()) as Fantasy[];
+  const [initialFantasies, tags] = await Promise.all([
+    getAllFantasies(),
+    getTagsOrderedByFrequency(),
+  ]);
 
   return (
     <PaddingContainer>
@@ -40,7 +45,8 @@ const HomePage = async () => {
           </div>
         </div>
       </div>
-      <FantasiesList initialFantasies={initialFantasies} />
+      <FantasyTags tags={tags} />
+      <FantasiesList initialFantasies={initialFantasies as Fantasy[]} />
       <AppFAQ />
     </PaddingContainer>
   );

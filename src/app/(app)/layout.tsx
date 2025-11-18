@@ -17,7 +17,7 @@ const AppLayout: FC<Props> = async ({ children }) => {
   return (
     <SidebarProvider defaultOpen={defaultOpen}>
       <AppSidebar />
-      <div className="w-full">
+      <div className="flex-1 min-w-0 flex flex-col">
         <header className="fixed right-0 left-0 top-0 z-50 p-4 flex justify-between align-center bg-background border-b border-primary/20 h-[68px]">
           <SidebarTrigger />
           <div className="flex items-center gap-2">
