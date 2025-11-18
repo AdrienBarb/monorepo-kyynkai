@@ -33,9 +33,11 @@ const GlobalConfig: FC<Props> = ({ children }) => {
   const handleToltSignup = async (email: string) => {
     const result = await window.tolt.signup(email);
 
-    updateUser({
-      toltData: result,
-    });
+    if (result.customer_id) {
+      updateUser({
+        toltData: result,
+      });
+    }
   };
 
   useEffect(() => {
