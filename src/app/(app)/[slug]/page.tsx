@@ -4,15 +4,8 @@ import { genPageMetadata } from '@/app/seo';
 import { redirect } from 'next/navigation';
 import imgixLoader from '@/lib/imgix/loader';
 import { getAiGirlfriendBySlug } from '@/services/ai-girlfriends-service/getAiGirlfriendBySlug';
-import { getMainFantasy } from '@/services/fantasies/getMainFantasy';
 import CharacterPageView from '@/components/tracking/CharacterPageView';
-import PageContainer from '@/components/PageContainer';
-import FantasyPageView from '@/components/tracking/FantasyPageView';
-import FantasyPlayer from '@/components/fantasies/FantasyPlayer';
-import { Fantasy } from '@/types/fantasies';
 import ProfileConversationInput from '@/components/conversations/ProfileConversationInput';
-import { auth } from '@/lib/better-auth/auth';
-import { headers } from 'next/headers';
 
 export type PageProps = {
   params: Promise<{ slug: string }>;
@@ -49,16 +42,12 @@ const ProfilePage = async ({ params }: PageProps) => {
     redirect('/404');
   }
 
-  const mainFantasy = (await getMainFantasy({
-    aiGirlfriendId: aiGirlfriend.id,
-  })) as Fantasy;
-
   const locale = 'en';
   const chatOpeningLine =
     typeof aiGirlfriend.chatOpeningLine === 'object' &&
     aiGirlfriend.chatOpeningLine !== null &&
     !Array.isArray(aiGirlfriend.chatOpeningLine)
-      ? (aiGirlfriend.chatOpeningLine as Record<string, string>)[locale] ?? ''
+      ? ((aiGirlfriend.chatOpeningLine as Record<string, string>)[locale] ?? '')
       : '';
 
   return (
@@ -67,7 +56,6 @@ const ProfilePage = async ({ params }: PageProps) => {
         <ProfileConversationInput
           chatOpeningLine={chatOpeningLine}
           profileVideoId={aiGirlfriend.profileVideoId}
-          mainFantasy={mainFantasy}
         />
       </div>
       <CharacterPageView />

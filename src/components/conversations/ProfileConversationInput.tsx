@@ -4,16 +4,13 @@ import ConversationInput from './ConversationInput';
 import MessageList from './MessageList';
 import { useChatScroll } from '@/hooks/messages/useChatScroll';
 import { useFetchMessages } from '@/hooks/messages/useFetchMessages';
-import { Fantasy } from '@/types/fantasies';
 
 const ProfileConversationInput = ({
   chatOpeningLine,
   profileVideoId,
-  mainFantasy,
 }: {
   chatOpeningLine: string;
   profileVideoId?: string | null;
-  mainFantasy?: Fantasy;
 }) => {
   const { messages } = useFetchMessages();
 
@@ -30,7 +27,7 @@ const ProfileConversationInput = ({
         />
       </div>
       <div className="sticky bottom-0 h-36">
-        <ConversationInput mainFantasy={mainFantasy} />
+        <ConversationInput />
       </div>
     </div>
   );

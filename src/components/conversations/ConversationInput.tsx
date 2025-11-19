@@ -68,7 +68,7 @@ function useAutoResizeTextarea({
   return { textareaRef, adjustHeight };
 }
 
-const ConversationInput = ({ mainFantasy }: { mainFantasy?: Fantasy }) => {
+const ConversationInput = () => {
   const [value, setValue] = useState('');
   const t = useTranslations();
   const { user: loggedUser, refetch: refetchUser } = useUser();
@@ -168,21 +168,20 @@ const ConversationInput = ({ mainFantasy }: { mainFantasy?: Fantasy }) => {
                   onSuccess={handleAskInputSuccess}
                 /> */}
 
-                {mainFantasy && (
-                  <Button
-                    variant="secondary"
-                    className="text-lg font-semibold text-background"
-                    style={{
-                      background:
-                        'linear-gradient(90deg, hsla(234, 80%, 88%, 1) 0%, hsla(340, 68%, 88%, 1) 50%, hsla(342, 72%, 85%, 1) 100%)',
-                    }}
-                    onClick={() => {
-                      router.push(`/fantasy/${mainFantasy?.id}`);
-                    }}
-                  >
-                    Play
-                  </Button>
-                )}
+                <Button
+                  variant="secondary"
+                  className="text-lg font-semibold text-background"
+                  style={{
+                    background:
+                      'linear-gradient(90deg, hsla(234, 80%, 88%, 1) 0%, hsla(340, 68%, 88%, 1) 50%, hsla(342, 72%, 85%, 1) 100%)',
+                  }}
+                  onClick={() => {
+                    router.push(`/${slug}/fantasies`);
+                  }}
+                >
+                  Play
+                </Button>
+
                 <Button
                   aria-label="Send message"
                   variant="default"
