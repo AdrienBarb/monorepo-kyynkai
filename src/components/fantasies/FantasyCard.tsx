@@ -1,8 +1,12 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Fantasy } from '@/types/fantasies';
 import { getCloudFrontUrl } from '@/utils/medias/getCloudFrontUrl';
 import { Play } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 interface Props {
   fantasy: Fantasy;
@@ -15,8 +19,10 @@ const formatViewCount = (count: number): string => {
   return count.toString();
 };
 
-const FantasyCard = ({ fantasy }: Props) => {
+const FantasyCard: React.FC<Props> = ({ fantasy }) => {
   const viewCount = fantasy.viewCount ?? 0;
+  const router = useRouter();
+
   return (
     <Link href={`/fantasy/${fantasy.id}`} prefetch={true}>
       <div className="flex flex-col">
@@ -42,6 +48,22 @@ const FantasyCard = ({ fantasy }: Props) => {
             </div>
             <div className="text-sm font-semibold font-karla text-white/80 leading-tight mt-1">
               {fantasy.aiGirlfriend.pseudo}
+            </div>
+            <div className="mt-1">
+              <Button
+                variant="secondary"
+                className="text-lg font-semibold text-background w-full"
+                style={{
+                  background:
+                    'linear-gradient(90deg, hsla(234, 80%, 88%, 1) 0%, hsla(340, 68%, 88%, 1) 50%, hsla(342, 72%, 85%, 1) 100%)',
+                }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.push(`/fantasy/${fantasy.id}`);
+                }}
+              >
+                Play now
+              </Button>
             </div>
           </div>
         </div>
