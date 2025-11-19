@@ -251,7 +251,7 @@ const FantasyPlayer: React.FC<FantasyPlayerProps> = ({ fantasy }) => {
   };
 
   return (
-    <div className="flex flex-col p-4 max-w-md mx-auto h-full">
+    <div className="flex flex-col mx-auto h-full">
       <Card className="p-0 relative">
         <div className="relative aspect-[9/16] w-full overflow-hidden rounded-lg">
           <video
